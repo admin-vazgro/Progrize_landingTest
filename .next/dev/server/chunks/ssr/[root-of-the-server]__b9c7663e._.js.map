@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 10, "column": 0}, "map": {"version":3,"sources":["file:///Users/rohith/Desktop/Progrize_landing-main/lib/supabase.ts"],"sourcesContent":["import { createClient } from '@supabase/supabase-js'\n\nconst supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!\nconst supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!\n\nexport const supabase = createClient(supabaseUrl, supabaseAnonKey)"],"names":[],"mappings":";;;;AAAA;;AAEA,MAAM;AACN,MAAM;AAEC,MAAM,WAAW,IAAA,8NAAY,EAAC,aAAa","debugId":null}}]
+}
