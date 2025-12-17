@@ -174,7 +174,7 @@ export default function ProfilePage() {
                     alt="Profile"
                     width={120}
                     height={120}
-                    className="rounded-2xl object-cover"
+                    className="rounded-2xl object-cover max-h-120"
                   />
                 ) : (
                   <div className="w-[120px] h-[120px] rounded-2xl bg-gray-200 flex items-center justify-center">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 interface CreateEventModalProps {
   isOpen: boolean;
@@ -18,10 +19,51 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess, userId }:
   const [location, setLocation] = useState("");
   const [meetingLink, setMeetingLink] = useState("");
   const [tags, setTags] = useState("");
+  const [eventImage, setEventImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   if (!isOpen) return null;
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setEventImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (file: File): Promise<string | null> => {
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${userId}-${Date.now()}.${fileExt}`;
+      const filePath = `event-images/${fileName}`;
+
+      // Use the correct bucket name with hyphen: profile-pictures
+      const { error: uploadError } = await supabase.storage
+        .from('profile-pictures')
+        .upload(filePath, file);
+
+      if (uploadError) {
+        console.error("Error uploading image:", uploadError);
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('profile-pictures')
+        .getPublicUrl(filePath);
+
+      return publicUrl;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +85,18 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess, userId }:
       // Combine date and time
       const eventDateTime = new Date(`${eventDate}T${eventTime}`).toISOString();
 
+      // Upload image if provided
+      let imageUrl = null;
+      if (eventImage) {
+        try {
+          imageUrl = await uploadImage(eventImage);
+        } catch (uploadError) {
+          setError("Failed to upload image. Please try again.");
+          setLoading(false);
+          return;
+        }
+      }
+
       // Create post
       const { data: postData, error: postError } = await supabase
         .from("posts")
@@ -52,6 +106,7 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess, userId }:
           title: title.trim(),
           content: content.trim(),
           tags: tagsArray,
+          event_image: imageUrl,
           community_id: null
         })
         .select()
@@ -79,6 +134,8 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess, userId }:
       setLocation("");
       setMeetingLink("");
       setTags("");
+      setEventImage(null);
+      setImagePreview("");
       
       onSuccess();
       onClose();
@@ -109,6 +166,50 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess, userId }:
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Event Image Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Event Image (optional)
+            </label>
+            <div className="flex items-center gap-4">
+              {imagePreview ? (
+                <div className="relative w-32 h-32 rounded-lg overflow-hidden">
+                  <Image
+                    src={imagePreview}
+                    alt="Event preview"
+                    fill
+                    className="object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEventImage(null);
+                      setImagePreview("");
+                    }}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ) : (
+                <label className="w-32 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#162f16] transition">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-xs text-gray-500 mt-2">Upload Image</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+              )}
+            </div>
+          </div>
+
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

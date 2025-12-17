@@ -1,8 +1,1 @@
-[00:00:00.919] Server  LOG      ✓ Ready in 682ms
-[00:00:05.771] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:06.032] Browser WARN    Image with src "/_next/static/media/logo.70795ee8.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:00:06.032] Browser WARN    Image with src "/_next/static/media/proboy.2832212c.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:06.032] Browser WARN    Image with src "/_next/static/media/progrizeschool.f34c2884.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:00:09.612] Browser WARN    Image with src "http://localhost:3000/_next/static/media/whitelogo.f788ef28.svg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:00:00.712] Server  LOG      ✓ Ready in 516ms

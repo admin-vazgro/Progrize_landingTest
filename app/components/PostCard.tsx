@@ -201,7 +201,7 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
               alt={post.user_name}
               width={40}
               height={40}
-              className="rounded-full object-cover"
+              className="rounded-full object-cover max-h-10"
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-[#162f16] text-white flex items-center justify-center font-semibold">

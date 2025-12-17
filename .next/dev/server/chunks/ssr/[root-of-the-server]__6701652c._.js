@@ -1285,7 +1285,7 @@ function ProfilePage() {
                                                             alt: "Profile",
                                                             width: 120,
                                                             height: 120,
-                                                            className: "rounded-2xl object-cover"
+                                                            className: "rounded-2xl object-cover max-h-120"
                                                         }, void 0, false, {
                                                             fileName: "[project]/Desktop/Progrize_landing-main/app/profile/page.tsx",
                                                             lineNumber: 172,

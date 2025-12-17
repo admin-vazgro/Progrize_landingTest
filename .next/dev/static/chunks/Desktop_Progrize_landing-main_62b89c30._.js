@@ -851,14 +851,14 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
                     ascending: true
                 });
                 if (error) throw error;
-                // Get user metadata for each comment
+                // Get user profile data for each comment from profiles table
                 const commentsWithUsers = await Promise.all((data || []).map({
                     "CommentsSection.useCallback[loadComments]": async (comment)=>{
-                        const { data: userData } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].auth.admin.getUserById(comment.user_id);
+                        const { data: profileData } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("profiles").select("full_name, avatar_url").eq("id", comment.user_id).single();
                         return {
                             ...comment,
-                            user_name: userData?.user?.user_metadata?.full_name || userData?.user?.email?.split("@")[0] || "User",
-                            user_avatar: userData?.user?.user_metadata?.avatar_url || ""
+                            user_name: profileData?.full_name || "User",
+                            user_avatar: profileData?.avatar_url || ""
                         };
                     }
                 }["CommentsSection.useCallback[loadComments]"]));
@@ -918,26 +918,33 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-4 mb-4",
-                children: comments.map((comment)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                children: comments.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                    className: "text-sm text-gray-500 text-center py-4",
+                    children: "No comments yet. Be the first to comment!"
+                }, void 0, false, {
+                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
+                    lineNumber: 114,
+                    columnNumber: 11
+                }, this) : comments.map((comment)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "flex gap-3",
                         children: [
                             comment.user_avatar ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 src: comment.user_avatar,
                                 alt: comment.user_name,
-                                width: 32,
-                                height: 32,
-                                className: "rounded-full object-cover"
+                                width: 40,
+                                height: 40,
+                                className: "rounded-full max-h-10"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                lineNumber: 111,
-                                columnNumber: 15
+                                lineNumber: 119,
+                                columnNumber: 17
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "w-8 h-8 rounded-full bg-[#162f16] text-white flex items-center justify-center text-sm font-semibold",
                                 children: comment.user_name.charAt(0).toUpperCase()
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                lineNumber: 119,
-                                columnNumber: 15
+                                lineNumber: 127,
+                                columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex-1",
@@ -950,46 +957,46 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
                                                 children: comment.user_name
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                                lineNumber: 125,
-                                                columnNumber: 17
+                                                lineNumber: 133,
+                                                columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "text-sm text-gray-700 mt-1",
                                                 children: comment.content
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                                lineNumber: 126,
-                                                columnNumber: 17
+                                                lineNumber: 134,
+                                                columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                        lineNumber: 124,
-                                        columnNumber: 15
+                                        lineNumber: 132,
+                                        columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-xs text-gray-500 mt-1 ml-3",
                                         children: formatDate(comment.created_at)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                        lineNumber: 128,
-                                        columnNumber: 15
+                                        lineNumber: 136,
+                                        columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                lineNumber: 123,
-                                columnNumber: 13
+                                lineNumber: 131,
+                                columnNumber: 15
                             }, this)
                         ]
                     }, comment.id, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                        lineNumber: 109,
-                        columnNumber: 11
+                        lineNumber: 117,
+                        columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                lineNumber: 107,
+                lineNumber: 112,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -1004,7 +1011,7 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
                         className: "flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                        lineNumber: 136,
+                        lineNumber: 145,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1014,19 +1021,19 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
                         children: loading ? "Posting..." : "Post"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                        lineNumber: 143,
+                        lineNumber: 152,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                lineNumber: 135,
+                lineNumber: 144,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-        lineNumber: 105,
+        lineNumber: 110,
         columnNumber: 5
     }, this);
 }
@@ -1194,7 +1201,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                 alt: post.user_name,
                                 width: 40,
                                 height: 40,
-                                className: "rounded-full object-cover"
+                                className: "rounded-full object-cover max-h-10"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
                                 lineNumber: 199,
@@ -1712,9 +1719,11 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/lib/supabase.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/image.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
@@ -1726,9 +1735,36 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
     const [location, setLocation] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [meetingLink, setMeetingLink] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [tags, setTags] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [eventImage, setEventImage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [imagePreview, setImagePreview] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     if (!isOpen) return null;
+    const handleImageChange = (e)=>{
+        const file = e.target.files?.[0];
+        if (file) {
+            setEventImage(file);
+            const reader = new FileReader();
+            reader.onloadend = ()=>{
+                setImagePreview(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    const uploadImage = async (file)=>{
+        try {
+            const fileExt = file.name.split('.').pop();
+            const fileName = `${userId}-${Date.now()}.${fileExt}`;
+            const filePath = `event-images/${fileName}`;
+            const { error: uploadError } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].storage.from('profile_pictures').upload(filePath, file);
+            if (uploadError) throw uploadError;
+            const { data: { publicUrl } } = __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].storage.from('profile_pictures').getPublicUrl(filePath);
+            return publicUrl;
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            return null;
+        }
+    };
     const handleSubmit = async (e)=>{
         e.preventDefault();
         if (!title.trim() || !content.trim() || !eventDate || !eventTime) {
@@ -1741,6 +1777,11 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
             const tagsArray = tags.split(",").map((tag)=>tag.trim()).filter((tag)=>tag.length > 0);
             // Combine date and time
             const eventDateTime = new Date(`${eventDate}T${eventTime}`).toISOString();
+            // Upload image if provided
+            let imageUrl = null;
+            if (eventImage) {
+                imageUrl = await uploadImage(eventImage);
+            }
             // Create post
             const { data: postData, error: postError } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("posts").insert({
                 user_id: userId,
@@ -1748,6 +1789,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                 title: title.trim(),
                 content: content.trim(),
                 tags: tagsArray,
+                event_image: imageUrl,
                 community_id: null
             }).select().single();
             if (postError) throw postError;
@@ -1767,6 +1809,8 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
             setLocation("");
             setMeetingLink("");
             setTags("");
+            setEventImage(null);
+            setImagePreview("");
             onSuccess();
             onClose();
         } catch (err) {
@@ -1797,17 +1841,17 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                             d: "M6 18L18 6M6 6l12 12"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 103,
+                            lineNumber: 150,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                        lineNumber: 102,
+                        lineNumber: 149,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                    lineNumber: 97,
+                    lineNumber: 144,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -1815,7 +1859,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                     children: "Create Event"
                 }, void 0, false, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                    lineNumber: 108,
+                    lineNumber: 155,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -1826,10 +1870,130 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
+                                    children: "Event Image"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                    lineNumber: 161,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex items-center gap-4",
+                                    children: imagePreview ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "relative w-32 h-32 rounded-lg overflow-hidden",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                src: imagePreview,
+                                                alt: "Event preview",
+                                                fill: true,
+                                                className: "object-cover"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                                lineNumber: 167,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                type: "button",
+                                                onClick: ()=>{
+                                                    setEventImage(null);
+                                                    setImagePreview("");
+                                                },
+                                                className: "absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                    className: "w-4 h-4",
+                                                    fill: "none",
+                                                    stroke: "currentColor",
+                                                    viewBox: "0 0 24 24",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                        strokeLinecap: "round",
+                                                        strokeLinejoin: "round",
+                                                        strokeWidth: 2,
+                                                        d: "M6 18L18 6M6 6l12 12"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                                        lineNumber: 182,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                                    lineNumber: 181,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                                lineNumber: 173,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                        lineNumber: 166,
+                                        columnNumber: 17
+                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                        className: "w-32 h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-[#162f16] transition",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                className: "w-8 h-8 text-gray-400",
+                                                fill: "none",
+                                                stroke: "currentColor",
+                                                viewBox: "0 0 24 24",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                    strokeLinecap: "round",
+                                                    strokeLinejoin: "round",
+                                                    strokeWidth: 2,
+                                                    d: "M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                                    lineNumber: 189,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                                lineNumber: 188,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-xs text-gray-500 mt-2",
+                                                children: "Upload Image"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                                lineNumber: 191,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                type: "file",
+                                                accept: "image/*",
+                                                onChange: handleImageChange,
+                                                className: "hidden"
+                                            }, void 0, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                                lineNumber: 192,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                        lineNumber: 187,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                                    lineNumber: 164,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
+                            lineNumber: 160,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                    className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Event Title *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 114,
+                                    lineNumber: 205,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1841,13 +2005,13 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     required: true
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 117,
+                                    lineNumber: 208,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 113,
+                            lineNumber: 204,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1857,7 +2021,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     children: "Description *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 129,
+                                    lineNumber: 220,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -1869,13 +2033,13 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     required: true
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 132,
+                                    lineNumber: 223,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 128,
+                            lineNumber: 219,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1888,7 +2052,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                             children: "Date *"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                            lineNumber: 145,
+                                            lineNumber: 236,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1899,13 +2063,13 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                             required: true
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                            lineNumber: 148,
+                                            lineNumber: 239,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 144,
+                                    lineNumber: 235,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1915,7 +2079,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                             children: "Time *"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                            lineNumber: 157,
+                                            lineNumber: 248,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1926,19 +2090,19 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                             required: true
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                            lineNumber: 160,
+                                            lineNumber: 251,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 156,
+                                    lineNumber: 247,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 143,
+                            lineNumber: 234,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1948,7 +2112,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     children: "Location (optional)"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 172,
+                                    lineNumber: 263,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1959,13 +2123,13 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     className: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#162f16]"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 175,
+                                    lineNumber: 266,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 171,
+                            lineNumber: 262,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1975,7 +2139,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     children: "Meeting Link (optional)"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 186,
+                                    lineNumber: 277,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1986,13 +2150,13 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     className: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#162f16]"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 189,
+                                    lineNumber: 280,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 185,
+                            lineNumber: 276,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2002,7 +2166,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     children: "Tags (comma separated)"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 200,
+                                    lineNumber: 291,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2013,13 +2177,13 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     className: "w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#162f16]"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 203,
+                                    lineNumber: 294,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 199,
+                            lineNumber: 290,
                             columnNumber: 11
                         }, this),
                         error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2027,7 +2191,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                             children: error
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 214,
+                            lineNumber: 305,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2040,7 +2204,7 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     children: loading ? "Creating..." : "Create Event"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 219,
+                                    lineNumber: 310,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2050,34 +2214,34 @@ function CreateEventModal({ isOpen, onClose, onSuccess, userId }) {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                                    lineNumber: 226,
+                                    lineNumber: 317,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                            lineNumber: 218,
+                            lineNumber: 309,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-                    lineNumber: 111,
+                    lineNumber: 158,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-            lineNumber: 95,
+            lineNumber: 142,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CreateEventModal.tsx",
-        lineNumber: 94,
+        lineNumber: 141,
         columnNumber: 5
     }, this);
 }
-_s(CreateEventModal, "E64cQR+T7d+1TsElHx30vCVdUS4=");
+_s(CreateEventModal, "cJicm45zLkR1n1Dfjw4FgJm3AWc=");
 _c = CreateEventModal;
 var _c;
 __turbopack_context__.k.register(_c, "CreateEventModal");
