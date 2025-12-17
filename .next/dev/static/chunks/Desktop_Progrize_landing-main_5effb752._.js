@@ -832,6 +832,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/lib/supabase.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/image.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
@@ -839,8 +840,10 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function CommentsSection({ postId, currentUserId, onUpdate }) {
     _s();
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const [comments, setComments] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
     const [newComment, setNewComment] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -893,13 +896,17 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
                 post_id: postId
             });
             setNewComment("");
-            loadComments();
+            await loadComments();
             onUpdate();
         } catch (error) {
             console.error("Error posting comment:", error);
         } finally{
             setLoading(false);
         }
+    };
+    const handleUserClick = (userId, e)=>{
+        e.stopPropagation();
+        router.push(`/user/${userId}`);
     };
     const formatDate = (dateString)=>{
         const date = new Date(dateString);
@@ -918,33 +925,26 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "space-y-4 mb-4",
-                children: comments.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                    className: "text-sm text-gray-500 text-center py-4",
-                    children: "No comments yet. Be the first to comment!"
-                }, void 0, false, {
-                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                    lineNumber: 114,
-                    columnNumber: 11
-                }, this) : comments.map((comment)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                children: comments.map((comment)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "flex gap-3",
                         children: [
                             comment.user_avatar ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 src: comment.user_avatar,
                                 alt: comment.user_name,
-                                width: 40,
-                                height: 40,
-                                className: "rounded-full max-h-10"
+                                width: 32,
+                                height: 32,
+                                className: "rounded-full object-cover"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                lineNumber: 119,
-                                columnNumber: 17
+                                lineNumber: 123,
+                                columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "w-8 h-8 rounded-full bg-[#162f16] text-white flex items-center justify-center text-sm font-semibold",
                                 children: comment.user_name.charAt(0).toUpperCase()
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                lineNumber: 127,
-                                columnNumber: 17
+                                lineNumber: 131,
+                                columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex-1",
@@ -957,46 +957,46 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
                                                 children: comment.user_name
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                                lineNumber: 133,
-                                                columnNumber: 19
+                                                lineNumber: 137,
+                                                columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                                 className: "text-sm text-gray-700 mt-1",
                                                 children: comment.content
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                                lineNumber: 134,
-                                                columnNumber: 19
+                                                lineNumber: 138,
+                                                columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                        lineNumber: 132,
-                                        columnNumber: 17
+                                        lineNumber: 136,
+                                        columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                         className: "text-xs text-gray-500 mt-1 ml-3",
                                         children: formatDate(comment.created_at)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                        lineNumber: 136,
-                                        columnNumber: 17
+                                        lineNumber: 140,
+                                        columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                                lineNumber: 131,
-                                columnNumber: 15
+                                lineNumber: 135,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, comment.id, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                        lineNumber: 117,
-                        columnNumber: 13
+                        lineNumber: 121,
+                        columnNumber: 11
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                lineNumber: 112,
+                lineNumber: 119,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -1011,7 +1011,7 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
                         className: "flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                        lineNumber: 145,
+                        lineNumber: 148,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1021,23 +1021,27 @@ function CommentsSection({ postId, currentUserId, onUpdate }) {
                         children: loading ? "Posting..." : "Post"
                     }, void 0, false, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                        lineNumber: 152,
+                        lineNumber: 155,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-                lineNumber: 144,
+                lineNumber: 147,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx",
-        lineNumber: 110,
+        lineNumber: 117,
         columnNumber: 5
     }, this);
 }
-_s(CommentsSection, "1hfCDE9v/nEBQg91Xw+o8t+fZ6o=");
+_s(CommentsSection, "JwC4rqS3ASQ6SZQDOshMhdDD+Ok=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
+    ];
+});
 _c = CommentsSection;
 var _c;
 __turbopack_context__.k.register(_c, "CommentsSection");
@@ -1055,6 +1059,7 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/lib/supabase.ts [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/navigation.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/image.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$app$2f$components$2f$CommentsSection$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/app/components/CommentsSection.tsx [app-client] (ecmascript)");
 ;
@@ -1064,19 +1069,33 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+;
 function PostCard({ post, currentUserId, onUpdate }) {
     _s();
+    const router = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"])();
     const [showComments, setShowComments] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isLiking, setIsLiking] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isRSVPing, setIsRSVPing] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isDeleting, setIsDeleting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [showDeleteConfirm, setShowDeleteConfirm] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [localLikesCount, setLocalLikesCount] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(post.likes_count);
+    const [localIsLiked, setLocalIsLiked] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(post.is_liked);
+    const [localCommentsCount, setLocalCommentsCount] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(post.comments_count);
     const isOwner = post.user_id === currentUserId;
+    const handleUserClick = (e)=>{
+        e.stopPropagation();
+        router.push(`/user/${post.user_id}`);
+    };
     const handleLike = async ()=>{
         if (isLiking) return;
         setIsLiking(true);
+        // Optimistic update
+        const newIsLiked = !localIsLiked;
+        const newLikesCount = newIsLiked ? localLikesCount + 1 : localLikesCount - 1;
+        setLocalIsLiked(newIsLiked);
+        setLocalLikesCount(newLikesCount);
         try {
-            if (post.is_liked) {
+            if (localIsLiked) {
                 // Unlike
                 await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("post_likes").delete().eq("post_id", post.id).eq("user_id", currentUserId);
                 await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].rpc("decrement_likes", {
@@ -1095,6 +1114,9 @@ function PostCard({ post, currentUserId, onUpdate }) {
             onUpdate();
         } catch (error) {
             console.error("Error toggling like:", error);
+            // Revert on error
+            setLocalIsLiked(!newIsLiked);
+            setLocalLikesCount(localLikesCount);
         } finally{
             setIsLiking(false);
         }
@@ -1159,6 +1181,10 @@ function PostCard({ post, currentUserId, onUpdate }) {
             setIsDeleting(false);
         }
     };
+    const handleCommentUpdate = ()=>{
+        setLocalCommentsCount((prev)=>prev + 1);
+        onUpdate();
+    };
     const copyLink = ()=>{
         const url = `${window.location.origin}/community?post=${post.id}`;
         navigator.clipboard.writeText(url);
@@ -1194,7 +1220,8 @@ function PostCard({ post, currentUserId, onUpdate }) {
                 className: "flex items-start justify-between mb-4",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex items-center gap-3",
+                        className: "flex items-center gap-3 cursor-pointer hover:opacity-80 transition",
+                        onClick: handleUserClick,
                         children: [
                             post.user_avatar ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 src: post.user_avatar,
@@ -1204,24 +1231,24 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                 className: "rounded-full object-cover max-h-10"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 199,
+                                lineNumber: 226,
                                 columnNumber: 13
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "w-10 h-10 rounded-full bg-[#162f16] text-white flex items-center justify-center font-semibold",
                                 children: post.user_name.charAt(0).toUpperCase()
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 207,
+                                lineNumber: 234,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "font-medium text-gray-900",
+                                        className: "font-medium text-gray-900 hover:underline",
                                         children: post.user_name
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                        lineNumber: 212,
+                                        lineNumber: 239,
                                         columnNumber: 13
                                     }, this),
                                     post.user_occupation && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1229,7 +1256,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                         children: post.user_occupation
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                        lineNumber: 214,
+                                        lineNumber: 241,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1237,19 +1264,19 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                         children: formatDate(post.created_at)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                        lineNumber: 216,
+                                        lineNumber: 243,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 211,
+                                lineNumber: 238,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 197,
+                        lineNumber: 221,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1260,7 +1287,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                 children: post.post_type.replace("_", " ")
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 221,
+                                lineNumber: 248,
                                 columnNumber: 11
                             }, this),
                             isOwner && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1282,17 +1309,17 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                                 d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                                lineNumber: 233,
+                                                lineNumber: 260,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                            lineNumber: 232,
+                                            lineNumber: 259,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                        lineNumber: 227,
+                                        lineNumber: 254,
                                         columnNumber: 15
                                     }, this),
                                     showDeleteConfirm && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1303,7 +1330,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                                 children: "Are you sure you want to delete this post?"
                                             }, void 0, false, {
                                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                                lineNumber: 239,
+                                                lineNumber: 266,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1316,7 +1343,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                                         children: isDeleting ? "Deleting..." : "Delete"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                                        lineNumber: 241,
+                                                        lineNumber: 268,
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1325,37 +1352,37 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                                         children: "Cancel"
                                                     }, void 0, false, {
                                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                                        lineNumber: 248,
+                                                        lineNumber: 275,
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                                lineNumber: 240,
+                                                lineNumber: 267,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                        lineNumber: 238,
+                                        lineNumber: 265,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 226,
+                                lineNumber: 253,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 220,
+                        lineNumber: 247,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                lineNumber: 196,
+                lineNumber: 220,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1363,7 +1390,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                 children: post.title
             }, void 0, false, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                lineNumber: 263,
+                lineNumber: 290,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1371,7 +1398,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                 children: post.content
             }, void 0, false, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                lineNumber: 264,
+                lineNumber: 291,
                 columnNumber: 7
             }, this),
             post.event && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1392,12 +1419,12 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                     d: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                    lineNumber: 271,
+                                    lineNumber: 298,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 270,
+                                lineNumber: 297,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1405,13 +1432,13 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                 children: new Date(post.event.event_date).toLocaleString()
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 273,
+                                lineNumber: 300,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 269,
+                        lineNumber: 296,
                         columnNumber: 11
                     }, this),
                     post.event.location && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1430,7 +1457,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                         d: "M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                        lineNumber: 281,
+                                        lineNumber: 308,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -1440,26 +1467,26 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                         d: "M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                                     }, void 0, false, {
                                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                        lineNumber: 282,
+                                        lineNumber: 309,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 280,
+                                lineNumber: 307,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 children: post.event.location
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 284,
+                                lineNumber: 311,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 279,
+                        lineNumber: 306,
                         columnNumber: 13
                     }, this),
                     post.event.meeting_link && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
@@ -1480,25 +1507,25 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                     d: "M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                    lineNumber: 296,
+                                    lineNumber: 323,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 295,
+                                lineNumber: 322,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 children: "Join Meeting"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 298,
+                                lineNumber: 325,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 289,
+                        lineNumber: 316,
                         columnNumber: 13
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1515,7 +1542,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 303,
+                                lineNumber: 330,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1529,19 +1556,19 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 314,
+                                lineNumber: 341,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 302,
+                        lineNumber: 329,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                lineNumber: 268,
+                lineNumber: 295,
                 columnNumber: 9
             }, this),
             post.tags && post.tags.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1554,12 +1581,12 @@ function PostCard({ post, currentUserId, onUpdate }) {
                         ]
                     }, index, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 333,
+                        lineNumber: 360,
                         columnNumber: 13
                     }, this))
             }, void 0, false, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                lineNumber: 331,
+                lineNumber: 358,
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1571,7 +1598,7 @@ function PostCard({ post, currentUserId, onUpdate }) {
                         className: "flex items-center gap-2 text-gray-600 hover:text-[#162f16] transition",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                className: `w-5 h-5 ${post.is_liked ? "fill-[#162f16] text-[#162f16]" : "fill-none"}`,
+                                className: `w-5 h-5 ${localIsLiked ? "fill-[#162f16] text-[#162f16]" : "fill-none"}`,
                                 stroke: "currentColor",
                                 viewBox: "0 0 24 24",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
@@ -1581,26 +1608,26 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                     d: "M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                    lineNumber: 355,
+                                    lineNumber: 382,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 350,
+                                lineNumber: 377,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "text-sm font-medium",
-                                children: post.likes_count
+                                children: localLikesCount
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 362,
+                                lineNumber: 389,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 345,
+                        lineNumber: 372,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1619,26 +1646,26 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                     d: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                    lineNumber: 370,
+                                    lineNumber: 397,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 369,
+                                lineNumber: 396,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                 className: "text-sm font-medium",
-                                children: post.comments_count
+                                children: localCommentsCount
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 377,
+                                lineNumber: 404,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 365,
+                        lineNumber: 392,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1657,12 +1684,12 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                     d: "M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                    lineNumber: 385,
+                                    lineNumber: 412,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 384,
+                                lineNumber: 411,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1670,38 +1697,42 @@ function PostCard({ post, currentUserId, onUpdate }) {
                                 children: "Share"
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                                lineNumber: 392,
+                                lineNumber: 419,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                        lineNumber: 380,
+                        lineNumber: 407,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                lineNumber: 344,
+                lineNumber: 371,
                 columnNumber: 7
             }, this),
             showComments && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$app$2f$components$2f$CommentsSection$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 postId: post.id,
                 currentUserId: currentUserId,
-                onUpdate: onUpdate
+                onUpdate: handleCommentUpdate
             }, void 0, false, {
                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-                lineNumber: 398,
+                lineNumber: 425,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/PostCard.tsx",
-        lineNumber: 194,
+        lineNumber: 218,
         columnNumber: 5
     }, this);
 }
-_s(PostCard, "OltdBN/gaXLc6t5KsfV7266cvyE=");
+_s(PostCard, "O4SNPEwi2QGs7LfTBv5rdv8tFC4=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"]
+    ];
+});
 _c = PostCard;
 var _c;
 __turbopack_context__.k.register(_c, "PostCard");

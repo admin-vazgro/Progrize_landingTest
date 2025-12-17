@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import CommentsSection from "./CommentsSection";
 
@@ -37,20 +38,35 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, currentUserId, onUpdate }: PostCardProps) {
+  const router = useRouter();
   const [showComments, setShowComments] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
   const [isRSVPing, setIsRSVPing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [localLikesCount, setLocalLikesCount] = useState(post.likes_count);
+  const [localIsLiked, setLocalIsLiked] = useState(post.is_liked);
+  const [localCommentsCount, setLocalCommentsCount] = useState(post.comments_count);
 
   const isOwner = post.user_id === currentUserId;
+
+  const handleUserClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/user/${post.user_id}`);
+  };
 
   const handleLike = async () => {
     if (isLiking) return;
     setIsLiking(true);
 
+    // Optimistic update
+    const newIsLiked = !localIsLiked;
+    const newLikesCount = newIsLiked ? localLikesCount + 1 : localLikesCount - 1;
+    setLocalIsLiked(newIsLiked);
+    setLocalLikesCount(newLikesCount);
+
     try {
-      if (post.is_liked) {
+      if (localIsLiked) {
         // Unlike
         await supabase
           .from("post_likes")
@@ -71,6 +87,9 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
       onUpdate();
     } catch (error) {
       console.error("Error toggling like:", error);
+      // Revert on error
+      setLocalIsLiked(!newIsLiked);
+      setLocalLikesCount(localLikesCount);
     } finally {
       setIsLiking(false);
     }
@@ -162,6 +181,11 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
     }
   };
 
+  const handleCommentUpdate = () => {
+    setLocalCommentsCount(prev => prev + 1);
+    onUpdate();
+  };
+
   const copyLink = () => {
     const url = `${window.location.origin}/community?post=${post.id}`;
     navigator.clipboard.writeText(url);
@@ -194,7 +218,10 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
     <div className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-md transition">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
-        <div className="flex items-center gap-3">
+        <div 
+          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition"
+          onClick={handleUserClick}
+        >
           {post.user_avatar ? (
             <Image
               src={post.user_avatar}
@@ -209,7 +236,7 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
             </div>
           )}
           <div>
-            <p className="font-medium text-gray-900">{post.user_name}</p>
+            <p className="font-medium text-gray-900 hover:underline">{post.user_name}</p>
             {post.user_occupation && (
               <p className="text-sm text-gray-600">{post.user_occupation}</p>
             )}
@@ -348,7 +375,7 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
           className="flex items-center gap-2 text-gray-600 hover:text-[#162f16] transition"
         >
           <svg
-            className={`w-5 h-5 ${post.is_liked ? "fill-[#162f16] text-[#162f16]" : "fill-none"}`}
+            className={`w-5 h-5 ${localIsLiked ? "fill-[#162f16] text-[#162f16]" : "fill-none"}`}
             stroke="currentColor"
             viewBox="0 0 24 24"
           >
@@ -359,7 +386,7 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
               d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
             />
           </svg>
-          <span className="text-sm font-medium">{post.likes_count}</span>
+          <span className="text-sm font-medium">{localLikesCount}</span>
         </button>
 
         <button
@@ -374,7 +401,7 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
               d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
             />
           </svg>
-          <span className="text-sm font-medium">{post.comments_count}</span>
+          <span className="text-sm font-medium">{localCommentsCount}</span>
         </button>
 
         <button
@@ -398,7 +425,7 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
         <CommentsSection
           postId={post.id}
           currentUserId={currentUserId}
-          onUpdate={onUpdate}
+          onUpdate={handleCommentUpdate}
         />
       )}
     </div>

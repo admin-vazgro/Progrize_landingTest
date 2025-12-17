@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 interface Comment {
@@ -20,6 +21,7 @@ interface CommentsSectionProps {
 }
 
 export default function CommentsSection({ postId, currentUserId, onUpdate }: CommentsSectionProps) {
+  const router = useRouter();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [loading, setLoading] = useState(false);
@@ -78,18 +80,23 @@ export default function CommentsSection({ postId, currentUserId, onUpdate }: Com
         });
 
       if (error) throw error;
-
+      
       // Increment comments count
       await supabase.rpc("increment_comments", { post_id: postId });
 
       setNewComment("");
-      loadComments();
+      await loadComments();
       onUpdate();
     } catch (error) {
       console.error("Error posting comment:", error);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleUserClick = (userId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    router.push(`/user/${userId}`);
   };
 
   const formatDate = (dateString: string) => {
@@ -110,34 +117,30 @@ export default function CommentsSection({ postId, currentUserId, onUpdate }: Com
     <div className="mt-6 pt-6 border-t border-gray-200">
       {/* Comments List */}
       <div className="space-y-4 mb-4">
-        {comments.length === 0 ? (
-          <p className="text-sm text-gray-500 text-center py-4">No comments yet. Be the first to comment!</p>
-        ) : (
-          comments.map((comment) => (
-            <div key={comment.id} className="flex gap-3">
-              {comment.user_avatar ? (
-                <Image
-                  src={comment.user_avatar}
-                  alt={comment.user_name}
-                  width={40}
-                  height={40}
-                  className="rounded-full max-h-10"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-[#162f16] text-white flex items-center justify-center text-sm font-semibold">
-                  {comment.user_name.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <div className="flex-1">
-                <div className="bg-gray-50 rounded-lg p-3">
-                  <p className="font-medium text-sm text-gray-900">{comment.user_name}</p>
-                  <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
-                </div>
-                <p className="text-xs text-gray-500 mt-1 ml-3">{formatDate(comment.created_at)}</p>
+        {comments.map((comment) => (
+          <div key={comment.id} className="flex gap-3">
+            {comment.user_avatar ? (
+              <Image
+                src={comment.user_avatar}
+                alt={comment.user_name}
+                width={32}
+                height={32}
+                className="rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-8 h-8 rounded-full bg-[#162f16] text-white flex items-center justify-center text-sm font-semibold">
+                {comment.user_name.charAt(0).toUpperCase()}
               </div>
+            )}
+            <div className="flex-1">
+              <div className="bg-gray-50 rounded-lg p-3">
+                <p className="font-medium text-sm text-gray-900">{comment.user_name}</p>
+                <p className="text-sm text-gray-700 mt-1">{comment.content}</p>
+              </div>
+              <p className="text-xs text-gray-500 mt-1 ml-3">{formatDate(comment.created_at)}</p>
             </div>
-          ))
-        )}
+          </div>
+        ))}
       </div>
 
       {/* Add Comment Form */}

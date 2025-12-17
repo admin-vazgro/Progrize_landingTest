@@ -448,6 +448,10 @@ img, video {
   margin-left: .75rem;
 }
 
+.ml-auto {
+  margin-left: auto;
+}
+
 .mt-1 {
   margin-top: .25rem;
 }
@@ -494,6 +498,13 @@ img, video {
 
 .mt-8 {
   margin-top: 2rem;
+}
+
+.line-clamp-2 {
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;
+  overflow: hidden;
 }
 
 .line-clamp-3 {
@@ -782,6 +793,10 @@ img, video {
 
 .gap-0 {
   gap: 0;
+}
+
+.gap-1 {
+  gap: .25rem;
 }
 
 .gap-10 {
