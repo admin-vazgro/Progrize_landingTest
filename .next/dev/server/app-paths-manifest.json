@@ -1,5 +1,6 @@
 {
   "/community/page": "app/community/page.js",
   "/page": "app/page.js",
+  "/profile/page": "app/profile/page.js",
   "/user/[userId]/page": "app/user/[userId]/page.js"
 }

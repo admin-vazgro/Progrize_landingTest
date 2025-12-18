@@ -20208,6 +20208,11 @@ const configEnv = ("TURBOPACK compile-time value", {
             "protocol": ("TURBOPACK compile-time value", "https"),
             "hostname": ("TURBOPACK compile-time value", "randomuser.me"),
             "pathname": ("TURBOPACK compile-time value", "/api/portraits/**")
+        }),
+        ("TURBOPACK compile-time value", {
+            "protocol": ("TURBOPACK compile-time value", "https"),
+            "hostname": ("TURBOPACK compile-time value", "*.supabase.co"),
+            "pathname": ("TURBOPACK compile-time value", "/storage/v1/object/public/**")
         })
     ]),
     "localPatterns": ("TURBOPACK compile-time value", [
@@ -20569,6 +20574,11 @@ function getImageProps(imgProps) {
                     "protocol": ("TURBOPACK compile-time value", "https"),
                     "hostname": ("TURBOPACK compile-time value", "randomuser.me"),
                     "pathname": ("TURBOPACK compile-time value", "/api/portraits/**")
+                }),
+                ("TURBOPACK compile-time value", {
+                    "protocol": ("TURBOPACK compile-time value", "https"),
+                    "hostname": ("TURBOPACK compile-time value", "*.supabase.co"),
+                    "pathname": ("TURBOPACK compile-time value", "/storage/v1/object/public/**")
                 })
             ]),
             "localPatterns": ("TURBOPACK compile-time value", [
