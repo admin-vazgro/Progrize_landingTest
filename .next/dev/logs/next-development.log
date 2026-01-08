@@ -1,38 +1,9 @@
-[00:00:01.669] Server  LOG      ✓ Ready in 1324ms
-[00:00:04.363] Server  WARN    [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
-[00:00:04.777] Server  LOG      ○ Compiling / ...
-[00:00:07.404] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:07.422] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:07.664] Browser WARN    Image with src "/_next/static/media/logo.35068b4e.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+[00:00:01.522] Server  LOG      ✓ Ready in 1283ms
+[00:08:40.974] Server  WARN    [baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+[00:08:42.818] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:08:42.839] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:08:42.996] Browser WARN    Image with src "/_next/static/media/logo.35068b4e.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
 Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:00:07.664] Browser WARN    Image with src "/_next/static/media/proboy.fc71aa8d.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:07.683] Browser WARN    Image with src "/_next/static/media/logo.35068b4e.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+[00:08:42.996] Browser WARN    Image with src "/_next/static/media/proboy.fc71aa8d.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[00:08:43.099] Browser WARN    Image with src "/_next/static/media/progrizeschool.862fa6e1.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
 Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:00:07.683] Browser WARN    Image with src "/_next/static/media/proboy.fc71aa8d.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:07.683] Browser WARN    Image with src "/_next/static/media/progrizeschool.862fa6e1.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:00:07.763] Browser WARN    Image with src "/_next/static/media/progrizeschool.862fa6e1.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:07:21.564] Browser WARN    Follow count update failed: {"code":"PGRST202","details":"Searched for the function public.increment_follow_counts with parameters follower_id, following_id or with a single unnamed json/jsonb parameter, but no matches were found in the schema cache.","hint":"Perhaps you meant to call the function public.increment_event_comments","message":"Could not find the function public.increment_follow_counts(follower_id, following_id) in the schema cache"}
-[00:07:50.433] Browser ERROR   Error uploading avatar: {"message":"Bucket not found","name":"StorageApiError","status":400,"statusCode":"404"}
-[00:09:39.144] Browser ERROR   Error uploading avatar: {"message":"new row violates row-level security policy","name":"StorageApiError","status":400,"statusCode":"403"}
-[00:10:26.756] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:10:27.133] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:10:27.289] Browser WARN    Image with src "/_next/static/media/logo.35068b4e.svg" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:10:27.290] Browser WARN    Image with src "/_next/static/media/proboy.fc71aa8d.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:10:27.620] Browser WARN    Image with src "/_next/static/media/progrizeschool.862fa6e1.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
-Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
-[00:14:43.841] Browser LOG     Sending verification email to: hello@progrize.com
-[00:24:35.930] Browser ERROR   Error sending verification request: {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'message' column of 'verification_requests' in the schema cache"}
-[00:25:14.225] Browser ERROR   Error sending verification request: {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'message' column of 'verification_requests' in the schema cache"} {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'message' column of 'verification_requests' in the schema cache"}
-[00:31:00.006] Browser ERROR   Error sending verification request: {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'message' column of 'verification_requests' in the schema cache"} {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'message' column of 'verification_requests' in the schema cache"}
-[00:32:28.605] Browser ERROR   Error sending verification request: {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'user_email' column of 'verification_requests' in the schema cache"} {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'user_email' column of 'verification_requests' in the schema cache"}
-[00:33:45.531] Browser ERROR   Error sending verification request: {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'user_email' column of 'verification_requests' in the schema cache"} {"code":"PGRST204","details":null,"hint":null,"message":"Could not find the 'user_email' column of 'verification_requests' in the schema cache"}
-[00:39:27.852] Browser ERROR   Error sending email: {"context":{},"name":"FunctionsHttpError"}
-[00:52:49.601] Browser LOG     Sending verification email to: hello@progrize.com
-[00:53:05.688] Browser ERROR   Error sending email: {"context":{},"name":"FunctionsHttpError"}
-[00:54:28.308] Browser LOG     Sending verification email to: hello@progize.com
-[00:57:20.823] Browser WARN    Image with src "/_next/static/media/proboy.fc71aa8d.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:59:41.542] Browser LOG     Sending verification email to: progrize.app@gmail.com
-[01:04:48.404] Browser LOG     Sending verification email to: hello@progrize.com

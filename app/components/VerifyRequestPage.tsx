@@ -55,9 +55,17 @@ export default function VerifyRequestPage() {
         .from("verification_requests")
         .select("*")
         .eq("verification_token", token)
-        .single();
+        .maybeSingle();
 
-      if (requestError) throw requestError;
+      if (requestError) {
+        throw requestError;
+      }
+
+      if (!requestData) {
+        setError("Invalid or expired verification link");
+        setLoading(false);
+        return;
+      }
 
       if (requestData.status !== "pending") {
         setError(`This verification request has already been ${requestData.status}`);
@@ -119,7 +127,13 @@ export default function VerifyRequestPage() {
       });
     } catch (error) {
       console.error("Error loading verification details:", error);
-      setError("Failed to load verification details");
+      const details = {
+        message: (error as { message?: string })?.message,
+        code: (error as { code?: string })?.code,
+        details: (error as { details?: string })?.details,
+        hint: (error as { hint?: string })?.hint,
+      };
+      setError(details.message || "Failed to load verification details");
     } finally {
       setLoading(false);
     }
