@@ -92,7 +92,7 @@ export default function ExperienceCard({ experience, isOwner, onUpdate }: Experi
   };
 
   const getVerificationStatusBadge = () => {
-    if (experience.verified) {
+    if (experience.verified || verificationStatus === "verified") {
       return (
         <VerificationBadge
           verified={true}
@@ -197,7 +197,10 @@ export default function ExperienceCard({ experience, isOwner, onUpdate }: Experi
             >
               Edit
             </button>
-            {experience.hr_email && !experience.verified && verificationStatus !== "pending" && (
+            {experience.hr_email &&
+              !experience.verified &&
+              verificationStatus !== "pending" &&
+              verificationStatus !== "verified" && (
               <button
                 onClick={() => setRequestVerificationOpen(true)}
                 className="text-xs text-blue-600 hover:underline flex items-center gap-1"

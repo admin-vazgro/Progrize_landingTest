@@ -201,7 +201,10 @@ export default function EducationCard({ education, isOwner, onUpdate }: Educatio
             >
               Edit
             </button>
-            {education.admin_email && !education.verified && verificationStatus !== "pending" && (
+            {education.admin_email &&
+              !education.verified &&
+              verificationStatus !== "pending" &&
+              verificationStatus !== "verified" && (
               <button
                 onClick={() => setRequestVerificationOpen(true)}
                 className="text-xs text-blue-600 hover:underline flex items-center gap-1"
