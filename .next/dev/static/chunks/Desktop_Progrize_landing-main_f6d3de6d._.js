@@ -538,66 +538,90 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/lib/supabase.ts [app-client] (ecmascript)");
+(()=>{
+    const e = new Error("Cannot find module '@/lib/contants'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
 ;
 ;
-const EMPTY_FORM = {
-    professional_summary: "",
-    phone: "",
-    location: "",
-    job_preferences: [],
-    skills: [],
-    preferred_countries: [],
-    social_links: {
-        linkedin: "",
-        whatsapp: "",
-        meta: "",
-        instagram: ""
-    }
-};
+;
 function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
     _s();
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(EMPTY_FORM);
-    const [newJobPref, setNewJobPref] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
+        professional_summary: "",
+        phone: "",
+        phone_country_code: "+44",
+        location: "",
+        skills: [],
+        preferred_countries: [],
+        social_links: {
+            linkedin: "",
+            whatsapp: "",
+            meta: "",
+            instagram: ""
+        }
+    });
     const [newSkill, setNewSkill] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [newCountry, setNewCountry] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [filteredSkills, setFilteredSkills] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredCountries, setFilteredCountries] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredLocations, setFilteredLocations] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [showSkillDropdown, setShowSkillDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showCountryDropdown, setShowCountryDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showLocationDropdown, setShowLocationDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [errors, setErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "EditProfileModal.useEffect": ()=>{
-            if (!profile) {
-                setFormData(EMPTY_FORM);
-                return;
+            if (profile) {
+                setFormData({
+                    professional_summary: profile.professional_summary || "",
+                    phone: profile.phone || "",
+                    phone_country_code: profile.phone_country_code || "+44",
+                    location: profile.location || "",
+                    skills: profile.skills || [],
+                    preferred_countries: profile.preferred_countries || [],
+                    social_links: profile.social_links || {
+                        linkedin: "",
+                        whatsapp: "",
+                        meta: "",
+                        instagram: ""
+                    }
+                });
             }
-            setFormData({
-                professional_summary: profile.professional_summary ?? "",
-                phone: profile.phone ?? "",
-                location: profile.location ?? "",
-                job_preferences: profile.job_preferences ?? [],
-                skills: profile.skills ?? [],
-                preferred_countries: profile.preferred_countries ?? [],
-                social_links: {
-                    linkedin: profile.social_links?.linkedin ?? "",
-                    whatsapp: profile.social_links?.whatsapp ?? "",
-                    meta: profile.social_links?.meta ?? "",
-                    instagram: profile.social_links?.instagram ?? ""
-                }
-            });
         }
     }["EditProfileModal.useEffect"], [
         profile
     ]);
+    const validateForm = ()=>{
+        const newErrors = {};
+        // Validate professional summary
+        if (formData.professional_summary.trim().length < MIN_SUMMARY_CHARS) {
+            newErrors.professional_summary = `Professional summary must be at least ${MIN_SUMMARY_CHARS} characters`;
+        }
+        // Validate phone number
+        if (formData.phone && !/^\d{7,15}$/.test(formData.phone.replace(/\s/g, ""))) {
+            newErrors.phone = "Please enter a valid phone number";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
     const handleSubmit = async (e)=>{
         e.preventDefault();
-        if (!profile?.id) return;
+        if (!validateForm()) {
+            return;
+        }
         setLoading(true);
         try {
             const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("profiles").update({
                 professional_summary: formData.professional_summary,
                 phone: formData.phone,
+                phone_country_code: formData.phone_country_code,
                 location: formData.location,
-                job_preferences: formData.job_preferences,
                 skills: formData.skills,
                 preferred_countries: formData.preferred_countries,
                 social_links: formData.social_links
@@ -605,75 +629,96 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
             if (error) throw error;
             onSuccess();
             onClose();
-        } catch (err) {
-            console.error("Error updating profile:", err);
+        } catch (error) {
+            console.error("Error updating profile:", error);
             alert("Failed to update profile. Please try again.");
         } finally{
             setLoading(false);
         }
     };
-    const addJobPreference = ()=>{
-        const value = newJobPref.trim();
-        if (!value) return;
-        setFormData((prev)=>{
-            if (prev.job_preferences.some((j)=>j.toLowerCase() === value.toLowerCase())) return prev;
-            return {
-                ...prev,
-                job_preferences: [
-                    ...prev.job_preferences,
-                    value
-                ]
-            };
-        });
-        setNewJobPref("");
+    const handleSkillInput = (value)=>{
+        setNewSkill(value);
+        if (value.trim()) {
+            const filtered = SKILLS.filter((skill)=>skill.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredSkills(filtered);
+            setShowSkillDropdown(true);
+        } else {
+            setShowSkillDropdown(false);
+        }
     };
-    const removeJobPreference = (index)=>{
-        setFormData((prev)=>({
-                ...prev,
-                job_preferences: prev.job_preferences.filter((_, i)=>i !== index)
-            }));
-    };
-    const addSkill = ()=>{
-        const value = newSkill.trim();
-        if (!value) return;
-        setFormData((prev)=>{
-            if (prev.skills.some((s)=>s.toLowerCase() === value.toLowerCase())) return prev;
-            return {
-                ...prev,
+    const addSkill = (skill)=>{
+        if (skill.trim() && !formData.skills.includes(skill.trim())) {
+            // Validate that it's a real skill from the list
+            const isValidSkill = SKILLS.some((s)=>s.toLowerCase() === skill.toLowerCase());
+            if (!isValidSkill) {
+                alert("Please select a skill from the dropdown list");
+                return;
+            }
+            setFormData({
+                ...formData,
                 skills: [
-                    ...prev.skills,
-                    value
+                    ...formData.skills,
+                    skill.trim()
                 ]
-            };
-        });
-        setNewSkill("");
+            });
+            setNewSkill("");
+            setShowSkillDropdown(false);
+        }
     };
     const removeSkill = (index)=>{
-        setFormData((prev)=>({
-                ...prev,
-                skills: prev.skills.filter((_, i)=>i !== index)
-            }));
-    };
-    const addCountry = ()=>{
-        const value = newCountry.trim();
-        if (!value) return;
-        setFormData((prev)=>{
-            if (prev.preferred_countries.some((c)=>c.toLowerCase() === value.toLowerCase())) return prev;
-            return {
-                ...prev,
-                preferred_countries: [
-                    ...prev.preferred_countries,
-                    value
-                ]
-            };
+        setFormData({
+            ...formData,
+            skills: formData.skills.filter((_, i)=>i !== index)
         });
-        setNewCountry("");
+    };
+    const handleCountryInput = (value)=>{
+        setNewCountry(value);
+        if (value.trim()) {
+            const filtered = COUNTRIES.filter((country)=>country.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredCountries(filtered);
+            setShowCountryDropdown(true);
+        } else {
+            setShowCountryDropdown(false);
+        }
+    };
+    const addCountry = (country)=>{
+        if (country.trim() && !formData.preferred_countries.includes(country.trim())) {
+            setFormData({
+                ...formData,
+                preferred_countries: [
+                    ...formData.preferred_countries,
+                    country.trim()
+                ]
+            });
+            setNewCountry("");
+            setShowCountryDropdown(false);
+        }
     };
     const removeCountry = (index)=>{
-        setFormData((prev)=>({
-                ...prev,
-                preferred_countries: prev.preferred_countries.filter((_, i)=>i !== index)
-            }));
+        setFormData({
+            ...formData,
+            preferred_countries: formData.preferred_countries.filter((_, i)=>i !== index)
+        });
+    };
+    const handleLocationInput = (value)=>{
+        setFormData({
+            ...formData,
+            location: value
+        });
+        if (value.trim()) {
+            const filtered = CITIES.filter((city)=>city.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredLocations(filtered);
+            setShowLocationDropdown(true);
+        } else {
+            setShowLocationDropdown(false);
+        }
+    };
+    const selectLocation = (location)=>{
+        setFormData({
+            ...formData,
+            location
+        });
+        setShowLocationDropdown(false);
     };
     if (!isOpen) return null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -689,7 +734,7 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                             children: "Edit Profile"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 197,
+                            lineNumber: 219,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -707,23 +752,23 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                     d: "M6 18L18 6M6 6l12 12"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 200,
+                                    lineNumber: 225,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                lineNumber: 199,
+                                lineNumber: 224,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 198,
+                            lineNumber: 220,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                    lineNumber: 196,
+                    lineNumber: 218,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -734,30 +779,73 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
-                                    children: "Professional Summary"
-                                }, void 0, false, {
+                                    children: [
+                                        "Professional Summary *",
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-xs text-gray-500 ml-2",
+                                            children: [
+                                                "(Minimum ",
+                                                MIN_SUMMARY_CHARS,
+                                                " characters)"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                            lineNumber: 235,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 208,
+                                    lineNumber: 233,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
                                     value: formData.professional_summary,
-                                    onChange: (e)=>setFormData((prev)=>({
-                                                ...prev,
-                                                professional_summary: e.target.value
-                                            })),
+                                    onChange: (e)=>setFormData({
+                                            ...formData,
+                                            professional_summary: e.target.value
+                                        }),
                                     rows: 4,
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm ${errors.professional_summary ? "border-red-500" : "border-gray-300"}`,
                                     placeholder: "Tell us about your professional background..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 211,
+                                    lineNumber: 239,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex justify-between mt-1",
+                                    children: [
+                                        errors.professional_summary && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500",
+                                            children: errors.professional_summary
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                            lineNumber: 250,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-gray-500 ml-auto",
+                                            children: [
+                                                formData.professional_summary.length,
+                                                " / ",
+                                                MIN_SUMMARY_CHARS
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                            lineNumber: 252,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                    lineNumber: 248,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 207,
+                            lineNumber: 232,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -770,143 +858,121 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                             children: "Phone"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 225,
+                                            lineNumber: 261,
                                             columnNumber: 15
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            type: "tel",
-                                            value: formData.phone,
-                                            onChange: (e)=>setFormData((prev)=>({
-                                                        ...prev,
-                                                        phone: e.target.value
-                                                    })),
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                            placeholder: "+44 7768188691"
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex gap-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
+                                                    value: formData.phone_country_code,
+                                                    onChange: (e)=>setFormData({
+                                                            ...formData,
+                                                            phone_country_code: e.target.value
+                                                        }),
+                                                    className: "px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                                    children: COUNTRY_CODES.map((item)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
+                                                            value: item.code,
+                                                            children: [
+                                                                item.flag,
+                                                                " ",
+                                                                item.code
+                                                            ]
+                                                        }, item.code, true, {
+                                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                            lineNumber: 271,
+                                                            columnNumber: 21
+                                                        }, this))
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 265,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    type: "tel",
+                                                    value: formData.phone,
+                                                    onChange: (e)=>setFormData({
+                                                            ...formData,
+                                                            phone: e.target.value
+                                                        }),
+                                                    className: `flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm ${errors.phone ? "border-red-500" : "border-gray-300"}`,
+                                                    placeholder: "7768188691"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 276,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                            lineNumber: 264,
+                                            columnNumber: 15
+                                        }, this),
+                                        errors.phone && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.phone
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 226,
-                                            columnNumber: 15
+                                            lineNumber: 287,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 224,
+                                    lineNumber: 260,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "relative",
                                     children: [
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                             className: "block text-sm font-medium text-gray-700 mb-2",
                                             children: "Location"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 235,
+                                            lineNumber: 291,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                             type: "text",
                                             value: formData.location,
-                                            onChange: (e)=>setFormData((prev)=>({
-                                                        ...prev,
-                                                        location: e.target.value
-                                                    })),
+                                            onChange: (e)=>handleLocationInput(e.target.value),
+                                            onFocus: ()=>formData.location && setShowLocationDropdown(true),
+                                            onBlur: ()=>setTimeout(()=>setShowLocationDropdown(false), 200),
                                             className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                            placeholder: "London"
+                                            placeholder: "Start typing city name..."
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 238,
-                                            columnNumber: 15
-                                        }, this)
-                                    ]
-                                }, void 0, true, {
-                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 234,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 223,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                    className: "block text-sm font-medium text-gray-700 mb-2",
-                                    children: "Job Preferences"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 252,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex gap-2 mb-2",
-                                    children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            type: "text",
-                                            value: newJobPref,
-                                            onChange: (e)=>setNewJobPref(e.target.value),
-                                            onKeyDown: (e)=>{
-                                                if (e.key === "Enter") {
-                                                    e.preventDefault();
-                                                    addJobPreference();
-                                                }
-                                            },
-                                            className: "flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                            placeholder: "e.g., Senior Product Designer"
-                                        }, void 0, false, {
-                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 257,
+                                            lineNumber: 294,
                                             columnNumber: 15
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "button",
-                                            onClick: addJobPreference,
-                                            className: "px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition",
-                                            children: "Add"
+                                        showLocationDropdown && filteredLocations.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                            children: filteredLocations.map((location)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>selectLocation(location),
+                                                    className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                                    children: location
+                                                }, location, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 306,
+                                                    columnNumber: 21
+                                                }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 270,
-                                            columnNumber: 15
+                                            lineNumber: 304,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 256,
-                                    columnNumber: 13
-                                }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex flex-wrap gap-2",
-                                    children: formData.job_preferences.map((job, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                            className: "px-3 py-1 bg-[#d4af37] text-[#162f16] rounded-full text-xs font-medium flex items-center gap-2",
-                                            children: [
-                                                job,
-                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                    type: "button",
-                                                    onClick: ()=>removeJobPreference(index),
-                                                    className: "hover:text-red-600",
-                                                    "aria-label": `Remove ${job}`,
-                                                    children: "×"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                                    lineNumber: 286,
-                                                    columnNumber: 19
-                                                }, this)
-                                            ]
-                                        }, `${job}-${index}`, true, {
-                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 281,
-                                            columnNumber: 17
-                                        }, this))
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 279,
+                                    lineNumber: 290,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 251,
+                            lineNumber: 259,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -916,43 +982,65 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                     children: "Skills"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 301,
+                                    lineNumber: 322,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex gap-2 mb-2",
+                                    className: "relative",
                                     children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            type: "text",
-                                            value: newSkill,
-                                            onChange: (e)=>setNewSkill(e.target.value),
-                                            onKeyDown: (e)=>{
-                                                if (e.key === "Enter") {
-                                                    e.preventDefault();
-                                                    addSkill();
-                                                }
-                                            },
-                                            className: "flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                            placeholder: "e.g., Illustrator"
-                                        }, void 0, false, {
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex gap-2 mb-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    type: "text",
+                                                    value: newSkill,
+                                                    onChange: (e)=>handleSkillInput(e.target.value),
+                                                    onFocus: ()=>newSkill && setShowSkillDropdown(true),
+                                                    onBlur: ()=>setTimeout(()=>setShowSkillDropdown(false), 200),
+                                                    className: "flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                                    placeholder: "Start typing skill name..."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 327,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>addSkill(newSkill),
+                                                    className: "px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition",
+                                                    children: "Add"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 336,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 304,
+                                            lineNumber: 326,
                                             columnNumber: 15
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "button",
-                                            onClick: addSkill,
-                                            className: "px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition",
-                                            children: "Add"
+                                        showSkillDropdown && filteredSkills.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                            children: filteredSkills.map((skill)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>addSkill(skill),
+                                                    className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                                    children: skill
+                                                }, skill, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 347,
+                                                    columnNumber: 21
+                                                }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 317,
-                                            columnNumber: 15
+                                            lineNumber: 345,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 303,
+                                    lineNumber: 325,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -965,28 +1053,27 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                                     type: "button",
                                                     onClick: ()=>removeSkill(index),
                                                     className: "hover:text-red-600",
-                                                    "aria-label": `Remove ${skill}`,
                                                     children: "×"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                                    lineNumber: 333,
+                                                    lineNumber: 366,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
-                                        }, `${skill}-${index}`, true, {
+                                        }, index, true, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 328,
+                                            lineNumber: 361,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 326,
+                                    lineNumber: 359,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 300,
+                            lineNumber: 321,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -996,43 +1083,65 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                     children: "Preferred Countries"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 348,
+                                    lineNumber: 380,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    className: "flex gap-2 mb-2",
+                                    className: "relative",
                                     children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                            type: "text",
-                                            value: newCountry,
-                                            onChange: (e)=>setNewCountry(e.target.value),
-                                            onKeyDown: (e)=>{
-                                                if (e.key === "Enter") {
-                                                    e.preventDefault();
-                                                    addCountry();
-                                                }
-                                            },
-                                            className: "flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                            placeholder: "e.g., United Kingdom"
-                                        }, void 0, false, {
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex gap-2 mb-2",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    type: "text",
+                                                    value: newCountry,
+                                                    onChange: (e)=>handleCountryInput(e.target.value),
+                                                    onFocus: ()=>newCountry && setShowCountryDropdown(true),
+                                                    onBlur: ()=>setTimeout(()=>setShowCountryDropdown(false), 200),
+                                                    className: "flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                                    placeholder: "Start typing country name..."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 385,
+                                                    columnNumber: 17
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>addCountry(newCountry),
+                                                    className: "px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition",
+                                                    children: "Add"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 394,
+                                                    columnNumber: 17
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 353,
+                                            lineNumber: 384,
                                             columnNumber: 15
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                            type: "button",
-                                            onClick: addCountry,
-                                            className: "px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition",
-                                            children: "Add"
+                                        showCountryDropdown && filteredCountries.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                            children: filteredCountries.map((country)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>addCountry(country),
+                                                    className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                                    children: country
+                                                }, country, false, {
+                                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
+                                                    lineNumber: 405,
+                                                    columnNumber: 21
+                                                }, this))
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 366,
-                                            columnNumber: 15
+                                            lineNumber: 403,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 352,
+                                    lineNumber: 383,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1045,28 +1154,27 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                                     type: "button",
                                                     onClick: ()=>removeCountry(index),
                                                     className: "hover:text-red-600",
-                                                    "aria-label": `Remove ${country}`,
                                                     children: "×"
                                                 }, void 0, false, {
                                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                                    lineNumber: 382,
+                                                    lineNumber: 424,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
-                                        }, `${country}-${index}`, true, {
+                                        }, index, true, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 377,
+                                            lineNumber: 419,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 375,
+                                    lineNumber: 417,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 347,
+                            lineNumber: 379,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1076,7 +1184,7 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                     children: "Social Links"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 397,
+                                    lineNumber: 438,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1085,81 +1193,81 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                             type: "url",
                                             value: formData.social_links.linkedin,
-                                            onChange: (e)=>setFormData((prev)=>({
-                                                        ...prev,
-                                                        social_links: {
-                                                            ...prev.social_links,
-                                                            linkedin: e.target.value
-                                                        }
-                                                    })),
+                                            onChange: (e)=>setFormData({
+                                                    ...formData,
+                                                    social_links: {
+                                                        ...formData.social_links,
+                                                        linkedin: e.target.value
+                                                    }
+                                                }),
                                             className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
                                             placeholder: "LinkedIn URL"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 402,
+                                            lineNumber: 442,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                             type: "tel",
                                             value: formData.social_links.whatsapp,
-                                            onChange: (e)=>setFormData((prev)=>({
-                                                        ...prev,
-                                                        social_links: {
-                                                            ...prev.social_links,
-                                                            whatsapp: e.target.value
-                                                        }
-                                                    })),
+                                            onChange: (e)=>setFormData({
+                                                    ...formData,
+                                                    social_links: {
+                                                        ...formData.social_links,
+                                                        whatsapp: e.target.value
+                                                    }
+                                                }),
                                             className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
                                             placeholder: "WhatsApp Number (e.g., 447768188691)"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 415,
+                                            lineNumber: 452,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                             type: "url",
                                             value: formData.social_links.meta,
-                                            onChange: (e)=>setFormData((prev)=>({
-                                                        ...prev,
-                                                        social_links: {
-                                                            ...prev.social_links,
-                                                            meta: e.target.value
-                                                        }
-                                                    })),
+                                            onChange: (e)=>setFormData({
+                                                    ...formData,
+                                                    social_links: {
+                                                        ...formData.social_links,
+                                                        meta: e.target.value
+                                                    }
+                                                }),
                                             className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
                                             placeholder: "Facebook/Meta URL"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 428,
+                                            lineNumber: 462,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                             type: "url",
                                             value: formData.social_links.instagram,
-                                            onChange: (e)=>setFormData((prev)=>({
-                                                        ...prev,
-                                                        social_links: {
-                                                            ...prev.social_links,
-                                                            instagram: e.target.value
-                                                        }
-                                                    })),
+                                            onChange: (e)=>setFormData({
+                                                    ...formData,
+                                                    social_links: {
+                                                        ...formData.social_links,
+                                                        instagram: e.target.value
+                                                    }
+                                                }),
                                             className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
                                             placeholder: "Instagram URL"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                            lineNumber: 441,
+                                            lineNumber: 472,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 401,
+                                    lineNumber: 441,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 396,
+                            lineNumber: 437,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1167,12 +1275,12 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     type: "submit",
-                                    disabled: loading || !profile?.id,
+                                    disabled: loading,
                                     className: "flex-1 px-4 py-2 bg-[#162f16] text-white rounded-lg font-medium hover:bg-[#0f2310] transition disabled:opacity-50",
                                     children: loading ? "Saving..." : "Save Changes"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 458,
+                                    lineNumber: 487,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1182,34 +1290,34 @@ function EditProfileModal({ isOpen, onClose, profile, onSuccess }) {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                                    lineNumber: 466,
+                                    lineNumber: 494,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                            lineNumber: 457,
+                            lineNumber: 486,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-                    lineNumber: 205,
+                    lineNumber: 230,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-            lineNumber: 195,
+            lineNumber: 217,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditProfileModal.tsx",
-        lineNumber: 194,
+        lineNumber: 216,
         columnNumber: 5
     }, this);
 }
-_s(EditProfileModal, "lLMAV/tIT7aw6L7Bj60qvDOPem4=");
+_s(EditProfileModal, "xnWyr4zxuelRLdcJf4QgV3bjg+A=");
 _c = EditProfileModal;
 var _c;
 __turbopack_context__.k.register(_c, "EditProfileModal");
@@ -1227,9 +1335,15 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/lib/supabase.ts [app-client] (ecmascript)");
+(()=>{
+    const e = new Error("Cannot find module '@/lib/contants'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
@@ -1237,49 +1351,147 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         company_name: "",
-        company_logo: "",
         position: "",
         location: "",
         start_date: "",
         end_date: "",
         is_current: false,
-        description: ""
+        description: "",
+        hr_email: ""
     });
+    const [errors, setErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const [filteredPositions, setFilteredPositions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredCompanies, setFilteredCompanies] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredLocations, setFilteredLocations] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [showPositionDropdown, setShowPositionDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showCompanyDropdown, setShowCompanyDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showLocationDropdown, setShowLocationDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showAddCompany, setShowAddCompany] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "EditExperienceModal.useEffect": ()=>{
             if (experience) {
                 setFormData({
                     company_name: experience.company_name || "",
-                    company_logo: experience.company_logo || "",
                     position: experience.position || "",
                     location: experience.location || "",
                     start_date: experience.start_date || "",
                     end_date: experience.end_date || "",
                     is_current: experience.is_current || false,
-                    description: experience.description || ""
+                    description: experience.description || "",
+                    hr_email: experience.hr_email || ""
                 });
             }
         }
     }["EditExperienceModal.useEffect"], [
         experience
     ]);
+    const validateDates = ()=>{
+        const newErrors = {};
+        const today = new Date();
+        const startDate = new Date(formData.start_date);
+        const endDate = formData.end_date ? new Date(formData.end_date) : null;
+        if (startDate > today) {
+            newErrors.start_date = "Start date cannot be in the future";
+        }
+        if (endDate && endDate < startDate) {
+            newErrors.end_date = "End date cannot be before start date";
+        }
+        if (endDate && endDate > today && !formData.is_current) {
+            newErrors.end_date = "End date cannot be in the future";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
     const handleSubmit = async (e)=>{
         e.preventDefault();
+        if (!validateDates()) {
+            return;
+        }
         setLoading(true);
         try {
             const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("experiences").update({
-                ...formData,
-                end_date: formData.is_current ? null : formData.end_date
+                company_name: formData.company_name,
+                position: formData.position,
+                location: formData.location,
+                start_date: formData.start_date,
+                end_date: formData.is_current ? null : formData.end_date,
+                is_current: formData.is_current,
+                description: formData.description,
+                hr_email: formData.hr_email
             }).eq("id", experience.id);
             if (error) throw error;
             onSuccess();
             onClose();
+            setErrors({});
         } catch (error) {
             console.error("Error updating experience:", error);
             alert("Failed to update experience. Please try again.");
         } finally{
             setLoading(false);
         }
+    };
+    const handlePositionInput = (value)=>{
+        setFormData({
+            ...formData,
+            position: value
+        });
+        if (value.trim()) {
+            const filtered = JOB_TITLES.filter((title)=>title.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredPositions(filtered);
+            setShowPositionDropdown(true);
+        } else {
+            setShowPositionDropdown(false);
+        }
+    };
+    const selectPosition = (position)=>{
+        setFormData({
+            ...formData,
+            position
+        });
+        setShowPositionDropdown(false);
+    };
+    const handleCompanyInput = (value)=>{
+        setFormData({
+            ...formData,
+            company_name: value
+        });
+        if (value.trim()) {
+            const filtered = COMPANIES.filter((company)=>company.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredCompanies(filtered);
+            setShowCompanyDropdown(true);
+            setShowAddCompany(filtered.length === 0 || !filtered.some((c)=>c.toLowerCase() === value.toLowerCase()));
+        } else {
+            setShowCompanyDropdown(false);
+            setShowAddCompany(false);
+        }
+    };
+    const selectCompany = (company)=>{
+        setFormData({
+            ...formData,
+            company_name: company
+        });
+        setShowCompanyDropdown(false);
+        setShowAddCompany(false);
+    };
+    const handleLocationInput = (value)=>{
+        setFormData({
+            ...formData,
+            location: value
+        });
+        if (value.trim()) {
+            const filtered = CITIES.filter((city)=>city.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredLocations(filtered);
+            setShowLocationDropdown(true);
+        } else {
+            setShowLocationDropdown(false);
+        }
+    };
+    const selectLocation = (location)=>{
+        setFormData({
+            ...formData,
+            location
+        });
+        setShowLocationDropdown(false);
     };
     if (!isOpen) return null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1295,7 +1507,7 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                             children: "Edit Experience"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 84,
+                            lineNumber: 184,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1313,23 +1525,23 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                     d: "M6 18L18 6M6 6l12 12"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 90,
+                                    lineNumber: 190,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                lineNumber: 89,
+                                lineNumber: 189,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 85,
+                            lineNumber: 185,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                    lineNumber: 83,
+                    lineNumber: 183,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -1337,121 +1549,165 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                     className: "p-6 space-y-4",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Position *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 97,
+                                    lineNumber: 198,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     required: true,
                                     value: formData.position,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            position: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    onChange: (e)=>handlePositionInput(e.target.value),
+                                    onFocus: ()=>formData.position && setShowPositionDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowPositionDropdown(false), 200),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Start typing position..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 100,
+                                    lineNumber: 201,
                                     columnNumber: 13
+                                }, this),
+                                showPositionDropdown && filteredPositions.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredPositions.map((position)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectPosition(position),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: position
+                                        }, position, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                            lineNumber: 214,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                    lineNumber: 212,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 96,
+                            lineNumber: 197,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Company Name *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 110,
+                                    lineNumber: 229,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     required: true,
                                     value: formData.company_name,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            company_name: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    onChange: (e)=>handleCompanyInput(e.target.value),
+                                    onFocus: ()=>formData.company_name && setShowCompanyDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowCompanyDropdown(false), 200),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Start typing company name..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 113,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 109,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                    className: "block text-sm font-medium text-gray-700 mb-2",
-                                    children: "Company Logo URL"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 123,
+                                    lineNumber: 232,
                                     columnNumber: 13
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                    type: "url",
-                                    value: formData.company_logo,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            company_logo: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
-                                }, void 0, false, {
+                                showCompanyDropdown && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: [
+                                        filteredCompanies.map((company)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                type: "button",
+                                                onClick: ()=>selectCompany(company),
+                                                className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                                children: company
+                                            }, company, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                                lineNumber: 245,
+                                                columnNumber: 19
+                                            }, this)),
+                                        showAddCompany && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>{
+                                                setShowCompanyDropdown(false);
+                                                setShowAddCompany(false);
+                                            },
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-[#162f16] font-medium border-t border-gray-200",
+                                            children: [
+                                                '+ Add "',
+                                                formData.company_name,
+                                                '"'
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                            lineNumber: 255,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 126,
-                                    columnNumber: 13
+                                    lineNumber: 243,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 122,
+                            lineNumber: 228,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Location"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 135,
+                                    lineNumber: 272,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     value: formData.location,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            location: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    onChange: (e)=>handleLocationInput(e.target.value),
+                                    onFocus: ()=>formData.location && setShowLocationDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowLocationDropdown(false), 200),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Start typing city name..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 138,
+                                    lineNumber: 275,
                                     columnNumber: 13
+                                }, this),
+                                showLocationDropdown && filteredLocations.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredLocations.map((location)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectLocation(location),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: location
+                                        }, location, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                            lineNumber: 287,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                    lineNumber: 285,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 134,
+                            lineNumber: 271,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1464,7 +1720,7 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                             children: "Start Date *"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                            lineNumber: 148,
+                                            lineNumber: 303,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1475,16 +1731,25 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                                     ...formData,
                                                     start_date: e.target.value
                                                 }),
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                            max: new Date().toISOString().split('T')[0],
+                                            className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm ${errors.start_date ? "border-red-500" : "border-gray-300"}`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                            lineNumber: 151,
+                                            lineNumber: 306,
                                             columnNumber: 15
+                                        }, this),
+                                        errors.start_date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.start_date
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                            lineNumber: 317,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 147,
+                                    lineNumber: 302,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1494,7 +1759,7 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                             children: "End Date"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                            lineNumber: 160,
+                                            lineNumber: 321,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1505,22 +1770,31 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                                     end_date: e.target.value
                                                 }),
                                             disabled: formData.is_current,
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm disabled:bg-gray-100"
+                                            max: new Date().toISOString().split('T')[0],
+                                            className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm disabled:bg-gray-100 ${errors.end_date ? "border-red-500" : "border-gray-300"}`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                            lineNumber: 163,
+                                            lineNumber: 324,
                                             columnNumber: 15
+                                        }, this),
+                                        errors.end_date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.end_date
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                            lineNumber: 335,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 159,
+                                    lineNumber: 320,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 146,
+                            lineNumber: 301,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1538,7 +1812,7 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                     className: "w-4 h-4 text-[#162f16] border-gray-300 rounded focus:ring-[#162f16]"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 174,
+                                    lineNumber: 341,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1547,13 +1821,53 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                     children: "I currently work here"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 181,
+                                    lineNumber: 348,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 173,
+                            lineNumber: 340,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                    className: "block text-sm font-medium text-gray-700 mb-2",
+                                    children: [
+                                        "HR/Company Email (Optional)",
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-xs text-gray-500 ml-2",
+                                            children: "For verification badge"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                            lineNumber: 357,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                    lineNumber: 355,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    type: "email",
+                                    value: formData.hr_email,
+                                    onChange: (e)=>setFormData({
+                                            ...formData,
+                                            hr_email: e.target.value
+                                        }),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "hr@company.com"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                                    lineNumber: 359,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
+                            lineNumber: 354,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1563,7 +1877,7 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                     children: "Description"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 187,
+                                    lineNumber: 370,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -1573,16 +1887,17 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                             description: e.target.value
                                         }),
                                     rows: 3,
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Describe your role and achievements..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 190,
+                                    lineNumber: 373,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 186,
+                            lineNumber: 369,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1595,7 +1910,7 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                     children: loading ? "Saving..." : "Save Changes"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 199,
+                                    lineNumber: 383,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1605,34 +1920,34 @@ function EditExperienceModal({ isOpen, onClose, experience, onSuccess }) {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                                    lineNumber: 206,
+                                    lineNumber: 390,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                            lineNumber: 198,
+                            lineNumber: 382,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-                    lineNumber: 95,
+                    lineNumber: 195,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-            lineNumber: 82,
+            lineNumber: 182,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditExperienceModal.tsx",
-        lineNumber: 81,
+        lineNumber: 181,
         columnNumber: 5
     }, this);
 }
-_s(EditExperienceModal, "VQ8ds3pUROtUlJPmiDv5BxoiVVI=");
+_s(EditExperienceModal, "weovFr+WRfW53yBmF7GYTRvI0nU=");
 _c = EditExperienceModal;
 var _c;
 __turbopack_context__.k.register(_c, "EditExperienceModal");
@@ -1889,9 +2204,15 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/lib/supabase.ts [app-client] (ecmascript)");
+(()=>{
+    const e = new Error("Cannot find module '@/lib/contants'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
@@ -1899,51 +2220,172 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         institution_name: "",
-        institution_logo: "",
         degree: "",
         field_of_study: "",
         location: "",
         start_date: "",
         end_date: "",
         is_current: false,
-        description: ""
+        description: "",
+        admin_email: ""
     });
+    const [errors, setErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const [filteredDegrees, setFilteredDegrees] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredFields, setFilteredFields] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredInstitutions, setFilteredInstitutions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredLocations, setFilteredLocations] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [showDegreeDropdown, setShowDegreeDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showFieldDropdown, setShowFieldDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showInstitutionDropdown, setShowInstitutionDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showLocationDropdown, setShowLocationDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showAddInstitution, setShowAddInstitution] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "EditEducationModal.useEffect": ()=>{
             if (education) {
                 setFormData({
                     institution_name: education.institution_name || "",
-                    institution_logo: education.institution_logo || "",
                     degree: education.degree || "",
                     field_of_study: education.field_of_study || "",
                     location: education.location || "",
                     start_date: education.start_date || "",
                     end_date: education.end_date || "",
                     is_current: education.is_current || false,
-                    description: education.description || ""
+                    description: education.description || "",
+                    admin_email: education.admin_email || ""
                 });
             }
         }
     }["EditEducationModal.useEffect"], [
         education
     ]);
+    const validateDates = ()=>{
+        const newErrors = {};
+        const today = new Date();
+        const startDate = new Date(formData.start_date);
+        const endDate = formData.end_date ? new Date(formData.end_date) : null;
+        if (startDate > today) {
+            newErrors.start_date = "Start date cannot be in the future";
+        }
+        if (endDate && endDate < startDate) {
+            newErrors.end_date = "End date cannot be before start date";
+        }
+        if (endDate && endDate > today && !formData.is_current) {
+            newErrors.end_date = "End date cannot be in the future";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
     const handleSubmit = async (e)=>{
         e.preventDefault();
+        if (!validateDates()) {
+            return;
+        }
         setLoading(true);
         try {
             const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("education").update({
-                ...formData,
-                end_date: formData.is_current ? null : formData.end_date
+                institution_name: formData.institution_name,
+                degree: formData.degree,
+                field_of_study: formData.field_of_study,
+                location: formData.location,
+                start_date: formData.start_date,
+                end_date: formData.is_current ? null : formData.end_date,
+                is_current: formData.is_current,
+                description: formData.description,
+                admin_email: formData.admin_email
             }).eq("id", education.id);
             if (error) throw error;
             onSuccess();
             onClose();
+            setErrors({});
         } catch (error) {
             console.error("Error updating education:", error);
             alert("Failed to update education. Please try again.");
         } finally{
             setLoading(false);
         }
+    };
+    const handleDegreeInput = (value)=>{
+        setFormData({
+            ...formData,
+            degree: value
+        });
+        if (value.trim()) {
+            const filtered = DEGREES.filter((degree)=>degree.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredDegrees(filtered);
+            setShowDegreeDropdown(true);
+        } else {
+            setShowDegreeDropdown(false);
+        }
+    };
+    const selectDegree = (degree)=>{
+        setFormData({
+            ...formData,
+            degree
+        });
+        setShowDegreeDropdown(false);
+    };
+    const handleFieldInput = (value)=>{
+        setFormData({
+            ...formData,
+            field_of_study: value
+        });
+        if (value.trim()) {
+            const filtered = FIELDS_OF_STUDY.filter((field)=>field.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredFields(filtered);
+            setShowFieldDropdown(true);
+        } else {
+            setShowFieldDropdown(false);
+        }
+    };
+    const selectField = (field)=>{
+        setFormData({
+            ...formData,
+            field_of_study: field
+        });
+        setShowFieldDropdown(false);
+    };
+    const handleInstitutionInput = (value)=>{
+        setFormData({
+            ...formData,
+            institution_name: value
+        });
+        if (value.trim()) {
+            const filtered = INSTITUTIONS.filter((institution)=>institution.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredInstitutions(filtered);
+            setShowInstitutionDropdown(true);
+            setShowAddInstitution(filtered.length === 0 || !filtered.some((i)=>i.toLowerCase() === value.toLowerCase()));
+        } else {
+            setShowInstitutionDropdown(false);
+            setShowAddInstitution(false);
+        }
+    };
+    const selectInstitution = (institution)=>{
+        setFormData({
+            ...formData,
+            institution_name: institution
+        });
+        setShowInstitutionDropdown(false);
+        setShowAddInstitution(false);
+    };
+    const handleLocationInput = (value)=>{
+        setFormData({
+            ...formData,
+            location: value
+        });
+        if (value.trim()) {
+            const filtered = CITIES.filter((city)=>city.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredLocations(filtered);
+            setShowLocationDropdown(true);
+        } else {
+            setShowLocationDropdown(false);
+        }
+    };
+    const selectLocation = (location)=>{
+        setFormData({
+            ...formData,
+            location
+        });
+        setShowLocationDropdown(false);
     };
     if (!isOpen) return null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1959,7 +2401,7 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                             children: "Edit Education"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 87,
+                            lineNumber: 208,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1977,23 +2419,23 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                     d: "M6 18L18 6M6 6l12 12"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 93,
+                                    lineNumber: 214,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                lineNumber: 92,
+                                lineNumber: 213,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 88,
+                            lineNumber: 209,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                    lineNumber: 86,
+                    lineNumber: 207,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -2001,150 +2443,213 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                     className: "p-6 space-y-4",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Degree *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 100,
+                                    lineNumber: 222,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     required: true,
                                     value: formData.degree,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            degree: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    onChange: (e)=>handleDegreeInput(e.target.value),
+                                    onFocus: ()=>formData.degree && setShowDegreeDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowDegreeDropdown(false), 200),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Start typing degree..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 103,
+                                    lineNumber: 225,
                                     columnNumber: 13
+                                }, this),
+                                showDegreeDropdown && filteredDegrees.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredDegrees.map((degree)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectDegree(degree),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: degree
+                                        }, degree, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                            lineNumber: 238,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                    lineNumber: 236,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 99,
+                            lineNumber: 221,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Institution Name *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 113,
+                                    lineNumber: 253,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     required: true,
                                     value: formData.institution_name,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            institution_name: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    onChange: (e)=>handleInstitutionInput(e.target.value),
+                                    onFocus: ()=>formData.institution_name && setShowInstitutionDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowInstitutionDropdown(false), 200),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Start typing institution name..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 116,
+                                    lineNumber: 256,
                                     columnNumber: 13
+                                }, this),
+                                showInstitutionDropdown && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: [
+                                        filteredInstitutions.map((institution)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                type: "button",
+                                                onClick: ()=>selectInstitution(institution),
+                                                className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                                children: institution
+                                            }, institution, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                                lineNumber: 269,
+                                                columnNumber: 19
+                                            }, this)),
+                                        showAddInstitution && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>{
+                                                setShowInstitutionDropdown(false);
+                                                setShowAddInstitution(false);
+                                            },
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-[#162f16] font-medium border-t border-gray-200",
+                                            children: [
+                                                '+ Add "',
+                                                formData.institution_name,
+                                                '"'
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                            lineNumber: 279,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                    lineNumber: 267,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 112,
+                            lineNumber: 252,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
-                                    children: "Field of Study"
+                                    children: "Field of Study *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 126,
+                                    lineNumber: 296,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
+                                    required: true,
                                     value: formData.field_of_study,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            field_of_study: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    onChange: (e)=>handleFieldInput(e.target.value),
+                                    onFocus: ()=>formData.field_of_study && setShowFieldDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowFieldDropdown(false), 200),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Start typing field of study..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 129,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 125,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                    className: "block text-sm font-medium text-gray-700 mb-2",
-                                    children: "Institution Logo URL"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 138,
+                                    lineNumber: 299,
                                     columnNumber: 13
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                    type: "url",
-                                    value: formData.institution_logo,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            institution_logo: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                showFieldDropdown && filteredFields.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredFields.map((field)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectField(field),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: field
+                                        }, field, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                            lineNumber: 312,
+                                            columnNumber: 19
+                                        }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 141,
-                                    columnNumber: 13
+                                    lineNumber: 310,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 137,
+                            lineNumber: 295,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Location"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 150,
+                                    lineNumber: 327,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     value: formData.location,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            location: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    onChange: (e)=>handleLocationInput(e.target.value),
+                                    onFocus: ()=>formData.location && setShowLocationDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowLocationDropdown(false), 200),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Start typing city name..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 153,
+                                    lineNumber: 330,
                                     columnNumber: 13
+                                }, this),
+                                showLocationDropdown && filteredLocations.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredLocations.map((location)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectLocation(location),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: location
+                                        }, location, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                            lineNumber: 342,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                    lineNumber: 340,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 149,
+                            lineNumber: 326,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2157,7 +2662,7 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                             children: "Start Date *"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                            lineNumber: 163,
+                                            lineNumber: 358,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2168,16 +2673,25 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                                     ...formData,
                                                     start_date: e.target.value
                                                 }),
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                            max: new Date().toISOString().split('T')[0],
+                                            className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm ${errors.start_date ? "border-red-500" : "border-gray-300"}`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                            lineNumber: 166,
+                                            lineNumber: 361,
                                             columnNumber: 15
+                                        }, this),
+                                        errors.start_date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.start_date
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                            lineNumber: 372,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 162,
+                                    lineNumber: 357,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2187,7 +2701,7 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                             children: "End Date"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                            lineNumber: 175,
+                                            lineNumber: 376,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2198,22 +2712,31 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                                     end_date: e.target.value
                                                 }),
                                             disabled: formData.is_current,
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm disabled:bg-gray-100"
+                                            max: new Date().toISOString().split('T')[0],
+                                            className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm disabled:bg-gray-100 ${errors.end_date ? "border-red-500" : "border-gray-300"}`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                            lineNumber: 178,
+                                            lineNumber: 379,
                                             columnNumber: 15
+                                        }, this),
+                                        errors.end_date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.end_date
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                            lineNumber: 390,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 174,
+                                    lineNumber: 375,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 161,
+                            lineNumber: 356,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2231,7 +2754,7 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                     className: "w-4 h-4 text-[#162f16] border-gray-300 rounded focus:ring-[#162f16]"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 189,
+                                    lineNumber: 396,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -2240,13 +2763,53 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                     children: "I currently study here"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 196,
+                                    lineNumber: 403,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 188,
+                            lineNumber: 395,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                    className: "block text-sm font-medium text-gray-700 mb-2",
+                                    children: [
+                                        "Admin/University Email (Optional)",
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-xs text-gray-500 ml-2",
+                                            children: "For verification badge"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                            lineNumber: 412,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                    lineNumber: 410,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    type: "email",
+                                    value: formData.admin_email,
+                                    onChange: (e)=>setFormData({
+                                            ...formData,
+                                            admin_email: e.target.value
+                                        }),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "admin@university.edu"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                                    lineNumber: 414,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
+                            lineNumber: 409,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2256,7 +2819,7 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                     children: "Description"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 202,
+                                    lineNumber: 425,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2266,16 +2829,17 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                             description: e.target.value
                                         }),
                                     rows: 3,
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "Describe your studies and achievements..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 205,
+                                    lineNumber: 428,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 201,
+                            lineNumber: 424,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2288,7 +2852,7 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                     children: loading ? "Saving..." : "Save Changes"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 214,
+                                    lineNumber: 438,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2298,34 +2862,34 @@ function EditEducationModal({ isOpen, onClose, education, onSuccess }) {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                                    lineNumber: 221,
+                                    lineNumber: 445,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                            lineNumber: 213,
+                            lineNumber: 437,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-                    lineNumber: 98,
+                    lineNumber: 219,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-            lineNumber: 85,
+            lineNumber: 206,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/EditEducationModal.tsx",
-        lineNumber: 84,
+        lineNumber: 205,
         columnNumber: 5
     }, this);
 }
-_s(EditEducationModal, "LF4EmWu9frAEjtyIUs1/IeNUo0M=");
+_s(EditEducationModal, "tsA/auJJw5z8NzL8Fc6n3k9QR3M=");
 _c = EditEducationModal;
 var _c;
 __turbopack_context__.k.register(_c, "EditEducationModal");
@@ -2590,9 +3154,15 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/lib/supabase.ts [app-client] (ecmascript)");
+(()=>{
+    const e = new Error("Cannot find module '@/lib/contants'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
@@ -2600,42 +3170,150 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         company_name: "",
-        company_logo: "",
         position: "",
         location: "",
         start_date: "",
         end_date: "",
         is_current: false,
-        description: ""
+        description: "",
+        hr_email: ""
     });
+    const [errors, setErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const [filteredPositions, setFilteredPositions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredCompanies, setFilteredCompanies] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredLocations, setFilteredLocations] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [showPositionDropdown, setShowPositionDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showCompanyDropdown, setShowCompanyDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showLocationDropdown, setShowLocationDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showAddCompany, setShowAddCompany] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const validateDates = ()=>{
+        const newErrors = {};
+        const today = new Date();
+        const startDate = new Date(formData.start_date);
+        const endDate = formData.end_date ? new Date(formData.end_date) : null;
+        // Check if start date is in the future
+        if (startDate > today) {
+            newErrors.start_date = "Start date cannot be in the future";
+        }
+        // Check if end date is before start date
+        if (endDate && endDate < startDate) {
+            newErrors.end_date = "End date cannot be before start date";
+        }
+        // Check if end date is in the future (unless it's current)
+        if (endDate && endDate > today && !formData.is_current) {
+            newErrors.end_date = "End date cannot be in the future";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
     const handleSubmit = async (e)=>{
         e.preventDefault();
+        if (!validateDates()) {
+            return;
+        }
         setLoading(true);
         try {
             const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("experiences").insert({
                 user_id: userId,
-                ...formData,
-                end_date: formData.is_current ? null : formData.end_date
+                company_name: formData.company_name,
+                company_logo: "",
+                position: formData.position,
+                location: formData.location,
+                start_date: formData.start_date,
+                end_date: formData.is_current ? null : formData.end_date,
+                is_current: formData.is_current,
+                description: formData.description,
+                hr_email: formData.hr_email,
+                verified: false
             });
             if (error) throw error;
+            // TODO: Send verification email to HR
+            if (formData.hr_email) {
+                console.log("Sending verification email to:", formData.hr_email);
+            // This will be implemented with AI automation later
+            }
             onSuccess();
             onClose();
             setFormData({
                 company_name: "",
-                company_logo: "",
                 position: "",
                 location: "",
                 start_date: "",
                 end_date: "",
                 is_current: false,
-                description: ""
+                description: "",
+                hr_email: ""
             });
+            setErrors({});
         } catch (error) {
             console.error("Error adding experience:", error);
             alert("Failed to add experience. Please try again.");
         } finally{
             setLoading(false);
         }
+    };
+    const handlePositionInput = (value)=>{
+        setFormData({
+            ...formData,
+            position: value
+        });
+        if (value.trim()) {
+            const filtered = JOB_TITLES.filter((title)=>title.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredPositions(filtered);
+            setShowPositionDropdown(true);
+        } else {
+            setShowPositionDropdown(false);
+        }
+    };
+    const selectPosition = (position)=>{
+        setFormData({
+            ...formData,
+            position
+        });
+        setShowPositionDropdown(false);
+    };
+    const handleCompanyInput = (value)=>{
+        setFormData({
+            ...formData,
+            company_name: value
+        });
+        if (value.trim()) {
+            const filtered = COMPANIES.filter((company)=>company.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredCompanies(filtered);
+            setShowCompanyDropdown(true);
+            setShowAddCompany(filtered.length === 0 || !filtered.some((c)=>c.toLowerCase() === value.toLowerCase()));
+        } else {
+            setShowCompanyDropdown(false);
+            setShowAddCompany(false);
+        }
+    };
+    const selectCompany = (company)=>{
+        setFormData({
+            ...formData,
+            company_name: company
+        });
+        setShowCompanyDropdown(false);
+        setShowAddCompany(false);
+    };
+    const handleLocationInput = (value)=>{
+        setFormData({
+            ...formData,
+            location: value
+        });
+        if (value.trim()) {
+            const filtered = CITIES.filter((city)=>city.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredLocations(filtered);
+            setShowLocationDropdown(true);
+        } else {
+            setShowLocationDropdown(false);
+        }
+    };
+    const selectLocation = (location)=>{
+        setFormData({
+            ...formData,
+            location
+        });
+        setShowLocationDropdown(false);
     };
     if (!isOpen) return null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2651,7 +3329,7 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                             children: "Add Experience"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 67,
+                            lineNumber: 178,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2669,23 +3347,23 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                     d: "M6 18L18 6M6 6l12 12"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 73,
+                                    lineNumber: 184,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                lineNumber: 72,
+                                lineNumber: 183,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 68,
+                            lineNumber: 179,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                    lineNumber: 66,
+                    lineNumber: 177,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -2693,125 +3371,165 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                     className: "p-6 space-y-4",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Position *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 80,
+                                    lineNumber: 192,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     required: true,
                                     value: formData.position,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            position: e.target.value
-                                        }),
+                                    onChange: (e)=>handlePositionInput(e.target.value),
+                                    onFocus: ()=>formData.position && setShowPositionDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowPositionDropdown(false), 200),
                                     className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "e.g., Senior Product Designer"
+                                    placeholder: "Start typing position..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 83,
+                                    lineNumber: 195,
                                     columnNumber: 13
+                                }, this),
+                                showPositionDropdown && filteredPositions.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredPositions.map((position)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectPosition(position),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: position
+                                        }, position, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                            lineNumber: 208,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                    lineNumber: 206,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 79,
+                            lineNumber: 191,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Company Name *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 94,
+                                    lineNumber: 223,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     required: true,
                                     value: formData.company_name,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            company_name: e.target.value
-                                        }),
+                                    onChange: (e)=>handleCompanyInput(e.target.value),
+                                    onFocus: ()=>formData.company_name && setShowCompanyDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowCompanyDropdown(false), 200),
                                     className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "e.g., Google"
+                                    placeholder: "Start typing company name..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 97,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 93,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                    className: "block text-sm font-medium text-gray-700 mb-2",
-                                    children: "Company Logo URL"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 108,
+                                    lineNumber: 226,
                                     columnNumber: 13
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                    type: "url",
-                                    value: formData.company_logo,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            company_logo: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "/images/CompanyLogo.jpg"
-                                }, void 0, false, {
+                                showCompanyDropdown && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: [
+                                        filteredCompanies.map((company)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                type: "button",
+                                                onClick: ()=>selectCompany(company),
+                                                className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                                children: company
+                                            }, company, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                                lineNumber: 239,
+                                                columnNumber: 19
+                                            }, this)),
+                                        showAddCompany && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>{
+                                                setShowCompanyDropdown(false);
+                                                setShowAddCompany(false);
+                                            },
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-[#162f16] font-medium border-t border-gray-200",
+                                            children: [
+                                                '+ Add "',
+                                                formData.company_name,
+                                                '"'
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                            lineNumber: 249,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 111,
-                                    columnNumber: 13
+                                    lineNumber: 237,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 107,
+                            lineNumber: 222,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Location"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 121,
+                                    lineNumber: 266,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     value: formData.location,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            location: e.target.value
-                                        }),
+                                    onChange: (e)=>handleLocationInput(e.target.value),
+                                    onFocus: ()=>formData.location && setShowLocationDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowLocationDropdown(false), 200),
                                     className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "e.g., London"
+                                    placeholder: "Start typing city name..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 124,
+                                    lineNumber: 269,
                                     columnNumber: 13
+                                }, this),
+                                showLocationDropdown && filteredLocations.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredLocations.map((location)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectLocation(location),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: location
+                                        }, location, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                            lineNumber: 281,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                    lineNumber: 279,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 120,
+                            lineNumber: 265,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2824,7 +3542,7 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                             children: "Start Date *"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                            lineNumber: 135,
+                                            lineNumber: 297,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2835,16 +3553,25 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                                     ...formData,
                                                     start_date: e.target.value
                                                 }),
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                            max: new Date().toISOString().split('T')[0],
+                                            className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm ${errors.start_date ? "border-red-500" : "border-gray-300"}`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                            lineNumber: 138,
+                                            lineNumber: 300,
                                             columnNumber: 15
+                                        }, this),
+                                        errors.start_date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.start_date
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                            lineNumber: 311,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 134,
+                                    lineNumber: 296,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2854,7 +3581,7 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                             children: "End Date"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                            lineNumber: 147,
+                                            lineNumber: 315,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2865,22 +3592,31 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                                     end_date: e.target.value
                                                 }),
                                             disabled: formData.is_current,
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm disabled:bg-gray-100"
+                                            max: new Date().toISOString().split('T')[0],
+                                            className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm disabled:bg-gray-100 ${errors.end_date ? "border-red-500" : "border-gray-300"}`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                            lineNumber: 150,
+                                            lineNumber: 318,
                                             columnNumber: 15
+                                        }, this),
+                                        errors.end_date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.end_date
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                            lineNumber: 329,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 146,
+                                    lineNumber: 314,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 133,
+                            lineNumber: 295,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2898,7 +3634,7 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                     className: "w-4 h-4 text-[#162f16] border-gray-300 rounded focus:ring-[#162f16]"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 161,
+                                    lineNumber: 335,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -2907,13 +3643,61 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                     children: "I currently work here"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 168,
+                                    lineNumber: 342,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 160,
+                            lineNumber: 334,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                    className: "block text-sm font-medium text-gray-700 mb-2",
+                                    children: [
+                                        "HR/Company Email (Optional)",
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-xs text-gray-500 ml-2",
+                                            children: "For verification badge"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                            lineNumber: 351,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                    lineNumber: 349,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    type: "email",
+                                    value: formData.hr_email,
+                                    onChange: (e)=>setFormData({
+                                            ...formData,
+                                            hr_email: e.target.value
+                                        }),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "hr@company.com"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                    lineNumber: 353,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                    className: "text-xs text-gray-500 mt-1",
+                                    children: "We'll send a verification request to confirm your employment"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                                    lineNumber: 360,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
+                            lineNumber: 348,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2923,7 +3707,7 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                     children: "Description"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 174,
+                                    lineNumber: 367,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -2937,13 +3721,13 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                     placeholder: "Describe your role and achievements..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 177,
+                                    lineNumber: 370,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 173,
+                            lineNumber: 366,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2956,7 +3740,7 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                     children: loading ? "Adding..." : "Add Experience"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 187,
+                                    lineNumber: 380,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2966,34 +3750,34 @@ function AddExperienceModal({ isOpen, onClose, userId, onSuccess }) {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                                    lineNumber: 194,
+                                    lineNumber: 387,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                            lineNumber: 186,
+                            lineNumber: 379,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-                    lineNumber: 78,
+                    lineNumber: 189,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-            lineNumber: 65,
+            lineNumber: 176,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddExperienceModal.tsx",
-        lineNumber: 64,
+        lineNumber: 175,
         columnNumber: 5
     }, this);
 }
-_s(AddExperienceModal, "DWP08Y59MkKbKGEcOfjlnFyUbes=");
+_s(AddExperienceModal, "z3qSoKrDzgR2lWm+qOMwLRHBiLE=");
 _c = AddExperienceModal;
 var _c;
 __turbopack_context__.k.register(_c, "AddExperienceModal");
@@ -3011,9 +3795,15 @@ __turbopack_context__.s([
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/Desktop/Progrize_landing-main/lib/supabase.ts [app-client] (ecmascript)");
+(()=>{
+    const e = new Error("Cannot find module '@/lib/contants'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
+;
 ;
 ;
 function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
@@ -3021,44 +3811,175 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [formData, setFormData] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({
         institution_name: "",
-        institution_logo: "",
         degree: "",
         field_of_study: "",
         location: "",
         start_date: "",
         end_date: "",
         is_current: false,
-        description: ""
+        description: "",
+        admin_email: ""
     });
+    const [errors, setErrors] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])({});
+    const [filteredDegrees, setFilteredDegrees] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredFields, setFilteredFields] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredInstitutions, setFilteredInstitutions] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [filteredLocations, setFilteredLocations] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([]);
+    const [showDegreeDropdown, setShowDegreeDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showFieldDropdown, setShowFieldDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showInstitutionDropdown, setShowInstitutionDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showLocationDropdown, setShowLocationDropdown] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showAddInstitution, setShowAddInstitution] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const validateDates = ()=>{
+        const newErrors = {};
+        const today = new Date();
+        const startDate = new Date(formData.start_date);
+        const endDate = formData.end_date ? new Date(formData.end_date) : null;
+        // Check if start date is in the future
+        if (startDate > today) {
+            newErrors.start_date = "Start date cannot be in the future";
+        }
+        // Check if end date is before start date
+        if (endDate && endDate < startDate) {
+            newErrors.end_date = "End date cannot be before start date";
+        }
+        // Check if end date is in the future (unless it's current)
+        if (endDate && endDate > today && !formData.is_current) {
+            newErrors.end_date = "End date cannot be in the future";
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
     const handleSubmit = async (e)=>{
         e.preventDefault();
+        if (!validateDates()) {
+            return;
+        }
         setLoading(true);
         try {
             const { error } = await __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$lib$2f$supabase$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["supabase"].from("education").insert({
                 user_id: userId,
-                ...formData,
-                end_date: formData.is_current ? null : formData.end_date
+                institution_name: formData.institution_name,
+                institution_logo: "",
+                degree: formData.degree,
+                field_of_study: formData.field_of_study,
+                location: formData.location,
+                start_date: formData.start_date,
+                end_date: formData.is_current ? null : formData.end_date,
+                is_current: formData.is_current,
+                description: formData.description,
+                admin_email: formData.admin_email,
+                verified: false
             });
             if (error) throw error;
+            // TODO: Send verification email to institution admin
+            if (formData.admin_email) {
+                console.log("Sending verification email to:", formData.admin_email);
+            // This will be implemented with AI automation later
+            }
             onSuccess();
             onClose();
             setFormData({
                 institution_name: "",
-                institution_logo: "",
                 degree: "",
                 field_of_study: "",
                 location: "",
                 start_date: "",
                 end_date: "",
                 is_current: false,
-                description: ""
+                description: "",
+                admin_email: ""
             });
+            setErrors({});
         } catch (error) {
             console.error("Error adding education:", error);
             alert("Failed to add education. Please try again.");
         } finally{
             setLoading(false);
         }
+    };
+    const handleDegreeInput = (value)=>{
+        setFormData({
+            ...formData,
+            degree: value
+        });
+        if (value.trim()) {
+            const filtered = DEGREES.filter((degree)=>degree.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredDegrees(filtered);
+            setShowDegreeDropdown(true);
+        } else {
+            setShowDegreeDropdown(false);
+        }
+    };
+    const selectDegree = (degree)=>{
+        setFormData({
+            ...formData,
+            degree
+        });
+        setShowDegreeDropdown(false);
+    };
+    const handleFieldInput = (value)=>{
+        setFormData({
+            ...formData,
+            field_of_study: value
+        });
+        if (value.trim()) {
+            const filtered = FIELDS_OF_STUDY.filter((field)=>field.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredFields(filtered);
+            setShowFieldDropdown(true);
+        } else {
+            setShowFieldDropdown(false);
+        }
+    };
+    const selectField = (field)=>{
+        setFormData({
+            ...formData,
+            field_of_study: field
+        });
+        setShowFieldDropdown(false);
+    };
+    const handleInstitutionInput = (value)=>{
+        setFormData({
+            ...formData,
+            institution_name: value
+        });
+        if (value.trim()) {
+            const filtered = INSTITUTIONS.filter((institution)=>institution.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredInstitutions(filtered);
+            setShowInstitutionDropdown(true);
+            setShowAddInstitution(filtered.length === 0 || !filtered.some((i)=>i.toLowerCase() === value.toLowerCase()));
+        } else {
+            setShowInstitutionDropdown(false);
+            setShowAddInstitution(false);
+        }
+    };
+    const selectInstitution = (institution)=>{
+        setFormData({
+            ...formData,
+            institution_name: institution
+        });
+        setShowInstitutionDropdown(false);
+        setShowAddInstitution(false);
+    };
+    const handleLocationInput = (value)=>{
+        setFormData({
+            ...formData,
+            location: value
+        });
+        if (value.trim()) {
+            const filtered = CITIES.filter((city)=>city.toLowerCase().includes(value.toLowerCase())).slice(0, 10);
+            setFilteredLocations(filtered);
+            setShowLocationDropdown(true);
+        } else {
+            setShowLocationDropdown(false);
+        }
+    };
+    const selectLocation = (location)=>{
+        setFormData({
+            ...formData,
+            location
+        });
+        setShowLocationDropdown(false);
     };
     if (!isOpen) return null;
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3074,7 +3995,7 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                             children: "Add Education"
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 69,
+                            lineNumber: 201,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3092,23 +4013,23 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                     d: "M6 18L18 6M6 6l12 12"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 75,
+                                    lineNumber: 207,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                lineNumber: 74,
+                                lineNumber: 206,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 70,
+                            lineNumber: 202,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                    lineNumber: 68,
+                    lineNumber: 200,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -3116,155 +4037,213 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                     className: "p-6 space-y-4",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Degree *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 82,
+                                    lineNumber: 215,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     required: true,
                                     value: formData.degree,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            degree: e.target.value
-                                        }),
+                                    onChange: (e)=>handleDegreeInput(e.target.value),
+                                    onFocus: ()=>formData.degree && setShowDegreeDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowDegreeDropdown(false), 200),
                                     className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "e.g., Masters in Web Design"
+                                    placeholder: "Start typing degree..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 85,
+                                    lineNumber: 218,
                                     columnNumber: 13
+                                }, this),
+                                showDegreeDropdown && filteredDegrees.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredDegrees.map((degree)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectDegree(degree),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: degree
+                                        }, degree, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                            lineNumber: 231,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                    lineNumber: 229,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 81,
+                            lineNumber: 214,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Institution Name *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 96,
+                                    lineNumber: 246,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     required: true,
                                     value: formData.institution_name,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            institution_name: e.target.value
-                                        }),
+                                    onChange: (e)=>handleInstitutionInput(e.target.value),
+                                    onFocus: ()=>formData.institution_name && setShowInstitutionDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowInstitutionDropdown(false), 200),
                                     className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "e.g., University of Greenwich"
+                                    placeholder: "Start typing institution name..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 99,
+                                    lineNumber: 249,
                                     columnNumber: 13
+                                }, this),
+                                showInstitutionDropdown && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: [
+                                        filteredInstitutions.map((institution)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                type: "button",
+                                                onClick: ()=>selectInstitution(institution),
+                                                className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                                children: institution
+                                            }, institution, false, {
+                                                fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                                lineNumber: 262,
+                                                columnNumber: 19
+                                            }, this)),
+                                        showAddInstitution && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>{
+                                                setShowInstitutionDropdown(false);
+                                                setShowAddInstitution(false);
+                                            },
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm text-[#162f16] font-medium border-t border-gray-200",
+                                            children: [
+                                                '+ Add "',
+                                                formData.institution_name,
+                                                '"'
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                            lineNumber: 272,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                    lineNumber: 260,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 95,
+                            lineNumber: 245,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
-                                    children: "Field of Study"
+                                    children: "Field of Study *"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 110,
+                                    lineNumber: 289,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
+                                    required: true,
                                     value: formData.field_of_study,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            field_of_study: e.target.value
-                                        }),
+                                    onChange: (e)=>handleFieldInput(e.target.value),
+                                    onFocus: ()=>formData.field_of_study && setShowFieldDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowFieldDropdown(false), 200),
                                     className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "e.g., Computer Science"
+                                    placeholder: "Start typing field of study..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 113,
-                                    columnNumber: 13
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 109,
-                            columnNumber: 11
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                    className: "block text-sm font-medium text-gray-700 mb-2",
-                                    children: "Institution Logo URL"
-                                }, void 0, false, {
-                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 123,
+                                    lineNumber: 292,
                                     columnNumber: 13
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
-                                    type: "url",
-                                    value: formData.institution_logo,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            institution_logo: e.target.value
-                                        }),
-                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "/images/photo1766082425.jpg"
+                                showFieldDropdown && filteredFields.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredFields.map((field)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectField(field),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: field
+                                        }, field, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                            lineNumber: 305,
+                                            columnNumber: 19
+                                        }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 126,
-                                    columnNumber: 13
+                                    lineNumber: 303,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 122,
+                            lineNumber: 288,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "relative",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                     className: "block text-sm font-medium text-gray-700 mb-2",
                                     children: "Location"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 136,
+                                    lineNumber: 320,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                     type: "text",
                                     value: formData.location,
-                                    onChange: (e)=>setFormData({
-                                            ...formData,
-                                            location: e.target.value
-                                        }),
+                                    onChange: (e)=>handleLocationInput(e.target.value),
+                                    onFocus: ()=>formData.location && setShowLocationDropdown(true),
+                                    onBlur: ()=>setTimeout(()=>setShowLocationDropdown(false), 200),
                                     className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
-                                    placeholder: "e.g., London"
+                                    placeholder: "Start typing city name..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 139,
+                                    lineNumber: 323,
                                     columnNumber: 13
+                                }, this),
+                                showLocationDropdown && filteredLocations.length > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto",
+                                    children: filteredLocations.map((location)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: ()=>selectLocation(location),
+                                            className: "w-full text-left px-4 py-2 hover:bg-gray-100 text-sm",
+                                            children: location
+                                        }, location, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                            lineNumber: 335,
+                                            columnNumber: 19
+                                        }, this))
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                    lineNumber: 333,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 135,
+                            lineNumber: 319,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3277,7 +4256,7 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                             children: "Start Date *"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                            lineNumber: 150,
+                                            lineNumber: 351,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3288,16 +4267,25 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                                     ...formData,
                                                     start_date: e.target.value
                                                 }),
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                                            max: new Date().toISOString().split('T')[0],
+                                            className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm ${errors.start_date ? "border-red-500" : "border-gray-300"}`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                            lineNumber: 153,
+                                            lineNumber: 354,
                                             columnNumber: 15
+                                        }, this),
+                                        errors.start_date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.start_date
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                            lineNumber: 365,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 149,
+                                    lineNumber: 350,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3307,7 +4295,7 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                             children: "End Date"
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                            lineNumber: 162,
+                                            lineNumber: 369,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -3318,22 +4306,31 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                                     end_date: e.target.value
                                                 }),
                                             disabled: formData.is_current,
-                                            className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm disabled:bg-gray-100"
+                                            max: new Date().toISOString().split('T')[0],
+                                            className: `w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm disabled:bg-gray-100 ${errors.end_date ? "border-red-500" : "border-gray-300"}`
                                         }, void 0, false, {
                                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                            lineNumber: 165,
+                                            lineNumber: 372,
                                             columnNumber: 15
+                                        }, this),
+                                        errors.end_date && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-xs text-red-500 mt-1",
+                                            children: errors.end_date
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                            lineNumber: 383,
+                                            columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 161,
+                                    lineNumber: 368,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 148,
+                            lineNumber: 349,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3351,7 +4348,7 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                     className: "w-4 h-4 text-[#162f16] border-gray-300 rounded focus:ring-[#162f16]"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 176,
+                                    lineNumber: 389,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -3360,13 +4357,61 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                     children: "I currently study here"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 183,
+                                    lineNumber: 396,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 175,
+                            lineNumber: 388,
+                            columnNumber: 11
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                    className: "block text-sm font-medium text-gray-700 mb-2",
+                                    children: [
+                                        "Admin/University Email (Optional)",
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: "text-xs text-gray-500 ml-2",
+                                            children: "For verification badge"
+                                        }, void 0, false, {
+                                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                            lineNumber: 405,
+                                            columnNumber: 15
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                    lineNumber: 403,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                    type: "email",
+                                    value: formData.admin_email,
+                                    onChange: (e)=>setFormData({
+                                            ...formData,
+                                            admin_email: e.target.value
+                                        }),
+                                    className: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm",
+                                    placeholder: "admin@university.edu"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                    lineNumber: 407,
+                                    columnNumber: 13
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                    className: "text-xs text-gray-500 mt-1",
+                                    children: "We'll send a verification request to confirm your enrollment"
+                                }, void 0, false, {
+                                    fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                                    lineNumber: 414,
+                                    columnNumber: 13
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
+                            lineNumber: 402,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3376,7 +4421,7 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                     children: "Description"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 189,
+                                    lineNumber: 421,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("textarea", {
@@ -3390,13 +4435,13 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                     placeholder: "Describe your studies and achievements..."
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 192,
+                                    lineNumber: 424,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 188,
+                            lineNumber: 420,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3409,7 +4454,7 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                     children: loading ? "Adding..." : "Add Education"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 202,
+                                    lineNumber: 434,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$Desktop$2f$Progrize_landing$2d$main$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -3419,34 +4464,34 @@ function AddEducationModal({ isOpen, onClose, userId, onSuccess }) {
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                                    lineNumber: 209,
+                                    lineNumber: 441,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                            lineNumber: 201,
+                            lineNumber: 433,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-                    lineNumber: 80,
+                    lineNumber: 212,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-            lineNumber: 67,
+            lineNumber: 199,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/Desktop/Progrize_landing-main/app/components/AddEducationModal.tsx",
-        lineNumber: 66,
+        lineNumber: 198,
         columnNumber: 5
     }, this);
 }
-_s(AddEducationModal, "ck+HBl7RqKK4PmvLrE4KUWL+ulI=");
+_s(AddEducationModal, "HSiDUBT3j4u090pZ+ZsuIGdDs6Y=");
 _c = AddEducationModal;
 var _c;
 __turbopack_context__.k.register(_c, "AddEducationModal");

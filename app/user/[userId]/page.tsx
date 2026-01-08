@@ -19,6 +19,7 @@ interface UserProfile {
   occupation: string;
   country: string;
   phone: string;
+  phone_country_code: string;
   location: string;
   professional_summary: string;
   job_preferences: string[];

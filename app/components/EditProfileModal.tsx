@@ -1,114 +1,114 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
+import { COUNTRIES, CITIES, SKILLS, COUNTRY_CODES, MIN_SUMMARY_CHARS } from "@/lib/constants";
 
 interface UserProfile {
   id: string;
-  professional_summary: string | null;
-  phone: string | null;
-  location: string | null;
-  job_preferences: string[] | null;
-  skills: string[] | null;
-  preferred_countries: string[] | null;
-  social_links:
-    | {
-        linkedin?: string | null;
-        whatsapp?: string | null;
-        meta?: string | null;
-        instagram?: string | null;
-      }
-    | null;
+  professional_summary: string;
+  phone: string;
+  phone_country_code: string;
+  location: string;
+  skills: string[];
+  preferred_countries: string[];
+  social_links: {
+    linkedin?: string;
+    whatsapp?: string;
+    meta?: string;
+    instagram?: string;
+  };
 }
 
 interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  profile?: UserProfile | null; // ✅ can be undefined while loading
+  profile: UserProfile;
   onSuccess: () => void;
 }
 
-type FormData = {
-  professional_summary: string;
-  phone: string;
-  location: string;
-  job_preferences: string[];
-  skills: string[];
-  preferred_countries: string[];
-  social_links: {
-    linkedin: string;
-    whatsapp: string;
-    meta: string;
-    instagram: string;
-  };
-};
-
-const EMPTY_FORM: FormData = {
-  professional_summary: "",
-  phone: "",
-  location: "",
-  job_preferences: [],
-  skills: [],
-  preferred_countries: [],
-  social_links: {
-    linkedin: "",
-    whatsapp: "",
-    meta: "",
-    instagram: "",
-  },
-};
-
-export default function EditProfileModal({
-  isOpen,
-  onClose,
-  profile,
-  onSuccess,
-}: EditProfileModalProps) {
+export default function EditProfileModal({ isOpen, onClose, profile, onSuccess }: EditProfileModalProps) {
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<FormData>(EMPTY_FORM);
-
-  const [newJobPref, setNewJobPref] = useState("");
+  const [formData, setFormData] = useState({
+    professional_summary: "",
+    phone: "",
+    phone_country_code: "+44",
+    location: "",
+    skills: [] as string[],
+    preferred_countries: [] as string[],
+    social_links: {
+      linkedin: "",
+      whatsapp: "",
+      meta: "",
+      instagram: ""
+    }
+  });
   const [newSkill, setNewSkill] = useState("");
   const [newCountry, setNewCountry] = useState("");
+  const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
+  const [filteredCountries, setFilteredCountries] = useState<string[]>([]);
+  const [filteredLocations, setFilteredLocations] = useState<string[]>([]);
+  const [showSkillDropdown, setShowSkillDropdown] = useState(false);
+  const [showCountryDropdown, setShowCountryDropdown] = useState(false);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    if (!profile) {
-      setFormData(EMPTY_FORM);
-      return;
+    if (profile) {
+      setFormData({
+        professional_summary: profile.professional_summary || "",
+        phone: profile.phone || "",
+        phone_country_code: profile.phone_country_code || "+44",
+        location: profile.location || "",
+        skills: profile.skills || [],
+        preferred_countries: profile.preferred_countries || [],
+        social_links: {
+          linkedin: profile.social_links?.linkedin ?? "",
+          whatsapp: profile.social_links?.whatsapp ?? "",
+          meta: profile.social_links?.meta ?? "",
+          instagram: profile.social_links?.instagram ?? "",
+        },
+      });
+    }
+  }, [profile]);
+
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    // Validate professional summary
+    if (formData.professional_summary.trim().length < MIN_SUMMARY_CHARS) {
+      newErrors.professional_summary = `Professional summary must be at least ${MIN_SUMMARY_CHARS} characters`;
     }
 
-    setFormData({
-      professional_summary: profile.professional_summary ?? "",
-      phone: profile.phone ?? "",
-      location: profile.location ?? "",
-      job_preferences: profile.job_preferences ?? [],
-      skills: profile.skills ?? [],
-      preferred_countries: profile.preferred_countries ?? [],
-      social_links: {
-        linkedin: profile.social_links?.linkedin ?? "",
-        whatsapp: profile.social_links?.whatsapp ?? "",
-        meta: profile.social_links?.meta ?? "",
-        instagram: profile.social_links?.instagram ?? "",
-      },
-    });
-  }, [profile]);
+    // Validate phone number
+    if (formData.phone && !/^\d{7,15}$/.test(formData.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "Please enter a valid phone number";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!profile?.id) return;
+
+    if (!validateForm()) {
+      return;
+    }
 
     setLoading(true);
+
     try {
       const { error } = await supabase
         .from("profiles")
         .update({
           professional_summary: formData.professional_summary,
           phone: formData.phone,
+          phone_country_code: formData.phone_country_code,
           location: formData.location,
-          job_preferences: formData.job_preferences,
           skills: formData.skills,
           preferred_countries: formData.preferred_countries,
-          social_links: formData.social_links,
+          social_links: formData.social_links
         })
         .eq("id", profile.id);
 
@@ -116,76 +116,98 @@ export default function EditProfileModal({
 
       onSuccess();
       onClose();
-    } catch (err) {
-      console.error("Error updating profile:", err);
+    } catch (error) {
+      console.error("Error updating profile:", error);
       alert("Failed to update profile. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  const addJobPreference = () => {
-    const value = newJobPref.trim();
-    if (!value) return;
-
-    setFormData((prev) => {
-      if (prev.job_preferences.some((j) => j.toLowerCase() === value.toLowerCase()))
-        return prev;
-      return { ...prev, job_preferences: [...prev.job_preferences, value] };
-    });
-
-    setNewJobPref("");
+  const handleSkillInput = (value: string) => {
+    setNewSkill(value);
+    if (value.trim()) {
+      const filtered = SKILLS.filter(skill =>
+        skill.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 10);
+      setFilteredSkills(filtered);
+      setShowSkillDropdown(true);
+    } else {
+      setShowSkillDropdown(false);
+    }
   };
 
-  const removeJobPreference = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      job_preferences: prev.job_preferences.filter((_, i) => i !== index),
-    }));
-  };
-
-  const addSkill = () => {
-    const value = newSkill.trim();
-    if (!value) return;
-
-    setFormData((prev) => {
-      if (prev.skills.some((s) => s.toLowerCase() === value.toLowerCase())) return prev;
-      return { ...prev, skills: [...prev.skills, value] };
-    });
-
-    setNewSkill("");
+  const addSkill = (skill: string) => {
+    if (skill.trim() && !formData.skills.includes(skill.trim())) {
+      // Validate that it's a real skill from the list
+      const isValidSkill = SKILLS.some(s => s.toLowerCase() === skill.toLowerCase());
+      if (!isValidSkill) {
+        alert("Please select a skill from the dropdown list");
+        return;
+      }
+      setFormData({
+        ...formData,
+        skills: [...formData.skills, skill.trim()]
+      });
+      setNewSkill("");
+      setShowSkillDropdown(false);
+    }
   };
 
   const removeSkill = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      skills: prev.skills.filter((_, i) => i !== index),
-    }));
+    setFormData({
+      ...formData,
+      skills: formData.skills.filter((_, i) => i !== index)
+    });
   };
 
-  const addCountry = () => {
-    const value = newCountry.trim();
-    if (!value) return;
+  const handleCountryInput = (value: string) => {
+    setNewCountry(value);
+    if (value.trim()) {
+      const filtered = COUNTRIES.filter(country =>
+        country.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 10);
+      setFilteredCountries(filtered);
+      setShowCountryDropdown(true);
+    } else {
+      setShowCountryDropdown(false);
+    }
+  };
 
-    setFormData((prev) => {
-      if (
-        prev.preferred_countries.some((c) => c.toLowerCase() === value.toLowerCase())
-      )
-        return prev;
-      return {
-        ...prev,
-        preferred_countries: [...prev.preferred_countries, value],
-      };
-    });
-
-    setNewCountry("");
+  const addCountry = (country: string) => {
+    if (country.trim() && !formData.preferred_countries.includes(country.trim())) {
+      setFormData({
+        ...formData,
+        preferred_countries: [...formData.preferred_countries, country.trim()]
+      });
+      setNewCountry("");
+      setShowCountryDropdown(false);
+    }
   };
 
   const removeCountry = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      preferred_countries: prev.preferred_countries.filter((_, i) => i !== index),
-    }));
+    setFormData({
+      ...formData,
+      preferred_countries: formData.preferred_countries.filter((_, i) => i !== index)
+    });
+  };
+
+  const handleLocationInput = (value: string) => {
+    setFormData({ ...formData, location: value });
+    if (value.trim()) {
+      const filtered = CITIES.filter(city =>
+        city.toLowerCase().includes(value.toLowerCase())
+      ).slice(0, 10);
+      setFilteredLocations(filtered);
+      setShowLocationDropdown(true);
+    } else {
+      setShowLocationDropdown(false);
+    }
+  };
+
+  const selectLocation = (location: string) => {
+    setFormData({ ...formData, location });
+    setShowLocationDropdown(false);
   };
 
   if (!isOpen) return null;
@@ -195,7 +217,10 @@ export default function EditProfileModal({
       <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold text-gray-900">Edit Profile</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition">
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 transition"
+          >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -206,127 +231,133 @@ export default function EditProfileModal({
           {/* Professional Summary */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Professional Summary
+              Professional Summary *
+              <span className="text-xs text-gray-500 ml-2">
+                (Minimum {MIN_SUMMARY_CHARS} characters)
+              </span>
             </label>
             <textarea
               value={formData.professional_summary}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, professional_summary: e.target.value }))
-              }
+              onChange={(e) => setFormData({ ...formData, professional_summary: e.target.value })}
               rows={4}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+              className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm ${errors.professional_summary ? "border-red-500" : "border-gray-300"
+                }`}
               placeholder="Tell us about your professional background..."
             />
+            <div className="flex justify-between mt-1">
+              {errors.professional_summary && (
+                <p className="text-xs text-red-500">{errors.professional_summary}</p>
+              )}
+              <p className="text-xs text-gray-500 ml-auto">
+                {formData.professional_summary.length} / {MIN_SUMMARY_CHARS}
+              </p>
+            </div>
           </div>
 
           {/* Contact Info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
-                placeholder="+44 7768188691"
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Phone
+              </label>
+              <div className="flex gap-2">
+                <select
+                  value={formData.phone_country_code}
+                  onChange={(e) => setFormData({ ...formData, phone_country_code: e.target.value })}
+                  className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                >
+                  {COUNTRY_CODES.map((item, index) => (
+                    <option key={`${item.code}-${index}`} value={item.code}>
+                      {item.flag} {item.code}
+                    </option>
+                  ))}
+                </select>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className={`flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm ${errors.phone ? "border-red-500" : "border-gray-300"
+                    }`}
+                  placeholder="7768188691"
+                />
+              </div>
+              {errors.phone && (
+                <p className="text-xs text-red-500 mt-1">{errors.phone}</p>
+              )}
             </div>
-            <div>
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Location
               </label>
               <input
                 type="text"
                 value={formData.location}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, location: e.target.value }))
-                }
+                onChange={(e) => handleLocationInput(e.target.value)}
+                onFocus={() => formData.location && setShowLocationDropdown(true)}
+                onBlur={() => setTimeout(() => setShowLocationDropdown(false), 200)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
-                placeholder="London"
+                placeholder="Start typing city name..."
               />
-            </div>
-          </div>
-
-          {/* Job Preferences */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Job Preferences
-            </label>
-
-            <div className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={newJobPref}
-                onChange={(e) => setNewJobPref(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addJobPreference();
-                  }
-                }}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
-                placeholder="e.g., Senior Product Designer"
-              />
-              <button
-                type="button"
-                onClick={addJobPreference}
-                className="px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
-              >
-                Add
-              </button>
-            </div>
-
-            <div className="flex flex-wrap gap-2">
-              {formData.job_preferences.map((job, index) => (
-                <span
-                  key={`${job}-${index}`}
-                  className="px-3 py-1 bg-[#d4af37] text-[#162f16] rounded-full text-xs font-medium flex items-center gap-2"
-                >
-                  {job}
-                  <button
-                    type="button"
-                    onClick={() => removeJobPreference(index)}
-                    className="hover:text-red-600"
-                    aria-label={`Remove ${job}`}
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
+              {showLocationDropdown && filteredLocations.length > 0 && (
+                <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {filteredLocations.map((location) => (
+                    <button
+                      key={location}
+                      type="button"
+                      onClick={() => selectLocation(location)}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                    >
+                      {location}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Skills */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Skills</label>
-
-            <div className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={newSkill}
-                onChange={(e) => setNewSkill(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addSkill();
-                  }
-                }}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
-                placeholder="e.g., Illustrator"
-              />
-              <button
-                type="button"
-                onClick={addSkill}
-                className="px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
-              >
-                Add
-              </button>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Skills
+            </label>
+            <div className="relative">
+              <div className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={newSkill}
+                  onChange={(e) => handleSkillInput(e.target.value)}
+                  onFocus={() => newSkill && setShowSkillDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowSkillDropdown(false), 200)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                  placeholder="Start typing skill name..."
+                />
+                <button
+                  type="button"
+                  onClick={() => addSkill(newSkill)}
+                  className="px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
+                >
+                  Add
+                </button>
+              </div>
+              {showSkillDropdown && filteredSkills.length > 0 && (
+                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {filteredSkills.map((skill) => (
+                    <button
+                      key={skill}
+                      type="button"
+                      onClick={() => addSkill(skill)}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                    >
+                      {skill}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-
             <div className="flex flex-wrap gap-2">
               {formData.skills.map((skill, index) => (
                 <span
-                  key={`${skill}-${index}`}
+                  key={index}
                   className="px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-xs font-medium flex items-center gap-2"
                 >
                   {skill}
@@ -334,7 +365,6 @@ export default function EditProfileModal({
                     type="button"
                     onClick={() => removeSkill(index)}
                     className="hover:text-red-600"
-                    aria-label={`Remove ${skill}`}
                   >
                     ×
                   </button>
@@ -348,34 +378,44 @@ export default function EditProfileModal({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Preferred Countries
             </label>
-
-            <div className="flex gap-2 mb-2">
-              <input
-                type="text"
-                value={newCountry}
-                onChange={(e) => setNewCountry(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    addCountry();
-                  }
-                }}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
-                placeholder="e.g., United Kingdom"
-              />
-              <button
-                type="button"
-                onClick={addCountry}
-                className="px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
-              >
-                Add
-              </button>
+            <div className="relative">
+              <div className="flex gap-2 mb-2">
+                <input
+                  type="text"
+                  value={newCountry}
+                  onChange={(e) => handleCountryInput(e.target.value)}
+                  onFocus={() => newCountry && setShowCountryDropdown(true)}
+                  onBlur={() => setTimeout(() => setShowCountryDropdown(false), 200)}
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                  placeholder="Start typing country name..."
+                />
+                <button
+                  type="button"
+                  onClick={() => addCountry(newCountry)}
+                  className="px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
+                >
+                  Add
+                </button>
+              </div>
+              {showCountryDropdown && filteredCountries.length > 0 && (
+                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                  {filteredCountries.map((country) => (
+                    <button
+                      key={country}
+                      type="button"
+                      onClick={() => addCountry(country)}
+                      className="w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
+                    >
+                      {country}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-
             <div className="flex flex-wrap gap-2">
               {formData.preferred_countries.map((country, index) => (
                 <span
-                  key={`${country}-${index}`}
+                  key={index}
                   className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium flex items-center gap-2"
                 >
                   {country}
@@ -383,7 +423,6 @@ export default function EditProfileModal({
                     type="button"
                     onClick={() => removeCountry(index)}
                     className="hover:text-red-600"
-                    aria-label={`Remove ${country}`}
                   >
                     ×
                   </button>
@@ -397,56 +436,44 @@ export default function EditProfileModal({
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Social Links
             </label>
-
             <div className="space-y-3">
               <input
                 type="url"
                 value={formData.social_links.linkedin}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    social_links: { ...prev.social_links, linkedin: e.target.value },
-                  }))
-                }
+                onChange={(e) => setFormData({
+                  ...formData,
+                  social_links: { ...formData.social_links, linkedin: e.target.value }
+                })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
                 placeholder="LinkedIn URL"
               />
-
               <input
                 type="tel"
                 value={formData.social_links.whatsapp}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    social_links: { ...prev.social_links, whatsapp: e.target.value },
-                  }))
-                }
+                onChange={(e) => setFormData({
+                  ...formData,
+                  social_links: { ...formData.social_links, whatsapp: e.target.value }
+                })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
                 placeholder="WhatsApp Number (e.g., 447768188691)"
               />
-
               <input
                 type="url"
                 value={formData.social_links.meta}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    social_links: { ...prev.social_links, meta: e.target.value },
-                  }))
-                }
+                onChange={(e) => setFormData({
+                  ...formData,
+                  social_links: { ...formData.social_links, meta: e.target.value }
+                })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
                 placeholder="Facebook/Meta URL"
               />
-
               <input
                 type="url"
                 value={formData.social_links.instagram}
-                onChange={(e) =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    social_links: { ...prev.social_links, instagram: e.target.value },
-                  }))
-                }
+                onChange={(e) => setFormData({
+                  ...formData,
+                  social_links: { ...formData.social_links, instagram: e.target.value }
+                })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
                 placeholder="Instagram URL"
               />
@@ -457,12 +484,11 @@ export default function EditProfileModal({
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              disabled={loading || !profile?.id}
+              disabled={loading}
               className="flex-1 px-4 py-2 bg-[#162f16] text-white rounded-lg font-medium hover:bg-[#0f2310] transition disabled:opacity-50"
             >
               {loading ? "Saving..." : "Save Changes"}
             </button>
-
             <button
               type="button"
               onClick={onClose}

@@ -1,5 +1,5 @@
 __turbopack_load_page_chunks__("/_app", [
-  "static/chunks/9312c_next_dist_compiled_7575e020._.js",
+  "static/chunks/9312c_next_dist_compiled_fab63cac._.js",
   "static/chunks/9312c_next_dist_shared_lib_abb2ef22._.js",
   "static/chunks/9312c_next_dist_client_a46c1df5._.js",
   "static/chunks/9312c_next_dist_1b426f3a._.js",
@@ -9,5 +9,5 @@ __turbopack_load_page_chunks__("/_app", [
   "static/chunks/9312c_cfd3a282._.js",
   "static/chunks/[root-of-the-server]__ca4522d5._.js",
   "static/chunks/Desktop_Progrize_landing-main_pages__app_2da965e7._.js",
-  "static/chunks/turbopack-Desktop_Progrize_landing-main_pages__app_39dc30b4._.js"
+  "static/chunks/turbopack-Desktop_Progrize_landing-main_pages__app_fec91699._.js"
 ])

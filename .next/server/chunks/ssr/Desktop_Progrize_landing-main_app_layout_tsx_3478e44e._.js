@@ -1,3 +1,0 @@
-module.exports=[66936,a=>{"use strict";var b=a.i(71468);function c({children:a}){return(0,b.jsxs)("html",{lang:"en",children:[(0,b.jsxs)("head",{children:[(0,b.jsx)("link",{rel:"preconnect",href:"https://fonts.googleapis.com"}),(0,b.jsx)("link",{rel:"preconnect",href:"https://fonts.gstatic.com",crossOrigin:"anonymous"}),(0,b.jsx)("link",{href:"https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap",rel:"stylesheet"})]}),(0,b.jsx)("body",{children:a})]})}a.s(["default",()=>c,"metadata",0,{title:"Progrize - Career Simplified",description:"Progrize - an all-in-one career platform"}])}];
-
-//# sourceMappingURL=Desktop_Progrize_landing-main_app_layout_tsx_3478e44e._.js.map

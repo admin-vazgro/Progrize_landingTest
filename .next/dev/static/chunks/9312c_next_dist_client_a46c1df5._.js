@@ -3022,7 +3022,7 @@ const _hooksclientcontextsharedruntime = __turbopack_context__.r("[project]/Desk
 const _onrecoverableerror = __turbopack_context__.r("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/client/react-client-callbacks/on-recoverable-error.js [client] (ecmascript)");
 const _tracer = /*#__PURE__*/ _interop_require_default._(__turbopack_context__.r("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/client/tracing/tracer.js [client] (ecmascript)"));
 const _isnextroutererror = __turbopack_context__.r("[project]/Desktop/Progrize_landing-main/node_modules/next/dist/client/components/is-next-router-error.js [client] (ecmascript)");
-const version = "16.0.1";
+const version = "16.0.10";
 let router;
 const emitter = (0, _mitt.default)();
 const looseToArray = (input)=>[].slice.call(input);
@@ -3191,7 +3191,18 @@ function AppContainer({ children }) {
                                         "dangerouslyAllowSVG": ("TURBOPACK compile-time value", false),
                                         "unoptimized": ("TURBOPACK compile-time value", false),
                                         "domains": ("TURBOPACK compile-time value", []),
-                                        "remotePatterns": ("TURBOPACK compile-time value", []),
+                                        "remotePatterns": ("TURBOPACK compile-time value", [
+                                            ("TURBOPACK compile-time value", {
+                                                "protocol": ("TURBOPACK compile-time value", "https"),
+                                                "hostname": ("TURBOPACK compile-time value", "randomuser.me"),
+                                                "pathname": ("TURBOPACK compile-time value", "/api/portraits/**")
+                                            }),
+                                            ("TURBOPACK compile-time value", {
+                                                "protocol": ("TURBOPACK compile-time value", "https"),
+                                                "hostname": ("TURBOPACK compile-time value", "*.supabase.co"),
+                                                "pathname": ("TURBOPACK compile-time value", "/storage/v1/object/public/**")
+                                            })
+                                        ]),
                                         "localPatterns": ("TURBOPACK compile-time value", [
                                             ("TURBOPACK compile-time value", {
                                                 "pathname": ("TURBOPACK compile-time value", "**"),

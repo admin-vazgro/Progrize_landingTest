@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   images: {
@@ -14,6 +15,17 @@ const nextConfig: NextConfig = {
         pathname: "/storage/v1/object/public/**",
       },
     ],
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      "@supabase/supabase-js": path.resolve(
+        __dirname,
+        "node_modules/@supabase/supabase-js/dist/main/index.js"
+      ),
+    };
+
+    return config;
   },
 };
 

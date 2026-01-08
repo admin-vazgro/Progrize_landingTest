@@ -1,5 +1,5 @@
 __turbopack_load_page_chunks__("/_error", [
-  "static/chunks/9312c_next_dist_compiled_7575e020._.js",
+  "static/chunks/9312c_next_dist_compiled_fab63cac._.js",
   "static/chunks/9312c_next_dist_shared_lib_713702f2._.js",
   "static/chunks/9312c_next_dist_client_a46c1df5._.js",
   "static/chunks/9312c_next_dist_2fb0831d._.js",
@@ -9,5 +9,5 @@ __turbopack_load_page_chunks__("/_error", [
   "static/chunks/9312c_cfd3a282._.js",
   "static/chunks/[root-of-the-server]__f9ff0724._.js",
   "static/chunks/Desktop_Progrize_landing-main_pages__error_2da965e7._.js",
-  "static/chunks/turbopack-Desktop_Progrize_landing-main_pages__error_4868da7b._.js"
+  "static/chunks/turbopack-Desktop_Progrize_landing-main_pages__error_ec0dd4dc._.js"
 ])

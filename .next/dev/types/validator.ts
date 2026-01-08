@@ -83,6 +83,33 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../../app/verification-rejected/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/verification-rejected">> = Specific
+  const handler = {} as typeof import("../../../app/verification-rejected/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/verification-success/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/verification-success">> = Specific
+  const handler = {} as typeof import("../../../app/verification-success/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../../app/verify/page.tsx
+{
+  type __IsExpected<Specific extends AppPageConfig<"/verify">> = Specific
+  const handler = {} as typeof import("../../../app/verify/page.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/api/send-curiosity/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/send-curiosity">> = Specific

@@ -31,6 +31,7 @@ interface EventCardProps {
 
 export default function EventCard({ event, currentUserId, onUpdate, onOpenDetail }: EventCardProps) {
   const [isRSVPing, setIsRSVPing] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const handleRSVP = async (status: "going" | "interested") => {
     if (isRSVPing) return;
@@ -92,17 +93,6 @@ export default function EventCard({ event, currentUserId, onUpdate, onOpenDetail
     }
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'long', 
-      day: 'numeric', 
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit'
-    });
-  };
-
   const totalAttendees = event.going_count + event.interested_count;
 
   return (
@@ -112,12 +102,13 @@ export default function EventCard({ event, currentUserId, onUpdate, onOpenDetail
     >
       {/* Event Image */}
       <div className="relative h-64 bg-gray-200">
-        {event.event_image ? (
+        {event.event_image && !imageError ? (
           <Image
             src={event.event_image}
             alt={event.title}
             fill
             className="object-cover"
+            onError={() => setImageError(true)}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#162f16] to-[#2a4a2a]">
@@ -146,6 +137,10 @@ export default function EventCard({ event, currentUserId, onUpdate, onOpenDetail
                   width={32}
                   height={32}
                   className="rounded-full border-2 border-white object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
                 />
               ) : (
                 <div 

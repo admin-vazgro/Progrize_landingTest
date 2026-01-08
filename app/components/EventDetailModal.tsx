@@ -55,6 +55,7 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
   const [isRSVPing, setIsRSVPing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const loadEventDetails = useCallback(async () => {
     if (!eventId) return;
@@ -407,12 +408,13 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
 
         {/* Event Image */}
         <div className="relative h-72 bg-gray-200 rounded-t-2xl overflow-hidden">
-          {event.event_image ? (
+          {event.event_image && !imageError ? (
             <Image
               src={event.event_image}
               alt={event.title}
               fill
               className="object-cover"
+              onError={() => setImageError(true)}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#162f16] to-[#2a4a2a]">
@@ -442,6 +444,10 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
                     width={40}
                     height={40}
                     className="rounded-full border-2 border-white object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                    }}
                   />
                 ) : (
                   <div 
@@ -482,7 +488,11 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
                 alt={event.host_name}
                 width={32}
                 height={32}
-                className="rounded-full object-cover max-w-10 max-h-10" 
+                className="rounded-full object-cover"
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-[#162f16] text-white flex items-center justify-center text-sm font-semibold">
@@ -532,9 +542,13 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
                       <Image
                         src={comment.user_avatar}
                         alt={comment.user_name}
-                        width={40}
-                        height={40}
-                        className="rounded-full object-cover max-w-10 max-h-10"
+                        width={32}
+                        height={32}
+                        className="rounded-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                        }}
                       />
                     ) : (
                       <div className="w-8 h-8 rounded-full bg-[#162f16] text-white flex items-center justify-center text-sm font-semibold">

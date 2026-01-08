@@ -10,6 +10,14 @@ import ExperienceCard from "../components/ExperienceCard";
 import EducationCard from "../components/EducationCard";
 import AddExperienceModal from "../components/AddExperienceModal";
 import AddEducationModal from "../components/AddEducationModal";
+import CertificationCard from "../components/CertificationCard";
+import AddCertificationModal from "../components/AddCertificationModal";
+import VolunteeringCard from "../components/VolunteeringCard";
+import AddVolunteeringModal from "../components/AddVolunteeringModal";
+import ProjectCard from "../components/ProjectCard";
+import AddProjectModal from "../components/AddProjectModal";
+import PublicationCard from "../components/PublicationCard";
+import AddPublicationModal from "../components/AddPublicationModal";
 
 interface UserProfile {
   id: string;
@@ -20,6 +28,7 @@ interface UserProfile {
   occupation: string;
   country: string;
   phone: string;
+  phone_country_code: string; // ✅ ADD THIS
   location: string;
   professional_summary: string;
   job_preferences: string[];
@@ -61,17 +70,70 @@ interface Education {
   description: string;
 }
 
+interface Certification {
+  id: string;
+  name: string;
+  issuing_organization: string;
+  issue_date: string;
+  expiration_date: string | null;
+  credential_id: string;
+  credential_url: string;
+  does_not_expire: boolean;
+}
+
+interface Volunteering {
+  id: string;
+  organization: string;
+  role: string;
+  cause: string;
+  start_date: string;
+  end_date: string | null;
+  is_current: boolean;
+  description: string;
+  location: string;
+}
+
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  start_date: string;
+  end_date: string | null;
+  is_ongoing: boolean;
+  project_url: string;
+  associated_with: string;
+  skills: string[];
+}
+
+interface Publication {
+  id: string;
+  title: string;
+  publisher: string;
+  publication_date: string;
+  publication_url: string;
+  description: string;
+  authors: string[];
+}
+
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
+  const [certifications, setCertifications] = useState<Certification[]>([]);
+  const [volunteering, setVolunteering] = useState<Volunteering[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [publications, setPublications] = useState<Publication[]>([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [addExperienceOpen, setAddExperienceOpen] = useState(false);
   const [addEducationOpen, setAddEducationOpen] = useState(false);
+  const [addCertificationOpen, setAddCertificationOpen] = useState(false);
+  const [addVolunteeringOpen, setAddVolunteeringOpen] = useState(false);
+  const [addProjectOpen, setAddProjectOpen] = useState(false);
+  const [addPublicationOpen, setAddPublicationOpen] = useState(false);
 
   const loadProfile = useCallback(async () => {
     try {
@@ -113,6 +175,46 @@ export default function ProfilePage() {
 
       if (educationError) throw educationError;
       setEducation(educationData || []);
+
+      // Load certifications
+      const { data: certificationsData, error: certificationsError } = await supabase
+        .from("certifications")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("issue_date", { ascending: false });
+
+      if (certificationsError) throw certificationsError;
+      setCertifications(certificationsData || []);
+
+      // Load volunteering
+      const { data: volunteeringData, error: volunteeringError } = await supabase
+        .from("volunteering")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("start_date", { ascending: false });
+
+      if (volunteeringError) throw volunteeringError;
+      setVolunteering(volunteeringData || []);
+
+      // Load projects
+      const { data: projectsData, error: projectsError } = await supabase
+        .from("projects")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("start_date", { ascending: false });
+
+      if (projectsError) throw projectsError;
+      setProjects(projectsData || []);
+
+      // Load publications
+      const { data: publicationsData, error: publicationsError } = await supabase
+        .from("publications")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("publication_date", { ascending: false });
+
+      if (publicationsError) throw publicationsError;
+      setPublications(publicationsData || []);
     } catch (error) {
       console.error("Error loading profile:", error);
     } finally {
@@ -189,6 +291,66 @@ export default function ProfilePage() {
       await loadProfile();
     } catch (error) {
       console.error("Error toggling referrals:", error);
+    }
+  };
+
+  const handleDeleteCertification = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("certifications")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+      await loadProfile();
+    } catch (error) {
+      console.error("Error deleting certification:", error);
+      alert("Failed to delete certification. Please try again.");
+    }
+  };
+
+  const handleDeleteVolunteering = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("volunteering")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+      await loadProfile();
+    } catch (error) {
+      console.error("Error deleting volunteering:", error);
+      alert("Failed to delete volunteering experience. Please try again.");
+    }
+  };
+
+  const handleDeleteProject = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("projects")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+      await loadProfile();
+    } catch (error) {
+      console.error("Error deleting project:", error);
+      alert("Failed to delete project. Please try again.");
+    }
+  };
+
+  const handleDeletePublication = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("publications")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+      await loadProfile();
+    } catch (error) {
+      console.error("Error deleting publication:", error);
+      alert("Failed to delete publication. Please try again.");
     }
   };
 
@@ -286,13 +448,13 @@ export default function ProfilePage() {
               
               <div className="flex gap-4 mb-4">
                 <div className="flex-1 text-center">
-                  <div className="w-16 h-16 rounded-xl bg-[#D6E264] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-full bg-[#d4af37] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
                     {profile.followers_count}
                   </div>
                   <p className="text-xs text-gray-600">Followers</p>
                 </div>
                 <div className="flex-1 text-center">
-                  <div className="w-16 h-16 rounded-xl bg-[#D6E264] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-full bg-[#d4af37] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
                     {profile.following_count}
                   </div>
                   <p className="text-xs text-gray-600">Following</p>
@@ -411,6 +573,118 @@ export default function ProfilePage() {
                 </div>
               )}
             </div>
+
+            {/* Licenses & Certifications */}
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Licenses & Certifications</h3>
+                <button
+                  onClick={() => setAddCertificationOpen(true)}
+                  className="text-sm text-[#162f16] hover:underline"
+                >
+                  + Add
+                </button>
+              </div>
+              
+              {certifications.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-8">No certifications added yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {certifications.map((cert) => (
+                    <CertificationCard
+                      key={cert.id}
+                      certification={cert}
+                      onEdit={() => {}}
+                      onDelete={handleDeleteCertification}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Volunteering */}
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Volunteering</h3>
+                <button
+                  onClick={() => setAddVolunteeringOpen(true)}
+                  className="text-sm text-[#162f16] hover:underline"
+                >
+                  + Add
+                </button>
+              </div>
+              
+              {volunteering.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-8">No volunteering experience added yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {volunteering.map((vol) => (
+                    <VolunteeringCard
+                      key={vol.id}
+                      volunteering={vol}
+                      onEdit={() => {}}
+                      onDelete={handleDeleteVolunteering}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Projects */}
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Projects</h3>
+                <button
+                  onClick={() => setAddProjectOpen(true)}
+                  className="text-sm text-[#162f16] hover:underline"
+                >
+                  + Add
+                </button>
+              </div>
+              
+              {projects.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-8">No projects added yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {projects.map((project) => (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      onEdit={() => {}}
+                      onDelete={handleDeleteProject}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Publications */}
+            <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Publications</h3>
+                <button
+                  onClick={() => setAddPublicationOpen(true)}
+                  className="text-sm text-[#162f16] hover:underline"
+                >
+                  + Add
+                </button>
+              </div>
+              
+              {publications.length === 0 ? (
+                <p className="text-sm text-gray-500 text-center py-8">No publications added yet.</p>
+              ) : (
+                <div className="space-y-3">
+                  {publications.map((pub) => (
+                    <PublicationCard
+                      key={pub.id}
+                      publication={pub}
+                      onEdit={() => {}}
+                      onDelete={handleDeletePublication}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Right Sidebar */}
@@ -433,7 +707,7 @@ export default function ProfilePage() {
                   {profile.job_preferences.map((job, index) => (
                     <span
                       key={index}
-                      className="px-3 py-2 bg-[#D6E264] text-[#162f16] rounded-xl text-xs font-medium"
+                      className="px-3 py-1 bg-[#d4af37] text-[#162f16] rounded-full text-xs font-medium"
                     >
                       {job}
                     </span>
@@ -487,7 +761,7 @@ export default function ProfilePage() {
                   Edit
                 </button>
               </div>
-              <p className="text-sm text-gray-600 mb-3">Countries you prefer to work in</p>
+              <p className="text-sm text-gray-600 mb-3">Loreal Epsum</p>
               
               {profile.preferred_countries && profile.preferred_countries.length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -526,6 +800,34 @@ export default function ProfilePage() {
       <AddEducationModal
         isOpen={addEducationOpen}
         onClose={() => setAddEducationOpen(false)}
+        userId={user.id}
+        onSuccess={loadProfile}
+      />
+
+      <AddCertificationModal
+        isOpen={addCertificationOpen}
+        onClose={() => setAddCertificationOpen(false)}
+        userId={user.id}
+        onSuccess={loadProfile}
+      />
+
+      <AddVolunteeringModal
+        isOpen={addVolunteeringOpen}
+        onClose={() => setAddVolunteeringOpen(false)}
+        userId={user.id}
+        onSuccess={loadProfile}
+      />
+
+      <AddProjectModal
+        isOpen={addProjectOpen}
+        onClose={() => setAddProjectOpen(false)}
+        userId={user.id}
+        onSuccess={loadProfile}
+      />
+
+      <AddPublicationModal
+        isOpen={addPublicationOpen}
+        onClose={() => setAddPublicationOpen(false)}
         userId={user.id}
         onSuccess={loadProfile}
       />

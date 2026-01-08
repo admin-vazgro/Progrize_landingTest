@@ -19,7 +19,16 @@
     "afterFiles": [],
     "fallback": []
   },
-  "dynamicRoutes": [],
+  "dynamicRoutes": [
+    {
+      "page": "/user/[userId]",
+      "regex": "^/user/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPuserId": "nxtPuserId"
+      },
+      "namedRegex": "^/user/(?<nxtPuserId>[^/]+?)(?:/)?$"
+    }
+  ],
   "staticRoutes": [
     {
       "page": "/",
@@ -62,6 +71,24 @@
       "regex": "^/profile(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/profile(?:/)?$"
+    },
+    {
+      "page": "/verification-rejected",
+      "regex": "^/verification\\-rejected(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/verification\\-rejected(?:/)?$"
+    },
+    {
+      "page": "/verification-success",
+      "regex": "^/verification\\-success(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/verification\\-success(?:/)?$"
+    },
+    {
+      "page": "/verify",
+      "regex": "^/verify(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/verify(?:/)?$"
     }
   ],
   "dataRoutes": [],

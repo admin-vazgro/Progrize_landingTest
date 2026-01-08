@@ -1,9 +1,13 @@
 {
-  "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/_global-error/page": "/_global-error",
   "/api/send-curiosity/route": "/api/send-curiosity",
   "/auth/callback/route": "/auth/callback",
-  "/community/page": "/community",
   "/page": "/",
-  "/profile/page": "/profile"
+  "/profile/page": "/profile",
+  "/verification-rejected/page": "/verification-rejected",
+  "/verification-success/page": "/verification-success",
+  "/user/[userId]/page": "/user/[userId]",
+  "/verify/page": "/verify",
+  "/community/page": "/community"
 }

@@ -1,0 +1,3 @@
+:HL["/_next/static/css/3fd09e3e32921bbe.css","style"]
+:HL["https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600;700;800&display=swap","style"]
+0:{"buildId":"FsGY8eno_Dcsb1XF3eomR","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"verification-rejected","paramType":null,"paramKey":"verification-rejected","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}
