@@ -635,6 +635,18 @@ export default function ProfilePage() {
   const hasJobPreferences = (profile.job_preferences || []).length > 0;
   const hasSkills = (profile.skills || []).length > 0;
   const hasPreferredCountries = (profile.preferred_countries || []).length > 0;
+  const isNewProfile =
+    !hasSummary &&
+    !hasExperiences &&
+    !hasEducation &&
+    !hasCertifications &&
+    !hasVolunteering &&
+    !hasProjects &&
+    !hasPublications &&
+    !hasJobPreferences &&
+    !hasSkills &&
+    !hasPreferredCountries &&
+    !hasActivity;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -767,6 +779,60 @@ export default function ProfilePage() {
 
           {/* Main Content */}
           <div className="lg:col-span-6 space-y-6">
+            {isNewProfile && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Get started</h3>
+                  <p className="text-sm text-gray-600">
+                    Add a few details so your profile feels complete and discoverable.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button
+                    onClick={() => setEditProfileOpen(true)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-[#162f16] hover:text-[#162f16] transition"
+                  >
+                    Add summary & skills
+                  </button>
+                  <button
+                    onClick={() => setAddExperienceOpen(true)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-[#162f16] hover:text-[#162f16] transition"
+                  >
+                    Add experience
+                  </button>
+                  <button
+                    onClick={() => setAddEducationOpen(true)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-[#162f16] hover:text-[#162f16] transition"
+                  >
+                    Add education
+                  </button>
+                  <button
+                    onClick={() => setAddCertificationOpen(true)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-[#162f16] hover:text-[#162f16] transition"
+                  >
+                    Add certification
+                  </button>
+                  <button
+                    onClick={() => setAddProjectOpen(true)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-[#162f16] hover:text-[#162f16] transition"
+                  >
+                    Add project
+                  </button>
+                  <button
+                    onClick={() => setAddVolunteeringOpen(true)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-[#162f16] hover:text-[#162f16] transition"
+                  >
+                    Add volunteering
+                  </button>
+                  <button
+                    onClick={() => setAddPublicationOpen(true)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-[#162f16] hover:text-[#162f16] transition"
+                  >
+                    Add publication
+                  </button>
+                </div>
+              </div>
+            )}
             {/* About You */}
             {hasSummary && (
               <div className="bg-white rounded-xl p-6 border border-gray-200">
