@@ -22,6 +22,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+-- Function to generate verification token
+CREATE OR REPLACE FUNCTION generate_verification_token()
+RETURNS TEXT AS $$
+DECLARE
+  token TEXT;
+BEGIN
+  token := encode(gen_random_bytes(32), 'hex');
+  RETURN token;
+END;
+$$ LANGUAGE plpgsql;
+
 -- Function to increment follow counts
 CREATE OR REPLACE FUNCTION increment_follow_counts(follower_id UUID, following_id UUID)
 RETURNS VOID AS $$

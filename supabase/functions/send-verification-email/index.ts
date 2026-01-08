@@ -10,6 +10,7 @@ interface VerificationEmailRequest {
   verificationRequestId: string;
   verifierEmail: string;
   userName: string;
+  message?: string;
   requestType: "experience" | "education";
   itemDetails: {
     title: string;
@@ -40,6 +41,7 @@ serve(async (req) => {
       verificationRequestId,
       verifierEmail,
       userName,
+      message,
       requestType,
       itemDetails,
       verificationToken,
@@ -128,6 +130,22 @@ serve(async (req) => {
                 </tr>
               </table>
               
+              ${message ? `
+              <!-- Message -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; border: 1px solid #e5e7eb; border-radius: 6px; margin: 20px 0;">
+                <tr>
+                  <td style="padding: 16px;">
+                    <p style="margin: 0 0 6px 0; color: #111827; font-size: 14px; font-weight: 600;">
+                      Additional message
+                    </p>
+                    <p style="margin: 0; color: #4b5563; font-size: 14px; line-height: 1.5;">
+                      ${message.replace(/\n/g, "<br />")}
+                    </p>
+                  </td>
+                </tr>
+              </table>
+              ` : ""}
+
               <!-- CTA Button -->
               <table width="100%" cellpadding="0" cellspacing="0" style="margin: 30px 0;">
                 <tr>

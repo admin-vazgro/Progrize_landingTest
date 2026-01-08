@@ -1,14 +1,14 @@
 {
-  "/_not-found/page": "/_not-found",
   "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
   "/api/send-curiosity/route": "/api/send-curiosity",
   "/auth/callback/route": "/auth/callback",
-  "/page": "/",
-  "/profile/page": "/profile",
   "/activity/[userId]/page": "/activity/[userId]",
-  "/user/[userId]/page": "/user/[userId]",
+  "/page": "/",
   "/community/page": "/community",
+  "/user/[userId]/page": "/user/[userId]",
+  "/profile/page": "/profile",
+  "/verify/page": "/verify",
   "/verification-rejected/page": "/verification-rejected",
-  "/verification-success/page": "/verification-success",
-  "/verify/page": "/verify"
+  "/verification-success/page": "/verification-success"
 }

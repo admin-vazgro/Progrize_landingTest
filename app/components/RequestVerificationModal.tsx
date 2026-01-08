@@ -51,6 +51,7 @@ export default function RequestVerificationModal({
         .single();
 
       const userName = profileData?.full_name || "User";
+      const userEmail = user.email || "";
 
       // Generate verification token
       const { data: tokenData, error: tokenError } = await supabase
@@ -61,18 +62,47 @@ export default function RequestVerificationModal({
       const verificationToken = tokenData;
 
       // Create verification request
-      const { data: requestData, error: requestError } = await supabase
+      const basePayload = {
+        user_id: user.id,
+        request_type: type,
+        reference_id: referenceId,
+        verifier_email: verifierEmail,
+        verification_token: verificationToken,
+        status: "pending",
+      };
+
+      const extendedPayload = {
+        ...basePayload,
+        user_name: userName,
+        user_email: userEmail,
+        ...(message.trim() ? { message: message.trim() } : {}),
+      };
+
+      let requestData;
+      let requestError;
+
+      ({ data: requestData, error: requestError } = await supabase
         .from("verification_requests")
-        .insert({
-          user_id: user.id,
-          request_type: type,
-          reference_id: referenceId,
-          verifier_email: verifierEmail,
-          verification_token: verificationToken,
-          status: "pending",
-        })
+        .insert(extendedPayload)
         .select()
-        .single();
+        .single());
+
+      if (requestError) {
+        const errorMessage = (requestError as { message?: string })?.message || "";
+        const isMissingExtendedColumn =
+          (errorMessage.includes("message") ||
+            errorMessage.includes("user_email") ||
+            errorMessage.includes("user_name")) &&
+          errorMessage.includes("column");
+
+        if (isMissingExtendedColumn) {
+          ({ data: requestData, error: requestError } = await supabase
+            .from("verification_requests")
+            .insert(basePayload)
+            .select()
+            .single());
+        }
+      }
 
       if (requestError) throw requestError;
 
@@ -84,6 +114,7 @@ export default function RequestVerificationModal({
             verificationRequestId: requestData.id,
             verifierEmail: verifierEmail,
             userName: userName,
+            message: message.trim() || undefined,
             requestType: type,
             itemDetails: itemDetails,
             verificationToken: verificationToken,
@@ -102,8 +133,15 @@ export default function RequestVerificationModal({
       onSuccess();
       onClose();
     } catch (error) {
-      console.error("Error sending verification request:", error);
-      alert("Failed to send verification request. Please try again.");
+      const details = {
+        message: (error as { message?: string })?.message,
+        code: (error as { code?: string })?.code,
+        details: (error as { details?: string })?.details,
+        hint: (error as { hint?: string })?.hint,
+      };
+      console.error("Error sending verification request:", error, details);
+      const fallback = "Failed to send verification request. Please try again.";
+      alert(details.message ? `${fallback}\n${details.message}` : fallback);
     } finally {
       setLoading(false);
     }

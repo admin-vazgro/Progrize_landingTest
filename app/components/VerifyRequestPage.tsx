@@ -7,14 +7,15 @@ import { useRouter, useSearchParams } from "next/navigation";
 interface VerificationDetails {
   id: string;
   user_id: string;
+  user_name: string;
+  user_email: string;
   request_type: string;
   reference_id: string;
   verifier_email: string;
   status: string;
   created_at: string;
   expires_at?: string;
-  user_name: string;
-  user_email: string;
+  message?: string;
   item_details: {
     title: string;
     organization: string;
@@ -76,14 +77,6 @@ export default function VerifyRequestPage() {
         return;
       }
 
-      // Get user profile and email
-      const { data: { user: authUser } } = await supabase.auth.admin.getUserById(requestData.user_id);
-      const { data: profileData } = await supabase
-        .from("profiles")
-        .select("full_name")
-        .eq("id", requestData.user_id)
-        .single();
-
       // Get item details based on type
       let itemDetails;
       if (requestData.request_type === "experience") {
@@ -120,8 +113,8 @@ export default function VerifyRequestPage() {
 
       setVerificationDetails({
         ...requestData,
-        user_name: profileData?.full_name || "Unknown User",
-        user_email: authUser?.email || "",
+        user_name: requestData.user_name || "Unknown User",
+        user_email: requestData.user_email || "",
         item_details: itemDetails,
       });
     } catch (error) {
@@ -366,6 +359,15 @@ export default function VerifyRequestPage() {
                 )}
               </div>
             </div>
+
+            {verificationDetails.message && (
+              <div className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                <h3 className="font-semibold text-gray-900 mb-2">Additional Message</h3>
+                <p className="text-sm text-gray-700 whitespace-pre-wrap">
+                  {verificationDetails.message}
+                </p>
+              </div>
+            )}
 
             {/* Rejection Form */}
             {showRejectionForm && (

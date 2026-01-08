@@ -407,7 +407,7 @@ export default function ProfilePage() {
         const oldPath = profile.avatar_url.split("/").pop();
         if (oldPath) {
           await supabase.storage
-            .from("profile_pictures")
+            .from("profile-pictures")
             .remove([`${user.id}/${oldPath}`]);
         }
       }
@@ -418,14 +418,14 @@ export default function ProfilePage() {
       const filePath = `${user.id}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from("profile_pictures")
+        .from("profile-pictures")
         .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
-        .from("profile_pictures")
+        .from("profile-pictures")
         .getPublicUrl(filePath);
 
       // Update profile with new avatar URL

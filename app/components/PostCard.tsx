@@ -237,9 +237,9 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
             </div>
           )}
           <div className="min-w-0">
-            <p className="font-medium text-gray-900 hover:underline line-clamp-1">{post.user_name}</p>
+            <p className="font-medium text-gray-900 text-xs hover:underline line-clamp-1">{post.user_name}</p>
             {post.user_occupation && (
-              <p className="text-sm text-gray-600 line-clamp-1">{post.user_occupation}</p>
+              <p className="text-xs text-gray-600 line-clamp-1">{post.user_occupation}</p>
             )}
             <p className="text-xs text-gray-500">{formatDate(post.created_at)}</p>
           </div>
@@ -285,14 +285,14 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
 
       {/* Content */}
       <h3
-        className={`text-lg sm:text-xl font-semibold text-gray-900 mb-2 ${
+        className={`text-l sm:text-base font-regular text-gray-900 mb-2 ${
           compact ? "line-clamp-2" : ""
         }`}
       >
         {post.title}
       </h3>
       <p
-        className={`text-sm sm:text-base text-gray-700 mb-4 whitespace-pre-wrap break-words ${
+        className={`text-xs sm:text-xs text-gray-700 mb-4 whitespace-pre-wrap break-words ${
           compact ? "line-clamp-3" : ""
         }`}
       >
