@@ -21,3 +21,31 @@ BEGIN
   UPDATE posts SET comments_count = comments_count + 1 WHERE id = post_id;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Function to increment follow counts
+CREATE OR REPLACE FUNCTION increment_follow_counts(follower_id UUID, following_id UUID)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE profiles
+  SET following_count = COALESCE(following_count, 0) + 1
+  WHERE id = follower_id;
+
+  UPDATE profiles
+  SET followers_count = COALESCE(followers_count, 0) + 1
+  WHERE id = following_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
+
+-- Function to decrement follow counts
+CREATE OR REPLACE FUNCTION decrement_follow_counts(follower_id UUID, following_id UUID)
+RETURNS VOID AS $$
+BEGIN
+  UPDATE profiles
+  SET following_count = GREATEST(COALESCE(following_count, 0) - 1, 0)
+  WHERE id = follower_id;
+
+  UPDATE profiles
+  SET followers_count = GREATEST(COALESCE(followers_count, 0) - 1, 0)
+  WHERE id = following_id;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;

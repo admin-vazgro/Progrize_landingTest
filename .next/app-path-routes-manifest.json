@@ -5,9 +5,10 @@
   "/auth/callback/route": "/auth/callback",
   "/page": "/",
   "/profile/page": "/profile",
+  "/activity/[userId]/page": "/activity/[userId]",
+  "/user/[userId]/page": "/user/[userId]",
+  "/community/page": "/community",
   "/verification-rejected/page": "/verification-rejected",
   "/verification-success/page": "/verification-success",
-  "/user/[userId]/page": "/user/[userId]",
-  "/verify/page": "/verify",
-  "/community/page": "/community"
+  "/verify/page": "/verify"
 }

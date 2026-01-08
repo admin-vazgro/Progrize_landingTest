@@ -11,6 +11,7 @@ import ExperienceCard from "../../components/ExperienceCard";
 import EducationCard from "../../components/EducationCard";
 import AddExperienceModal from "../../components/AddExperienceModal";
 import AddEducationModal from "../../components/AddEducationModal";
+import PostCard from "../../components/PostCard";
 
 interface UserProfile {
   id: string;
@@ -62,6 +63,39 @@ interface Education {
   description: string;
 }
 
+interface PostLike {
+  user_id: string;
+}
+
+interface PostEvent {
+  id: string;
+  event_date: string;
+  location: string;
+  meeting_link: string;
+  going_count: number;
+  interested_count: number;
+  user_rsvp: string | null;
+}
+
+interface Post {
+  id: string;
+  post_type: string;
+  title: string;
+  content: string;
+  tags: string[];
+  likes_count: number;
+  comments_count: number;
+  created_at: string;
+  user_id: string;
+  post_likes?: PostLike[];
+  events?: PostEvent[];
+  user_name: string;
+  user_avatar: string;
+  user_occupation: string;
+  is_liked: boolean;
+  event?: PostEvent;
+}
+
 export default function UserProfilePage() {
   const router = useRouter();
   const params = useParams();
@@ -71,6 +105,7 @@ export default function UserProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [experiences, setExperiences] = useState<Experience[]>([]);
   const [education, setEducation] = useState<Education[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [addExperienceOpen, setAddExperienceOpen] = useState(false);
@@ -92,7 +127,30 @@ export default function UserProfilePage() {
         .single();
 
       if (profileError) throw profileError;
-      setProfile(profileData);
+      let nextProfile = profileData as UserProfile;
+
+      // Refresh follow counts from follow table
+      const [{ count: followersCount, error: followersCountError }, { count: followingCount, error: followingCountError }] =
+        await Promise.all([
+          supabase
+            .from("profile_follows")
+            .select("id", { count: "exact", head: true })
+            .eq("following_id", userId),
+          supabase
+            .from("profile_follows")
+            .select("id", { count: "exact", head: true })
+            .eq("follower_id", userId),
+        ]);
+
+      if (!followersCountError && !followingCountError) {
+        nextProfile = {
+          ...nextProfile,
+          followers_count: followersCount ?? nextProfile.followers_count ?? 0,
+          following_count: followingCount ?? nextProfile.following_count ?? 0,
+        };
+      }
+
+      setProfile(nextProfile);
 
       // Load experiences
       const { data: experiencesData, error: experiencesError } = await supabase
@@ -113,6 +171,41 @@ export default function UserProfilePage() {
 
       if (educationError) throw educationError;
       setEducation(educationData || []);
+
+      // Load posts
+      const { data: postsData, error: postsError } = await supabase
+        .from("posts")
+        .select(`
+          *,
+          post_likes!left(user_id),
+          events!left(*)
+        `)
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+
+      if (postsError) throw postsError;
+
+      const postsWithUsers = (postsData || []).map((post) => {
+        const isLiked =
+          post.post_likes?.some((like: PostLike) => like.user_id === user?.id) ||
+          false;
+
+        let eventData: PostEvent | undefined;
+        if (post.post_type === "event" && post.events && post.events.length > 0) {
+          eventData = post.events[0];
+        }
+
+        return {
+          ...post,
+          user_name: profileData?.full_name || "User",
+          user_avatar: profileData?.avatar_url || "",
+          user_occupation: profileData?.occupation || "",
+          is_liked: isLiked,
+          event: eventData,
+        };
+      });
+
+      setPosts(postsWithUsers);
     } catch (error) {
       console.error("Error loading user profile:", error);
     } finally {
@@ -159,6 +252,10 @@ export default function UserProfilePage() {
       </div>
     );
   }
+
+  const activityLimit = 2;
+  const visiblePosts = posts.slice(0, activityLimit);
+  const hasActivity = posts.length > 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -286,6 +383,39 @@ export default function UserProfilePage() {
 
           {/* Main Content */}
           <div className="lg:col-span-6 space-y-6">
+            {hasActivity && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Activity</h3>
+                    <p className="text-sm text-gray-500">Recent posts</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {visiblePosts.map((post) => (
+                    <PostCard
+                      key={post.id}
+                      post={post}
+                      currentUserId={currentUser?.id || ""}
+                      onUpdate={loadUserProfile}
+                      compact
+                    />
+                  ))}
+                </div>
+
+                {posts.length > activityLimit && (
+                  <div className="mt-4 flex justify-center">
+                    <button
+                      onClick={() => router.push(`/activity/${userId}`)}
+                      className="text-sm text-[#162f16] hover:underline"
+                    >
+                      Show all posts →
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
             {/* About You */}
             <div className="bg-white rounded-xl p-6 border border-gray-200">
               <div className="flex items-center justify-between mb-4">

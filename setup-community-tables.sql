@@ -70,6 +70,16 @@ CREATE TABLE IF NOT EXISTS comments (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Create profile follows table
+CREATE TABLE IF NOT EXISTS profile_follows (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  follower_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  following_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  UNIQUE(follower_id, following_id),
+  CHECK (follower_id <> following_id)
+);
+
 -- Create indexes for better performance
 CREATE INDEX IF NOT EXISTS posts_community_idx ON posts(community_id);
 CREATE INDEX IF NOT EXISTS posts_user_idx ON posts(user_id);
@@ -77,6 +87,8 @@ CREATE INDEX IF NOT EXISTS posts_created_at_idx ON posts(created_at DESC);
 CREATE INDEX IF NOT EXISTS comments_post_idx ON comments(post_id);
 CREATE INDEX IF NOT EXISTS likes_post_idx ON post_likes(post_id);
 CREATE INDEX IF NOT EXISTS event_rsvps_event_idx ON event_rsvps(event_id);
+CREATE INDEX IF NOT EXISTS profile_follows_follower_idx ON profile_follows(follower_id);
+CREATE INDEX IF NOT EXISTS profile_follows_following_idx ON profile_follows(following_id);
 
 -- Enable Row Level Security
 ALTER TABLE communities ENABLE ROW LEVEL SECURITY;
@@ -86,6 +98,7 @@ ALTER TABLE events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE event_rsvps ENABLE ROW LEVEL SECURITY;
 ALTER TABLE post_likes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profile_follows ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for communities (public read)
 CREATE POLICY "allow_read_all_communities" ON communities FOR SELECT USING (true);
@@ -117,6 +130,11 @@ CREATE POLICY "allow_read_all_comments" ON comments FOR SELECT TO authenticated 
 CREATE POLICY "allow_insert_own_comments" ON comments FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "allow_update_own_comments" ON comments FOR UPDATE TO authenticated USING (auth.uid() = user_id);
 CREATE POLICY "allow_delete_own_comments" ON comments FOR DELETE TO authenticated USING (auth.uid() = user_id);
+
+-- RLS Policies for profile follows
+CREATE POLICY "allow_read_all_profile_follows" ON profile_follows FOR SELECT TO authenticated USING (true);
+CREATE POLICY "allow_insert_own_profile_follows" ON profile_follows FOR INSERT TO authenticated WITH CHECK (auth.uid() = follower_id);
+CREATE POLICY "allow_delete_own_profile_follows" ON profile_follows FOR DELETE TO authenticated USING (auth.uid() = follower_id);
 
 -- Insert default communities
 INSERT INTO communities (name, description) VALUES

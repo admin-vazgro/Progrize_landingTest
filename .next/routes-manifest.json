@@ -21,6 +21,14 @@
   },
   "dynamicRoutes": [
     {
+      "page": "/activity/[userId]",
+      "regex": "^/activity/([^/]+?)(?:/)?$",
+      "routeKeys": {
+        "nxtPuserId": "nxtPuserId"
+      },
+      "namedRegex": "^/activity/(?<nxtPuserId>[^/]+?)(?:/)?$"
+    },
+    {
       "page": "/user/[userId]",
       "regex": "^/user/([^/]+?)(?:/)?$",
       "routeKeys": {

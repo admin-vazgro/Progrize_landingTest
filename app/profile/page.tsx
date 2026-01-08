@@ -18,6 +18,7 @@ import ProjectCard from "../components/ProjectCard";
 import AddProjectModal from "../components/AddProjectModal";
 import PublicationCard from "../components/PublicationCard";
 import AddPublicationModal from "../components/AddPublicationModal";
+import PostCard from "../components/PostCard";
 
 interface UserProfile {
   id: string;
@@ -115,6 +116,46 @@ interface Publication {
   authors: string[];
 }
 
+interface SuggestedProfile {
+  id: string;
+  full_name: string;
+  avatar_url: string;
+  occupation: string;
+}
+
+interface PostLike {
+  user_id: string;
+}
+
+interface PostEvent {
+  id: string;
+  event_date: string;
+  location: string;
+  meeting_link: string;
+  going_count: number;
+  interested_count: number;
+  user_rsvp: string | null;
+}
+
+interface Post {
+  id: string;
+  post_type: string;
+  title: string;
+  content: string;
+  tags: string[];
+  likes_count: number;
+  comments_count: number;
+  created_at: string;
+  user_id: string;
+  post_likes?: PostLike[];
+  events?: PostEvent[];
+  user_name: string;
+  user_avatar: string;
+  user_occupation: string;
+  is_liked: boolean;
+  event?: PostEvent;
+}
+
 export default function ProfilePage() {
   const router = useRouter();
   const [user, setUser] = useState<{ id: string; email?: string } | null>(null);
@@ -125,6 +166,10 @@ export default function ProfilePage() {
   const [volunteering, setVolunteering] = useState<Volunteering[]>([]);
   const [projects, setProjects] = useState<Project[]>([]);
   const [publications, setPublications] = useState<Publication[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [suggestions, setSuggestions] = useState<SuggestedProfile[]>([]);
+  const [followingIds, setFollowingIds] = useState<Set<string>>(new Set());
+  const [followLoadingId, setFollowLoadingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
@@ -154,7 +199,30 @@ export default function ProfilePage() {
         .single();
 
       if (profileError) throw profileError;
-      setProfile(profileData);
+      let nextProfile = profileData as UserProfile;
+
+      // Refresh follow counts from follow table to keep them consistent
+      const [{ count: followersCount, error: followersCountError }, { count: followingCount, error: followingCountError }] =
+        await Promise.all([
+          supabase
+            .from("profile_follows")
+            .select("id", { count: "exact", head: true })
+            .eq("following_id", user.id),
+          supabase
+            .from("profile_follows")
+            .select("id", { count: "exact", head: true })
+            .eq("follower_id", user.id),
+        ]);
+
+      if (!followersCountError && !followingCountError) {
+        nextProfile = {
+          ...nextProfile,
+          followers_count: followersCount ?? nextProfile.followers_count ?? 0,
+          following_count: followingCount ?? nextProfile.following_count ?? 0,
+        };
+      }
+
+      setProfile(nextProfile);
 
       // Load experiences
       const { data: experiencesData, error: experiencesError } = await supabase
@@ -215,6 +283,107 @@ export default function ProfilePage() {
 
       if (publicationsError) throw publicationsError;
       setPublications(publicationsData || []);
+
+      // Load suggestions
+      let suggestionRows: SuggestedProfile[] = [];
+      try {
+        if (profileData.occupation) {
+          const { data: suggestedData, error: suggestedError } = await supabase
+            .from("profiles")
+            .select("id, full_name, avatar_url, occupation")
+            .neq("id", user.id)
+            .ilike("occupation", `%${profileData.occupation}%`)
+            .limit(5);
+
+          if (suggestedError) {
+            console.warn("Suggestion lookup failed:", suggestedError);
+          } else {
+            suggestionRows = suggestedData || [];
+          }
+        }
+
+        if (suggestionRows.length === 0) {
+          const { data: fallbackData, error: fallbackError } = await supabase
+            .from("profiles")
+            .select("id, full_name, avatar_url, occupation")
+            .neq("id", user.id)
+            .order("created_at", { ascending: false })
+            .limit(5);
+
+          if (fallbackError) {
+            console.warn("Suggestion fallback failed:", fallbackError);
+          } else {
+            suggestionRows = fallbackData || [];
+          }
+        }
+      } catch (error) {
+        console.warn("Suggestion loading failed:", error);
+      }
+
+      setSuggestions(suggestionRows);
+
+      if (suggestionRows.length > 0) {
+        const { data: followData, error: followError } = await supabase
+          .from("profile_follows")
+          .select("following_id")
+          .eq("follower_id", user.id)
+          .in("following_id", suggestionRows.map((row) => row.id));
+
+        if (followError) {
+          console.warn("Follow lookup failed:", followError);
+          setFollowingIds(new Set());
+        } else {
+          setFollowingIds(new Set((followData || []).map((row) => row.following_id)));
+        }
+      } else {
+        setFollowingIds(new Set());
+      }
+
+      // Load posts
+      const { data: postsData, error: postsError } = await supabase
+        .from("posts")
+        .select(`
+          *,
+          post_likes!left(user_id),
+          events!left(*)
+        `)
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (postsError) throw postsError;
+
+      const postsWithUsers = await Promise.all(
+        (postsData || []).map(async (post) => {
+          const isLiked = post.post_likes?.some((like: PostLike) => like.user_id === user.id) || false;
+
+          let eventData: PostEvent | undefined;
+          if (post.post_type === "event" && post.events && post.events.length > 0) {
+            const event = post.events[0];
+            const { data: rsvpData } = await supabase
+              .from("event_rsvps")
+              .select("status")
+              .eq("event_id", event.id)
+              .eq("user_id", user.id)
+              .single();
+
+            eventData = {
+              ...event,
+              user_rsvp: rsvpData?.status || null
+            };
+          }
+
+          return {
+            ...post,
+            user_name: profileData?.full_name || "User",
+            user_avatar: profileData?.avatar_url || "",
+            user_occupation: profileData?.occupation || "",
+            is_liked: isLiked,
+            event: eventData
+          };
+        })
+      );
+
+      setPosts(postsWithUsers);
     } catch (error) {
       console.error("Error loading profile:", error);
     } finally {
@@ -354,6 +523,89 @@ export default function ProfilePage() {
     }
   };
 
+  const handleToggleFollow = async (targetId: string) => {
+    if (!user) return;
+    if (targetId === user.id) {
+      alert("You cannot follow yourself.");
+      return;
+    }
+    const isFollowing = followingIds.has(targetId);
+    setFollowLoadingId(targetId);
+
+    try {
+      if (isFollowing) {
+        const { error } = await supabase
+          .from("profile_follows")
+          .delete()
+          .eq("follower_id", user.id)
+          .eq("following_id", targetId);
+
+        if (error) throw error;
+        const { error: countError } = await supabase.rpc("decrement_follow_counts", {
+          follower_id: user.id,
+          following_id: targetId,
+        });
+
+        if (countError) {
+          console.warn("Follow count update failed:", countError);
+        }
+        setFollowingIds((prev) => {
+          const next = new Set(prev);
+          next.delete(targetId);
+          return next;
+        });
+        setProfile((prev) =>
+          prev
+            ? { ...prev, following_count: Math.max(0, prev.following_count - 1) }
+            : prev
+        );
+      } else {
+        const { data: existingFollow, error: existingError } = await supabase
+          .from("profile_follows")
+          .select("id")
+          .eq("follower_id", user.id)
+          .eq("following_id", targetId)
+          .maybeSingle();
+
+        if (existingError) throw existingError;
+        if (existingFollow) {
+          setFollowingIds((prev) => new Set(prev).add(targetId));
+          return;
+        }
+
+        const { error } = await supabase
+          .from("profile_follows")
+          .insert({ follower_id: user.id, following_id: targetId });
+
+        if (error) throw error;
+        const { error: countError } = await supabase.rpc("increment_follow_counts", {
+          follower_id: user.id,
+          following_id: targetId,
+        });
+
+        if (countError) {
+          console.warn("Follow count update failed:", countError);
+        }
+        setFollowingIds((prev) => new Set(prev).add(targetId));
+        setProfile((prev) =>
+          prev ? { ...prev, following_count: prev.following_count + 1 } : prev
+        );
+      }
+    } catch (error) {
+      const details = {
+        message: (error as { message?: string })?.message,
+        code: (error as { code?: string })?.code,
+        details: (error as { details?: string })?.details,
+        hint: (error as { hint?: string })?.hint,
+      };
+      console.error("Error updating follow status:", error, details);
+      const fallback = "Failed to update follow status. Please try again.";
+      alert(details.message ? `${fallback}\n${details.message}` : fallback);
+    } finally {
+      setFollowLoadingId(null);
+    }
+  };
+
   const handleAuthClick = () => {
     router.push("/");
   };
@@ -369,6 +621,20 @@ export default function ProfilePage() {
   if (!user || !profile) {
     return null;
   }
+
+  const activityLimit = 2;
+  const visiblePosts = posts.slice(0, activityLimit);
+  const hasSummary = Boolean(profile.professional_summary?.trim());
+  const hasExperiences = experiences.length > 0;
+  const hasEducation = education.length > 0;
+  const hasCertifications = certifications.length > 0;
+  const hasVolunteering = volunteering.length > 0;
+  const hasProjects = projects.length > 0;
+  const hasPublications = publications.length > 0;
+  const hasActivity = posts.length > 0;
+  const hasJobPreferences = (profile.job_preferences || []).length > 0;
+  const hasSkills = (profile.skills || []).length > 0;
+  const hasPreferredCountries = (profile.preferred_countries || []).length > 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -448,13 +714,13 @@ export default function ProfilePage() {
               
               <div className="flex gap-4 mb-4">
                 <div className="flex-1 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#d4af37] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-full bg-[#D6E264] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
                     {profile.followers_count}
                   </div>
                   <p className="text-xs text-gray-600">Followers</p>
                 </div>
                 <div className="flex-1 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#d4af37] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-full bg-[#D6E264] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
                     {profile.following_count}
                   </div>
                   <p className="text-xs text-gray-600">Following</p>
@@ -502,37 +768,70 @@ export default function ProfilePage() {
           {/* Main Content */}
           <div className="lg:col-span-6 space-y-6">
             {/* About You */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">About you</h3>
-                <button
-                  onClick={() => setEditProfileOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  Edit
-                </button>
+            {hasSummary && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">About you</h3>
+                  <button
+                    onClick={() => setEditProfileOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Professional Summary</p>
+                <p className="text-sm text-gray-700 leading-relaxed">
+                  {profile.professional_summary}
+                </p>
               </div>
-              <p className="text-sm text-gray-600 mb-3">Professional Summary</p>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                {profile.professional_summary || "No professional summary added yet."}
-              </p>
-            </div>
+            )}
+
+            {hasActivity && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Activity</h3>
+                    <p className="text-sm text-gray-500">Recent posts</p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {visiblePosts.map((post) => (
+                    <PostCard
+                      key={post.id}
+                      post={post}
+                      currentUserId={user.id}
+                      onUpdate={loadProfile}
+                      compact
+                    />
+                  ))}
+                </div>
+
+                {posts.length > activityLimit && (
+                  <div className="mt-4 flex justify-center">
+                    <button
+                      onClick={() => router.push(`/activity/${user.id}`)}
+                      className="text-sm text-[#162f16] hover:underline"
+                    >
+                      Show all posts →
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Experiences */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Experiences</h3>
-                <button
-                  onClick={() => setAddExperienceOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  + Add
-                </button>
-              </div>
-              
-              {experiences.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-8">No experiences added yet.</p>
-              ) : (
+            {hasExperiences && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Experiences</h3>
+                  <button
+                    onClick={() => setAddExperienceOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    + Add
+                  </button>
+                </div>
                 <div className="space-y-4">
                   {experiences.map((exp) => (
                     <ExperienceCard
@@ -543,24 +842,21 @@ export default function ProfilePage() {
                     />
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Education */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Education</h3>
-                <button
-                  onClick={() => setAddEducationOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  + Add
-                </button>
-              </div>
-              
-              {education.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-8">No education added yet.</p>
-              ) : (
+            {hasEducation && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Education</h3>
+                  <button
+                    onClick={() => setAddEducationOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    + Add
+                  </button>
+                </div>
                 <div className="space-y-4">
                   {education.map((edu) => (
                     <EducationCard
@@ -571,24 +867,21 @@ export default function ProfilePage() {
                     />
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Licenses & Certifications */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Licenses & Certifications</h3>
-                <button
-                  onClick={() => setAddCertificationOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  + Add
-                </button>
-              </div>
-              
-              {certifications.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-8">No certifications added yet.</p>
-              ) : (
+            {hasCertifications && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Licenses & Certifications</h3>
+                  <button
+                    onClick={() => setAddCertificationOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    + Add
+                  </button>
+                </div>
                 <div className="space-y-3">
                   {certifications.map((cert) => (
                     <CertificationCard
@@ -599,24 +892,21 @@ export default function ProfilePage() {
                     />
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Volunteering */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Volunteering</h3>
-                <button
-                  onClick={() => setAddVolunteeringOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  + Add
-                </button>
-              </div>
-              
-              {volunteering.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-8">No volunteering experience added yet.</p>
-              ) : (
+            {hasVolunteering && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Volunteering</h3>
+                  <button
+                    onClick={() => setAddVolunteeringOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    + Add
+                  </button>
+                </div>
                 <div className="space-y-3">
                   {volunteering.map((vol) => (
                     <VolunteeringCard
@@ -627,24 +917,21 @@ export default function ProfilePage() {
                     />
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Projects */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Projects</h3>
-                <button
-                  onClick={() => setAddProjectOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  + Add
-                </button>
-              </div>
-              
-              {projects.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-8">No projects added yet.</p>
-              ) : (
+            {hasProjects && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Projects</h3>
+                  <button
+                    onClick={() => setAddProjectOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    + Add
+                  </button>
+                </div>
                 <div className="space-y-3">
                   {projects.map((project) => (
                     <ProjectCard
@@ -655,24 +942,21 @@ export default function ProfilePage() {
                     />
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Publications */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">Publications</h3>
-                <button
-                  onClick={() => setAddPublicationOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  + Add
-                </button>
-              </div>
-              
-              {publications.length === 0 ? (
-                <p className="text-sm text-gray-500 text-center py-8">No publications added yet.</p>
-              ) : (
+            {hasPublications && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Publications</h3>
+                  <button
+                    onClick={() => setAddPublicationOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    + Add
+                  </button>
+                </div>
                 <div className="space-y-3">
                   {publications.map((pub) => (
                     <PublicationCard
@@ -683,55 +967,51 @@ export default function ProfilePage() {
                     />
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Right Sidebar */}
           <div className="lg:col-span-3 space-y-6">
             {/* Interested Job */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">Interested job</h3>
-                <button
-                  onClick={() => setEditProfileOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  Edit
-                </button>
-              </div>
-              <p className="text-sm text-gray-600 mb-3">Job Preference</p>
-              
-              {profile.job_preferences && profile.job_preferences.length > 0 ? (
+            {hasJobPreferences && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">Interested job</h3>
+                  <button
+                    onClick={() => setEditProfileOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Job Preference</p>
                 <div className="flex flex-wrap gap-2">
                   {profile.job_preferences.map((job, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-[#d4af37] text-[#162f16] rounded-full text-xs font-medium"
+                      className="px-3 py-1 bg-[#D6E264] text-[#162f16] rounded-full text-xs font-medium"
                     >
                       {job}
                     </span>
                   ))}
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500">No job preferences added yet.</p>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Skills */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">Skills</h3>
-                <button
-                  onClick={() => setEditProfileOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  Edit
-                </button>
-              </div>
-              <p className="text-sm text-gray-600 mb-3">Top skills</p>
-              
-              {profile.skills && profile.skills.length > 0 ? (
+            {hasSkills && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">Skills</h3>
+                  <button
+                    onClick={() => setEditProfileOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Top skills</p>
                 <div className="flex flex-wrap gap-2">
                   {profile.skills.map((skill, index) => (
                     <span
@@ -745,25 +1025,22 @@ export default function ProfilePage() {
                     </span>
                   ))}
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500">No skills added yet.</p>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Preferred Countries */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">Preferred Countries</h3>
-                <button
-                  onClick={() => setEditProfileOpen(true)}
-                  className="text-sm text-[#162f16] hover:underline"
-                >
-                  Edit
-                </button>
-              </div>
-              <p className="text-sm text-gray-600 mb-3">Loreal Epsum</p>
-              
-              {profile.preferred_countries && profile.preferred_countries.length > 0 ? (
+            {hasPreferredCountries && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">Preferred Countries</h3>
+                  <button
+                    onClick={() => setEditProfileOpen(true)}
+                    className="text-sm text-[#162f16] hover:underline"
+                  >
+                    Edit
+                  </button>
+                </div>
+                <p className="text-sm text-gray-600 mb-3">Loreal Epsum</p>
                 <div className="flex flex-wrap gap-2">
                   {profile.preferred_countries.map((country, index) => (
                     <span
@@ -774,10 +1051,68 @@ export default function ProfilePage() {
                     </span>
                   ))}
                 </div>
-              ) : (
-                <p className="text-sm text-gray-500">No preferred countries added yet.</p>
-              )}
-            </div>
+              </div>
+            )}
+
+            {suggestions.length > 0 && (
+              <div className="bg-white rounded-xl p-6 border border-gray-200">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-gray-900">More profiles for you</h3>
+                </div>
+                <div className="space-y-4">
+                  {suggestions.map((suggestion) => {
+                    const isFollowing = followingIds.has(suggestion.id);
+                    const isLoading = followLoadingId === suggestion.id;
+
+                    return (
+                      <div
+                        key={suggestion.id}
+                        className="flex items-center justify-between gap-3"
+                      >
+                        <button
+                          onClick={() => router.push(`/user/${suggestion.id}`)}
+                          className="flex items-center gap-3 text-left min-w-0"
+                        >
+                          {suggestion.avatar_url ? (
+                            <Image
+                              src={suggestion.avatar_url}
+                              alt={suggestion.full_name}
+                              width={40}
+                              height={40}
+                              className="w-10 h-10 rounded-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded-full bg-[#162f16] text-white flex items-center justify-center font-semibold">
+                              {suggestion.full_name?.charAt(0)?.toUpperCase() || "U"}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-medium text-gray-900 line-clamp-1">
+                              {suggestion.full_name || "User"}
+                            </p>
+                            <p className="text-xs text-gray-600 line-clamp-1">
+                              {suggestion.occupation || "Professional"}
+                            </p>
+                          </div>
+                        </button>
+
+                        <button
+                          onClick={() => handleToggleFollow(suggestion.id)}
+                          disabled={isLoading}
+                          className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
+                            isFollowing
+                              ? "border-gray-300 text-gray-700 hover:bg-gray-100"
+                              : "border-[#162f16] text-[#162f16] hover:bg-[#162f16] hover:text-white"
+                          } ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                        >
+                          {isFollowing ? "Unfollow" : "Follow"}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -788,6 +1123,12 @@ export default function ProfilePage() {
         onClose={() => setEditProfileOpen(false)}
         profile={profile}
         onSuccess={loadProfile}
+        onAddExperience={() => setAddExperienceOpen(true)}
+        onAddEducation={() => setAddEducationOpen(true)}
+        onAddCertification={() => setAddCertificationOpen(true)}
+        onAddVolunteering={() => setAddVolunteeringOpen(true)}
+        onAddProject={() => setAddProjectOpen(true)}
+        onAddPublication={() => setAddPublicationOpen(true)}
       />
 
       <AddExperienceModal

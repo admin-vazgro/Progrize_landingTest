@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
@@ -14,9 +14,12 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose, mode, onAuthSuccess }: AuthModalProps) {
   const [view, setView] = useState<"sign_in" | "sign_up">(mode);
+  const [showPassword, setShowPassword] = useState(false);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setView(mode);
+    setShowPassword(false);
   }, [mode]);
 
   useEffect(() => {
@@ -34,11 +37,48 @@ export default function AuthModal({ isOpen, onClose, mode, onAuthSuccess }: Auth
     return () => subscription.unsubscribe();
   }, [onClose, onAuthSuccess]);
 
+  useEffect(() => {
+    if (!isOpen || view !== "sign_in") return;
+
+    const applyVisibility = () => {
+      const input = containerRef.current?.querySelector<HTMLInputElement>("#password");
+      if (!input) return;
+      const desiredType = showPassword ? "text" : "password";
+      if (input.type !== desiredType) {
+        input.type = desiredType;
+      }
+      if ("webkitTextSecurity" in input.style) {
+        const desiredSecurity = showPassword ? "none" : "disc";
+        if (input.style.webkitTextSecurity !== desiredSecurity) {
+          input.style.webkitTextSecurity = desiredSecurity;
+        }
+      }
+    };
+
+    applyVisibility();
+
+    const observer = new MutationObserver(() => {
+      applyVisibility();
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current, {
+        subtree: true,
+        childList: true,
+      });
+    }
+
+    return () => observer.disconnect();
+  }, [isOpen, showPassword, view]);
+
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="relative w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl p-8">
+      <div
+        ref={containerRef}
+        className="relative w-full max-w-md mx-4 bg-white rounded-2xl shadow-2xl p-8"
+      >
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -87,6 +127,18 @@ export default function AuthModal({ isOpen, onClose, mode, onAuthSuccess }: Auth
           onlyThirdPartyProviders={false}
           magicLink={false}
         />
+
+        {view === "sign_in" && (
+          <div className="mt-4 flex items-center justify-between text-sm">
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="text-gray-600 hover:text-gray-900 transition"
+            >
+              {showPassword ? "Hide password" : "Show password"}
+            </button>
+          </div>
+        )}
 
         {/* Toggle View */}
         <div className="mt-6 text-center text-sm">

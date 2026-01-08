@@ -35,9 +35,10 @@ interface PostCardProps {
   };
   currentUserId: string;
   onUpdate: () => void;
+  compact?: boolean;
 }
 
-export default function PostCard({ post, currentUserId, onUpdate }: PostCardProps) {
+export default function PostCard({ post, currentUserId, onUpdate, compact = false }: PostCardProps) {
   const router = useRouter();
   const [showComments, setShowComments] = useState(false);
   const [isLiking, setIsLiking] = useState(false);
@@ -217,9 +218,9 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
   return (
     <div className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-md transition">
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-4">
         <div 
-          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition"
+          className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition min-w-0"
           onClick={handleUserClick}
         >
           {post.user_avatar ? (
@@ -228,27 +229,23 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
               alt={post.user_name}
               width={40}
               height={40}
-              className="rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover"
             />
           ) : (
             <div className="w-10 h-10 rounded-full bg-[#162f16] text-white flex items-center justify-center font-semibold">
               {post.user_name.charAt(0).toUpperCase()}
             </div>
           )}
-          <div>
-            <p className="font-medium text-gray-900 hover:underline">{post.user_name}</p>
+          <div className="min-w-0">
+            <p className="font-medium text-gray-900 hover:underline line-clamp-1">{post.user_name}</p>
             {post.user_occupation && (
-              <p className="text-sm text-gray-600">{post.user_occupation}</p>
+              <p className="text-sm text-gray-600 line-clamp-1">{post.user_occupation}</p>
             )}
             <p className="text-xs text-gray-500">{formatDate(post.created_at)}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getPostTypeColor()}`}>
-            {post.post_type.replace("_", " ")}
-          </span>
-          
           {isOwner && (
             <div className="relative">
               <button
@@ -287,8 +284,20 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
       </div>
 
       {/* Content */}
-      <h3 className="text-xl font-semibold text-gray-900 mb-2">{post.title}</h3>
-      <p className="text-gray-700 mb-4 whitespace-pre-wrap">{post.content}</p>
+      <h3
+        className={`text-lg sm:text-xl font-semibold text-gray-900 mb-2 ${
+          compact ? "line-clamp-2" : ""
+        }`}
+      >
+        {post.title}
+      </h3>
+      <p
+        className={`text-sm sm:text-base text-gray-700 mb-4 whitespace-pre-wrap break-words ${
+          compact ? "line-clamp-3" : ""
+        }`}
+      >
+        {post.content}
+      </p>
 
       {/* Event Details */}
       {post.event && (
@@ -368,7 +377,7 @@ export default function PostCard({ post, currentUserId, onUpdate }: PostCardProp
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-6 pt-4 border-t border-gray-200">
+      <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-4 border-t border-gray-200">
         <button
           onClick={handleLike}
           disabled={isLiking}

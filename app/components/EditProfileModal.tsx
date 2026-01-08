@@ -25,9 +25,26 @@ interface EditProfileModalProps {
   onClose: () => void;
   profile: UserProfile;
   onSuccess: () => void;
+  onAddExperience?: () => void;
+  onAddEducation?: () => void;
+  onAddCertification?: () => void;
+  onAddVolunteering?: () => void;
+  onAddProject?: () => void;
+  onAddPublication?: () => void;
 }
 
-export default function EditProfileModal({ isOpen, onClose, profile, onSuccess }: EditProfileModalProps) {
+export default function EditProfileModal({
+  isOpen,
+  onClose,
+  profile,
+  onSuccess,
+  onAddExperience,
+  onAddEducation,
+  onAddCertification,
+  onAddVolunteering,
+  onAddProject,
+  onAddPublication,
+}: EditProfileModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     professional_summary: "",
@@ -208,6 +225,21 @@ export default function EditProfileModal({ isOpen, onClose, profile, onSuccess }
   const selectLocation = (location: string) => {
     setFormData({ ...formData, location });
     setShowLocationDropdown(false);
+  };
+
+  const addSectionActions = [
+    { label: "Experience", onClick: onAddExperience },
+    { label: "Education", onClick: onAddEducation },
+    { label: "Certification", onClick: onAddCertification },
+    { label: "Volunteering", onClick: onAddVolunteering },
+    { label: "Project", onClick: onAddProject },
+    { label: "Publication", onClick: onAddPublication },
+  ].filter((section) => section.onClick);
+
+  const handleAddSection = (onClick?: () => void) => {
+    if (!onClick) return;
+    onClose();
+    onClick();
   };
 
   if (!isOpen) return null;
@@ -479,6 +511,29 @@ export default function EditProfileModal({ isOpen, onClose, profile, onSuccess }
               />
             </div>
           </div>
+
+          {addSectionActions.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Add to profile
+                </label>
+                <span className="text-xs text-gray-500">Create new sections</span>
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                {addSectionActions.map((section) => (
+                  <button
+                    key={section.label}
+                    type="button"
+                    onClick={() => handleAddSection(section.onClick)}
+                    className="px-4 py-2 border border-gray-300 rounded-lg text-sm text-gray-700 hover:border-[#162f16] hover:text-[#162f16] transition"
+                  >
+                    + {section.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex gap-3 pt-4">
