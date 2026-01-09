@@ -443,7 +443,7 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
                     alt={attendee.full_name}
                     width={40}
                     height={40}
-                    className="rounded-full border-2 border-white object-cover"
+                    className="w-10 h-10 rounded-full border-2 border-white object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
@@ -488,7 +488,7 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
                 alt={event.host_name}
                 width={32}
                 height={32}
-                className="rounded-full object-cover"
+                className="w-8 h-8 rounded-full object-cover"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
@@ -544,7 +544,7 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
                         alt={comment.user_name}
                         width={32}
                         height={32}
-                        className="rounded-full object-cover"
+                        className="w-8 h-8 rounded-full object-cover"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';

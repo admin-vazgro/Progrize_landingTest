@@ -125,6 +125,10 @@ ALTER TABLE education
   ADD COLUMN IF NOT EXISTS verified_by TEXT,
   ADD COLUMN IF NOT EXISTS verified_at TIMESTAMP WITH TIME ZONE;
 
+-- Add feed preferences to profiles
+ALTER TABLE profiles
+  ADD COLUMN IF NOT EXISTS feed_preferences TEXT[] DEFAULT '{}';
+
 -- Create profile follows table
 CREATE TABLE IF NOT EXISTS profile_follows (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

@@ -32,6 +32,7 @@ interface EventData {
   event_image: string | null;
   title: string;
   content: string;
+  tags: string[];
   user_id: string;
   user_name: string;
   user_avatar: string;
@@ -79,7 +80,22 @@ export default function CommunityPage() {
   const [postTypeFilter, setPostTypeFilter] = useState<PostType>("all");
   const [sortBy, setSortBy] = useState<SortType>("latest");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedEventLocations, setSelectedEventLocations] = useState<string[]>([]);
+  const [selectedEventThemes, setSelectedEventThemes] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [profileDetails, setProfileDetails] = useState<{
+    full_name: string | null;
+    avatar_url: string | null;
+    occupation: string | null;
+    location: string | null;
+    professional_summary: string | null;
+    skills: string[] | null;
+    feed_preferences: string[] | null;
+  } | null>(null);
+  const [feedPreferences, setFeedPreferences] = useState<string[]>([]);
+  const [preferenceInput, setPreferenceInput] = useState("");
+  const [isEditingPreferences, setIsEditingPreferences] = useState(false);
+  const [savingPreferences, setSavingPreferences] = useState(false);
 
   const checkAuth = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -221,6 +237,7 @@ export default function CommunityPage() {
             title: post.title,
             content: post.content,
             event_image: post.event_image,
+            tags: post.tags || [],
             user_id: post.user_id,
             user_name: profileData?.full_name || "User",
             user_avatar: profileData?.avatar_url || "",
@@ -238,6 +255,7 @@ export default function CommunityPage() {
 
   const filterPosts = useCallback(() => {
     let filtered = [...posts];
+    const normalizedPreferences = feedPreferences.map((pref) => pref.toLowerCase());
 
     if (activeTab === "events") {
       filtered = filtered.filter(p => p.post_type === "event");
@@ -261,8 +279,26 @@ export default function CommunityPage() {
       );
     }
 
+    if (normalizedPreferences.length > 0) {
+      filtered = filtered.filter((post) => {
+        const roleMatch = normalizedPreferences.some((pref) =>
+          post.user_occupation?.toLowerCase().includes(pref)
+        );
+        const titleMatch = normalizedPreferences.some((pref) =>
+          post.title?.toLowerCase().includes(pref)
+        );
+        const contentMatch = normalizedPreferences.some((pref) =>
+          post.content?.toLowerCase().includes(pref)
+        );
+        const tagMatch = post.tags?.some((tag) =>
+          normalizedPreferences.some((pref) => tag.toLowerCase().includes(pref))
+        );
+        return Boolean(roleMatch || titleMatch || contentMatch || tagMatch);
+      });
+    }
+
     setFilteredPosts(filtered);
-  }, [posts, activeTab, postTypeFilter, selectedTags, searchQuery]);
+  }, [posts, activeTab, postTypeFilter, selectedTags, searchQuery, feedPreferences]);
 
   const filterEvents = useCallback(() => {
     let filtered = [...events];
@@ -274,8 +310,24 @@ export default function CommunityPage() {
       );
     }
 
+    if (selectedEventLocations.length > 0) {
+      filtered = filtered.filter((event) =>
+        selectedEventLocations.some((location) =>
+          event.location?.toLowerCase().includes(location.toLowerCase())
+        )
+      );
+    }
+
+    if (selectedEventThemes.length > 0) {
+      filtered = filtered.filter((event) =>
+        event.tags?.some((tag) =>
+          selectedEventThemes.some((theme) => tag.toLowerCase().includes(theme.toLowerCase()))
+        )
+      );
+    }
+
     return filtered;
-  }, [events, searchQuery]);
+  }, [events, searchQuery, selectedEventLocations, selectedEventThemes]);
 
   useEffect(() => {
     checkAuth();
@@ -290,8 +342,64 @@ export default function CommunityPage() {
     filterPosts();
   }, [filterPosts]);
 
+  useEffect(() => {
+    if (!user) {
+      setProfileDetails(null);
+      return;
+    }
+
+    const loadProfileDetails = async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, avatar_url, occupation, location, professional_summary, skills, feed_preferences")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      setProfileDetails(data ?? null);
+      setFeedPreferences(data?.feed_preferences || []);
+    };
+
+    loadProfileDetails();
+  }, [user]);
+
   const handleAuthClick = () => {
     router.push("/");
+  };
+
+  const savePreferences = async (nextPreferences: string[]) => {
+    if (!user) return;
+    setSavingPreferences(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({ feed_preferences: nextPreferences })
+        .eq("id", user.id);
+
+      if (error) throw error;
+      setFeedPreferences(nextPreferences);
+    } catch (error) {
+      console.error("Error updating feed preferences:", error);
+      alert("Failed to update preferences. Please try again.");
+    } finally {
+      setSavingPreferences(false);
+    }
+  };
+
+  const handleAddPreference = async () => {
+    const value = preferenceInput.trim();
+    if (!value) return;
+    if (feedPreferences.some((pref) => pref.toLowerCase() === value.toLowerCase())) {
+      setPreferenceInput("");
+      return;
+    }
+    const nextPreferences = [...feedPreferences, value];
+    setPreferenceInput("");
+    await savePreferences(nextPreferences);
+  };
+
+  const handleRemovePreference = async (value: string) => {
+    const nextPreferences = feedPreferences.filter((pref) => pref !== value);
+    await savePreferences(nextPreferences);
   };
 
   const getAllTags = () => {
@@ -318,6 +426,29 @@ export default function CommunityPage() {
       .slice(0, 5);
   };
 
+  const getEventLocations = () =>
+    Array.from(new Set(events.map((event) => event.location).filter(Boolean))) as string[];
+
+  const getEventThemes = () => {
+    const themes = new Set<string>();
+    events.forEach((event) => {
+      event.tags?.forEach((tag) => themes.add(tag));
+    });
+    return Array.from(themes).slice(0, 8);
+  };
+
+  const toggleEventLocation = (value: string) => {
+    setSelectedEventLocations((prev) =>
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+    );
+  };
+
+  const toggleEventTheme = (value: string) => {
+    setSelectedEventThemes((prev) =>
+      prev.includes(value) ? prev.filter((item) => item !== value) : [...prev, value]
+    );
+  };
+
   const toggleTag = (tag: string) => {
     setSelectedTags(prev =>
       prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
@@ -334,6 +465,24 @@ export default function CommunityPage() {
 
   const filteredEventsData = filterEvents();
 
+  const displayName =
+    profileDetails?.full_name ||
+    user?.user_metadata?.full_name ||
+    user?.email?.split("@")[0] ||
+    "User";
+  const completionScore = (() => {
+    if (!profileDetails) return 0;
+    const fields = [
+      profileDetails.full_name,
+      profileDetails.occupation,
+      profileDetails.location,
+      profileDetails.professional_summary,
+      profileDetails.skills && profileDetails.skills.length > 0 ? "yes" : "",
+    ];
+    const filled = fields.filter(Boolean).length;
+    return Math.round((filled / fields.length) * 100);
+  })();
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar onAuthClick={handleAuthClick} />
@@ -341,14 +490,14 @@ export default function CommunityPage() {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-regular text-gray-900 mb-2">
-            Welcome Back, {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User'}👋
+          <h1 className="text-4xl font-regular text-gray-900 mb-1">
+            Welcome Back, {displayName}👋
           </h1>
-          <p className="text-gray-600">Connect, share, and grow with fellow professionals</p>
+          <p className="text-gray-600">Let's collaborate and network.</p>
         </div>
 
         {/* Tabs */}
-        <div className="flex items-center gap-4 mb-6 border-b border-gray-200">
+        <div className="flex items-center gap-6 mb-8 border-b border-gray-200">
           <button
             onClick={() => setActiveTab("feed")}
             className={`pb-3 px-4 font-medium transition ${
@@ -371,10 +520,10 @@ export default function CommunityPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)_280px] gap-6">
           {/* Sidebar - Filters */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-xl p-6 border border-gray-200 sticky top-6 space-y-6">
+            <div className="bg-white rounded-xl p-6 sticky top-6 space-y-6">
               {/* Search Tags */}
               <div>
                 <input
@@ -386,29 +535,8 @@ export default function CommunityPage() {
                 />
               </div>
 
-              {activeTab === "feed" && (
+              {activeTab === "feed" ? (
                 <>
-                  {/* Post Type Filter */}
-                  <div>
-                    <p className="text-sm text-gray-700 mb-2 font-medium">Post Type</p>
-                    <div className="space-y-2">
-                      {["all", "discussion", "job_opportunity", "event"].map((type) => (
-                        <label key={type} className="flex items-center gap-2 cursor-pointer">
-                          <input
-                            type="radio"
-                            name="postType"
-                            checked={postTypeFilter === type}
-                            onChange={() => setPostTypeFilter(type as PostType)}
-                            className="w-4 h-4 text-[#162f16]"
-                          />
-                          <span className="text-sm text-gray-700 capitalize">
-                            {type.replace("_", " ")}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
-
                   {/* Tags Filter */}
                   <div>
                     <p className="text-sm text-gray-700 mb-2 font-medium">Tags</p>
@@ -425,6 +553,42 @@ export default function CommunityPage() {
                         >
                           #{tag}
                         </button>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <p className="text-sm text-gray-700 mb-2 font-medium">Location</p>
+                    <div className="space-y-2">
+                      {getEventLocations().map((location) => (
+                        <label key={location} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedEventLocations.includes(location)}
+                            onChange={() => toggleEventLocation(location)}
+                            className="w-4 h-4 text-[#162f16]"
+                          />
+                          <span className="text-sm text-gray-700">{location}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-700 mb-2 font-medium">Theme</p>
+                    <div className="space-y-2">
+                      {getEventThemes().map((theme) => (
+                        <label key={theme} className="flex items-center gap-2 cursor-pointer">
+                          <input
+                            type="checkbox"
+                            checked={selectedEventThemes.includes(theme)}
+                            onChange={() => toggleEventTheme(theme)}
+                            className="w-4 h-4 text-[#162f16]"
+                          />
+                          <span className="text-sm text-gray-700">{theme}</span>
+                        </label>
                       ))}
                     </div>
                   </div>
@@ -457,27 +621,97 @@ export default function CommunityPage() {
           </div>
 
           {/* Main Content */}
-          <div className="lg:col-span-3">
-            {/* Action Bar */}
-            <div className="bg-white rounded-xl p-4 mb-6 border border-gray-200 flex items-center justify-between">
-              <div className="flex items-center gap-3">
+          <div className="lg:col-span-1">
+            {activeTab === "feed" ? (
+              <div className="bg-white rounded-xl p-4 mb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  {profileDetails?.avatar_url ? (
+                    <img
+                      src={profileDetails.avatar_url}
+                      alt={displayName}
+                      className="w-10 h-10 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-[#162f16] text-white flex items-center justify-center text-sm font-semibold">
+                      {displayName.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <button
+                    onClick={() => setCreatePostOpen(true)}
+                    className="flex-1 text-left px-4 py-2 rounded-lg bg-gray-50 text-sm text-gray-500 hover:bg-gray-100 transition"
+                  >
+                    What's on your mind
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {[
+                    { label: "Discussion", type: "discussion" },
+                    { label: "Job Opportunity", type: "job_opportunity" },
+                    { label: "Events", type: "event" },
+                    { label: "Mentorship Offer", type: "discussion" },
+                    { label: "Coaching", type: "discussion" },
+                  ].map((pill) => (
+                    <button
+                      key={pill.label}
+                      onClick={() => setPostTypeFilter(pill.type as PostType)}
+                      className="px-3 py-1 rounded-full text-xs bg-[#e8f5e8] text-[#162f16] hover:bg-[#dff0df] transition"
+                    >
+                      {pill.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3 text-gray-500">
+                    <button className="hover:text-[#162f16]" aria-label="Add image">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h18M3 19h18M5 5v14M19 5v14" />
+                      </svg>
+                    </button>
+                    <button className="hover:text-[#162f16]" aria-label="Add link">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 015.657 5.656l-3 3a4 4 0 01-5.657-5.656m-1.414 1.414a4 4 0 00-5.657-5.656l-3 3a4 4 0 005.657 5.656" />
+                      </svg>
+                    </button>
+                    <button className="hover:text-[#162f16]" aria-label="Add location">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 0c-4.418 0-8 2.239-8 5v3h16v-3c0-2.761-3.582-5-8-5z" />
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-gray-400">Draft</span>
+                    <button
+                      onClick={() => setCreatePostOpen(true)}
+                      className="px-4 py-2 bg-[#162f16] text-white rounded-md text-sm font-medium hover:bg-[#0f2310] transition flex items-center gap-2"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 12h16m0 0l-6-6m6 6l-6 6" />
+                      </svg>
+                      Post
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-white rounded-xl p-4 mb-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-1">
+                  Welcome Back, {displayName}👋
+                </h2>
+                <p className="text-sm text-gray-500 mb-4">Create an event post.</p>
                 <button
-                  onClick={() => setCreatePostOpen(true)}
+                  onClick={() => setCreateEventOpen(true)}
                   className="px-4 py-2 bg-[#162f16] text-white rounded-md text-sm font-medium hover:bg-[#0f2310] transition"
                 >
-                  Create Post
+                  Create Event
                 </button>
-                {activeTab === "events" && (
-                  <button
-                    onClick={() => setCreateEventOpen(true)}
-                    className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-50 transition"
-                  >
-                    Create Event
-                  </button>
-                )}
               </div>
+            )}
 
-              {/* Sort */}
+            {/* Sort */}
+            <div className="flex items-center justify-end mb-4">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Sort by:</span>
                 <select
@@ -495,7 +729,7 @@ export default function CommunityPage() {
             {activeTab === "feed" ? (
               <div className="space-y-4">
                 {filteredPosts.length === 0 ? (
-                  <div className="bg-white rounded-xl p-12 text-center border border-gray-200">
+                  <div className="bg-white rounded-xl p-12 text-center">
                     <p className="text-gray-600">No posts found. Be the first to post!</p>
                   </div>
                 ) : (
@@ -512,7 +746,7 @@ export default function CommunityPage() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {filteredEventsData.length === 0 ? (
-                  <div className="col-span-2 bg-white rounded-xl p-12 text-center border border-gray-200">
+                  <div className="col-span-2 bg-white rounded-xl p-12 text-center">
                     <p className="text-gray-600">No events found. Create the first event!</p>
                   </div>
                 ) : (
@@ -528,6 +762,108 @@ export default function CommunityPage() {
                 )}
               </div>
             )}
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="lg:col-span-1">
+            <div className="sticky top-6 space-y-6">
+              <div className="bg-[#162f16] rounded-2xl p-6 text-white">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-24 h-24 rounded-full border-2 border-[#d4af37] overflow-hidden mb-4">
+                    {profileDetails?.avatar_url ? (
+                      <img
+                        src={profileDetails.avatar_url}
+                        alt={displayName}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#2a4a2a] flex items-center justify-center text-2xl font-semibold">
+                        {displayName.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="text-lg font-semibold">{displayName}</h3>
+                  <p className="text-sm text-gray-300">
+                    {profileDetails?.occupation || "Professional"}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {profileDetails?.location || "Location"}
+                  </p>
+                  <div className="w-full mt-6">
+                    <div className="flex items-center justify-between text-xs text-gray-300 mb-2">
+                      <span>Profile completion</span>
+                      <span>{completionScore}%</span>
+                    </div>
+                    <div className="w-full h-2 bg-[#234323] rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-[#d4af37]"
+                        style={{ width: `${completionScore}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-6">
+                <div className="flex items-center justify-between mb-3">
+                  <h4 className="text-sm font-semibold text-gray-900">Feed Preference</h4>
+                  <button
+                    onClick={() => setIsEditingPreferences((prev) => !prev)}
+                    className="text-xs text-[#162f16] hover:underline"
+                  >
+                    {isEditingPreferences ? "Done" : "Edit"}
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mb-4">
+                  Select what you want to explore
+                </p>
+
+                {isEditingPreferences && (
+                  <div className="flex gap-2 mb-3">
+                    <input
+                      type="text"
+                      value={preferenceInput}
+                      onChange={(e) => setPreferenceInput(e.target.value)}
+                      placeholder="Add a tag, role, or company"
+                      className="flex-1 px-3 py-2 rounded-lg bg-gray-50 text-sm focus:outline-none focus:ring-2 focus:ring-[#162f16]"
+                    />
+                    <button
+                      onClick={handleAddPreference}
+                      disabled={savingPreferences}
+                      className="px-3 py-2 bg-[#162f16] text-white rounded-lg text-xs font-medium hover:bg-[#0f2310] transition disabled:opacity-50"
+                    >
+                      Add
+                    </button>
+                  </div>
+                )}
+
+                {feedPreferences.length === 0 ? (
+                  <p className="text-xs text-gray-400">
+                    No preferences yet.
+                  </p>
+                ) : (
+                  <div className="flex flex-wrap gap-2">
+                    {feedPreferences.map((pref) => (
+                      <span
+                        key={pref}
+                        className="px-3 py-1 rounded-full text-xs bg-[#e8f5e8] text-[#162f16] flex items-center gap-1"
+                      >
+                        {pref}
+                        {isEditingPreferences && (
+                          <button
+                            onClick={() => handleRemovePreference(pref)}
+                            className="text-[#162f16] hover:text-red-600"
+                            aria-label={`Remove ${pref}`}
+                          >
+                            ×
+                          </button>
+                        )}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

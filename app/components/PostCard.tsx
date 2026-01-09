@@ -234,7 +234,7 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
   };
 
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 hover:shadow-md transition">
+    <div className="bg-white rounded-xl p-6 hover:shadow-md transition">
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-4">
         <div 

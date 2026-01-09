@@ -97,7 +97,7 @@ export default function EventCard({ event, currentUserId, onUpdate, onOpenDetail
 
   return (
     <div 
-      className="bg-white rounded-xl overflow-hidden border border-gray-200 hover:shadow-lg transition cursor-pointer"
+      className="bg-white rounded-xl overflow-hidden hover:shadow-lg transition cursor-pointer"
       onClick={() => onOpenDetail(event.id)}
     >
       {/* Event Image */}
@@ -136,7 +136,7 @@ export default function EventCard({ event, currentUserId, onUpdate, onOpenDetail
                   alt={attendee.full_name}
                   width={32}
                   height={32}
-                  className="rounded-full border-2 border-white object-cover"
+                  className="w-8 h-8 rounded-full border-2 border-white object-cover"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.style.display = 'none';

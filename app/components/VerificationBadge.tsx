@@ -35,7 +35,7 @@ export default function VerificationBadge({
   return (
     <div className="group relative inline-flex">
       <span
-        className={`${sizeClasses[size]} bg-blue-100 text-blue-700 rounded-full font-medium flex items-center gap-1.5 cursor-help`}
+        className={`${sizeClasses[size]} bg-lime-200 text-[#14351b] rounded-xl font-medium flex items-center gap-1`}
       >
         <svg
           className={iconSizes[size]}

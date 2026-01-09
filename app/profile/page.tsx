@@ -137,6 +137,14 @@ interface PostEvent {
   user_rsvp: string | null;
 }
 
+interface UpcomingEvent {
+  id: string;
+  title: string;
+  event_date: string;
+  location: string;
+  going_count: number;
+}
+
 interface Post {
   id: string;
   post_type: string;
@@ -172,6 +180,8 @@ export default function ProfilePage() {
   const [followLoadingId, setFollowLoadingId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
+  const [upcomingEvents, setUpcomingEvents] = useState<UpcomingEvent[]>([]);
+  const [cancelingEventId, setCancelingEventId] = useState<string | null>(null);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [addExperienceOpen, setAddExperienceOpen] = useState(false);
   const [addEducationOpen, setAddEducationOpen] = useState(false);
@@ -384,6 +394,50 @@ export default function ProfilePage() {
       );
 
       setPosts(postsWithUsers);
+
+      const { data: rsvpData, error: rsvpError } = await supabase
+        .from("event_rsvps")
+        .select(`
+          event_id,
+          events (
+            event_date,
+            location,
+            going_count,
+            posts (
+              title
+            )
+          )
+        `)
+        .eq("user_id", user.id)
+        .eq("status", "going");
+
+      if (rsvpError) throw rsvpError;
+
+      const normalizedRsvps = (rsvpData || []) as Array<{
+        event_id: string;
+        events?: {
+          event_date?: string;
+          location?: string;
+          going_count?: number;
+          posts?: { title?: string };
+        };
+      }>;
+
+      const upcoming = normalizedRsvps
+        .map((row) => ({
+          id: row.event_id,
+          title: row.events?.posts?.title || "Event",
+          event_date: row.events?.event_date || "",
+          location: row.events?.location || "Virtual Event",
+          going_count: row.events?.going_count ?? 0,
+        }))
+        .filter((event) => event.event_date && new Date(event.event_date) >= new Date())
+        .sort(
+          (a, b) =>
+            new Date(a.event_date).getTime() - new Date(b.event_date).getTime()
+        );
+
+      setUpcomingEvents(upcoming);
     } catch (error) {
       console.error("Error loading profile:", error);
     } finally {
@@ -444,6 +498,49 @@ export default function ProfilePage() {
       alert("Failed to upload profile picture. Please try again.");
     } finally {
       setUploading(false);
+    }
+  };
+
+  const formatCountdown = (dateString: string) => {
+    const eventDate = new Date(dateString);
+    const now = new Date();
+    const diffMs = eventDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    if (diffDays <= 0) return "Today";
+    if (diffDays === 1) return "in 1 Day";
+    return `in ${diffDays} Days`;
+  };
+
+  const handleCancelGoing = async (eventId: string) => {
+    if (!user || cancelingEventId) return;
+    setCancelingEventId(eventId);
+    try {
+      const event = upcomingEvents.find((item) => item.id === eventId);
+
+      const { error: deleteError } = await supabase
+        .from("event_rsvps")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("event_id", eventId);
+
+      if (deleteError) throw deleteError;
+
+      if (event) {
+        const { error: updateError } = await supabase
+          .from("events")
+          .update({ going_count: Math.max(0, event.going_count - 1) })
+          .eq("id", eventId);
+
+        if (updateError) throw updateError;
+      }
+
+      setUpcomingEvents((prev) => prev.filter((item) => item.id !== eventId));
+    } catch (error) {
+      console.error("Error cancelling RSVP:", error);
+      alert("Failed to cancel. Please try again.");
+    } finally {
+      setCancelingEventId(null);
     }
   };
 
@@ -705,8 +802,8 @@ export default function ProfilePage() {
 
             {/* Referrals */}
             <div className="bg-white rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">Referrals</h3>
-              <p className="text-sm text-gray-600 mb-4">Let us help other to get job</p>
+              <h3 className="font-semibold text-gray-900 mb-1">Referrals</h3>
+              <p className="text-xs text-gray-600 mb-4">Let us help other to get job</p>
               
               <div className="flex items-center justify-between mb-3">
                 <span className="text-sm text-gray-700">Accepting referrals</span>
@@ -731,8 +828,8 @@ export default function ProfilePage() {
 
             {/* Community */}
             <div className="bg-white rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">Community</h3>
-              <p className="text-sm text-gray-600 mb-4">Networking is the key to success</p>
+              <h3 className="font-semibold text-gray-900 mb-1">Community</h3>
+              <p className="text-xs text-gray-600 mb-4">Networking is the key to success</p>
               
               <div className="flex gap-4 mb-4">
                 <div className="flex-1 text-center">
@@ -759,8 +856,8 @@ export default function ProfilePage() {
 
             {/* Public Profiles */}
             <div className="bg-white rounded-xl p-6">
-              <h3 className="font-semibold text-gray-900 mb-2">Public profiles</h3>
-              <p className="text-sm text-gray-600 mb-4">Networking is the key to success</p>
+              <h3 className="font-semibold text-gray-900 mb-1">Public profiles</h3>
+              <p className="text-xs text-gray-600 mb-4">Networking is the key to success</p>
               
               <div className="flex gap-3">
                 {profile.social_links?.linkedin && (
@@ -1061,7 +1158,7 @@ export default function ProfilePage() {
                     Edit
                   </button>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">Job Preference</p>
+                <p className="text-xs text-gray-600 mb-2">Job Preference</p>
                 <div className="flex flex-wrap gap-2">
                   {profile.job_preferences.map((job, index) => (
                     <span
@@ -1087,7 +1184,7 @@ export default function ProfilePage() {
                     Edit
                   </button>
                 </div>
-                <p className="text-sm text-gray-600 mb-2">Top skills</p>
+                <p className="text-xs text-gray-600 mb-2">Top skills</p>
                 <div className="flex flex-wrap gap-2">
                   {profile.skills.map((skill, index) => (
                     <span
@@ -1103,6 +1200,34 @@ export default function ProfilePage() {
                 </div>
               </div>
             )}
+
+            {/* Upcoming Events */}
+            <div className="bg-white rounded-xl p-6">
+              <h3 className=" font-semibold text-gray-900 mb-1">Upcoming events</h3>
+              <p className="text-xs text-gray-500 mb-4">Events coming up</p>
+
+              {upcomingEvents.length === 0 ? (
+                <p className="text-xs text-gray-500">No upcoming events yet.</p>
+              ) : (
+                <div className="divide-y divide-gray-100">
+                  {upcomingEvents.map((event) => (
+                    <div key={event.id} className="flex items-center justify-between py-3">
+                      <p className="text-sm text-gray-700">
+                        <span className="font-semibold text-gray-900">{event.title}</span>{" "}
+                        <span className="text-gray-500">{formatCountdown(event.event_date)}</span>
+                      </p>
+                      <button
+                        onClick={() => handleCancelGoing(event.id)}
+                        disabled={cancelingEventId === event.id}
+                        className="text-sm text-red-500 hover:underline disabled:opacity-50"
+                      >
+                        {cancelingEventId === event.id ? "Canceling..." : "Cancel"}
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {/* Preferred Countries */}
             {hasPreferredCountries && (
