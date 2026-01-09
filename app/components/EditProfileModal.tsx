@@ -14,6 +14,7 @@ interface UserProfile {
   phone_country_code: string;
   location: string;
   skills: string[];
+  job_preferences: string[];
   preferred_countries: string[];
   social_links: {
     linkedin?: string;
@@ -58,6 +59,7 @@ export default function EditProfileModal({
     phone_country_code: "+44",
     location: "",
     skills: [] as string[],
+    job_preferences: [] as string[],
     preferred_countries: [] as string[],
     social_links: {
       linkedin: "",
@@ -68,6 +70,7 @@ export default function EditProfileModal({
   });
   const [newSkill, setNewSkill] = useState("");
   const [newCountry, setNewCountry] = useState("");
+  const [newJobPreference, setNewJobPreference] = useState("");
   const [filteredSkills, setFilteredSkills] = useState<string[]>([]);
   const [filteredCountries, setFilteredCountries] = useState<string[]>([]);
   const [filteredLocations, setFilteredLocations] = useState<string[]>([]);
@@ -87,6 +90,7 @@ export default function EditProfileModal({
         phone_country_code: profile.phone_country_code || "+44",
         location: profile.location || "",
         skills: profile.skills || [],
+        job_preferences: profile.job_preferences || [],
         preferred_countries: profile.preferred_countries || [],
         social_links: {
           linkedin: profile.social_links?.linkedin ?? "",
@@ -136,6 +140,7 @@ export default function EditProfileModal({
           phone_country_code: formData.phone_country_code,
           location: formData.location,
           skills: formData.skills,
+          job_preferences: formData.job_preferences,
           preferred_countries: formData.preferred_countries,
           social_links: formData.social_links
         })
@@ -187,6 +192,23 @@ export default function EditProfileModal({
     setFormData({
       ...formData,
       skills: formData.skills.filter((_, i) => i !== index)
+    });
+  };
+
+  const addJobPreference = (job: string) => {
+    if (job.trim() && !formData.job_preferences.includes(job.trim())) {
+      setFormData({
+        ...formData,
+        job_preferences: [...formData.job_preferences, job.trim()]
+      });
+      setNewJobPreference("");
+    }
+  };
+
+  const removeJobPreference = (index: number) => {
+    setFormData({
+      ...formData,
+      job_preferences: formData.job_preferences.filter((_, i) => i !== index)
     });
   };
 
@@ -444,6 +466,46 @@ export default function EditProfileModal({
                   <button
                     type="button"
                     onClick={() => removeSkill(index)}
+                    className="hover:text-red-600"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Job Preferences */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Job Preferences
+            </label>
+            <div className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={newJobPreference}
+                onChange={(e) => setNewJobPreference(e.target.value)}
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                placeholder="e.g., Senior Product Designer"
+              />
+              <button
+                type="button"
+                onClick={() => addJobPreference(newJobPreference)}
+                className="px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
+              >
+                Add
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {formData.job_preferences.map((job, index) => (
+                <span
+                  key={`${job}-${index}`}
+                  className="px-3 py-1 bg-[#D6E264] text-[#162f16] rounded-full text-xs font-medium flex items-center gap-2"
+                >
+                  {job}
+                  <button
+                    type="button"
+                    onClick={() => removeJobPreference(index)}
                     className="hover:text-red-600"
                   >
                     ×

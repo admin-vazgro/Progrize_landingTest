@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import logo from "../public/logo.svg";
+import mlogo from "../public/mlogo.svg";
 
 interface NavbarProps {
   onAuthClick: (mode: "sign_in" | "sign_up") => void;
@@ -19,6 +20,7 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [profile, setProfile] = useState<{ full_name: string | null; avatar_url: string | null } | null>(null);
   const [notifications, setNotifications] = useState<Array<{
     id: string;
     user_id: string;
@@ -49,6 +51,27 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (!user) {
+      setProfile(null);
+      return;
+    }
+
+    const loadProfile = async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("full_name, avatar_url")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!error) {
+        setProfile(data ?? null);
+      }
+    };
+
+    loadProfile();
+  }, [user]);
 
   useEffect(() => {
     if (!user) {
@@ -156,6 +179,9 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
   };
 
   const getUserName = () => {
+    if (profile?.full_name) {
+      return profile.full_name;
+    }
     if (user?.user_metadata?.first_name) {
       return `${user.user_metadata.first_name} ${user.user_metadata.last_name || ""}`.trim();
     }
@@ -166,10 +192,16 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
   };
 
   const getAvatarUrl = () => {
+    if (profile?.avatar_url) {
+      return profile.avatar_url;
+    }
     return user?.user_metadata?.avatar_url || "";
   };
 
   const getInitial = () => {
+    if (profile?.full_name) {
+      return profile.full_name.charAt(0).toUpperCase();
+    }
     if (user?.user_metadata?.first_name) {
       return user.user_metadata.first_name.charAt(0).toUpperCase();
     }
@@ -229,192 +261,217 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <Link href="/">
-            <Image src={logo} alt="Progrize logo" className="w-auto h-8" />
+            <Image src={mlogo} alt="Progrize logo" className="w-auto h-8" />
           </Link>
         </div>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-10 text-sm tracking-wider text-gray-600">
-          <a href="#features" className="hover:text-[#162f16] transition">Features</a>
-          <a href="#testimonials" className="hover:text-[#162f16] transition">Testimonials</a>
-          <a href="/upcoming" className="hover:text-[#162f16] transition">Resources</a>
-          <button
-            onClick={handleCommunityClick}
-            className={`hover:text-[#162f16] transition ${
-              pathname === "/community" ? "text-[#162f16] font-semibold" : ""
-            }`}
-          >
-            Community
-          </button>
-        </nav>
+        {user ? (
+          <>
+            <nav className="hidden md:flex items-center gap-6 lg:px-12 text-sm text-gray-600">
+              <button className="hover:text-[#162f16] transition">Find Job</button>
+              <button className="hover:text-[#162f16] transition">Job Dashboard</button>
+              <button
+                onClick={handleCommunityClick}
+                className={`hover:text-[#162f16] transition ${
+                  pathname === "/community" ? "text-[#162f16] font-semibold" : ""
+                }`}
+              >
+                Community
+              </button>
+            </nav>
 
-        {/* Desktop Auth Section */}
-        <div className="hidden md:flex items-center gap-4">
-          {user ? (
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <button
-                  onClick={async () => {
-                    const nextOpen = !notificationsOpen;
-                    setNotificationsOpen(nextOpen);
-                    if (nextOpen) {
-                      await markNotificationsRead();
-                    }
-                  }}
-                  className="relative p-2 rounded-full hover:bg-gray-100 transition"
-                  aria-label="Notifications"
-                >
-                  <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0a3 3 0 11-6 0m6 0H9"
-                    />
-                  </svg>
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
-                      {unreadCount > 9 ? "9+" : unreadCount}
-                    </span>
-                  )}
-                </button>
-
-                {notificationsOpen && (
-                  <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
-                    <div className="px-4 py-3 border-b border-gray-100">
-                      <p className="text-sm font-semibold text-gray-900">Notifications</p>
-                    </div>
-                    <div className="max-h-96 overflow-y-auto">
-                      {notifications.length === 0 ? (
-                        <p className="px-4 py-6 text-sm text-gray-500 text-center">
-                          No notifications yet.
-                        </p>
-                      ) : (
-                        notifications.map((notification) => (
-                          <button
-                            key={notification.id}
-                            onClick={() => {
-                              setNotificationsOpen(false);
-                              if (notification.entity_type === "post" && notification.entity_id) {
-                                router.push(`/community?post=${notification.entity_id}`);
-                              } else if (notification.type === "follow" && notification.actor_id) {
-                                router.push(`/user/${notification.actor_id}`);
-                              }
-                            }}
-                            className={`w-full px-4 py-3 flex gap-3 text-left hover:bg-gray-50 ${
-                              notification.read_at ? "bg-white" : "bg-blue-50/40"
-                            }`}
-                          >
-                            {notification.actor_avatar ? (
-                              <Image
-                                src={notification.actor_avatar}
-                                alt={notification.actor_name || "User"}
-                                width={36}
-                                height={36}
-                                className="w-9 h-9 rounded-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-9 h-9 rounded-full bg-[#162f16] text-white flex items-center justify-center text-xs font-semibold">
-                                {(notification.actor_name || "U").charAt(0).toUpperCase()}
-                              </div>
-                            )}
-                            <div className="flex-1">
-                              <p className="text-sm text-gray-900">
-                                <span className="font-semibold">
-                                  {notification.actor_name || "User"}
-                                </span>{" "}
-                                {getNotificationText(notification)}
-                              </p>
-                              <p className="text-xs text-gray-500">
-                                {formatNotificationTime(notification.created_at)}
-                              </p>
-                            </div>
-                          </button>
-                        ))
-                      )}
-                    </div>
-                  </div>
-                )}
+            <div className="hidden md:flex items-center gap-4 flex-1 justify-end">
+              <div className="relative w-full max-w-md">
+                <input
+                  type="text"
+                  placeholder="Search for..."
+                  className="w-full px-4 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#162f16]"
+                />
               </div>
 
-              <div className="relative">
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-3 hover:opacity-80 transition"
-                >
-                  {getAvatarUrl() ? (
-                    <Image
-                      src={getAvatarUrl()}
-                      alt="Profile"
-                      width={40}
-                      height={40}
-                      className="rounded-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-10 h-10 rounded-full bg-[#162f16] text-white flex items-center justify-center font-semibold">
-                      {getInitial()}
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <button
+                    onClick={async () => {
+                      const nextOpen = !notificationsOpen;
+                      setNotificationsOpen(nextOpen);
+                      if (nextOpen) {
+                        await markNotificationsRead();
+                      }
+                    }}
+                    className="relative p-2 rounded-full hover:bg-gray-100 transition"
+                    aria-label="Notifications"
+                  >
+                    <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V4a2 2 0 10-4 0v1.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0a3 3 0 11-6 0m6 0H9"
+                      />
+                    </svg>
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-full">
+                        {unreadCount > 9 ? "9+" : unreadCount}
+                      </span>
+                    )}
+                  </button>
+
+                  {notificationsOpen && (
+                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                      <div className="px-4 py-3 border-b border-gray-100">
+                        <p className="text-sm font-semibold text-gray-900">Notifications</p>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        {notifications.length === 0 ? (
+                          <p className="px-4 py-6 text-sm text-gray-500 text-center">
+                            No notifications yet.
+                          </p>
+                        ) : (
+                          notifications.map((notification) => (
+                            <button
+                              key={notification.id}
+                              onClick={() => {
+                                setNotificationsOpen(false);
+                                if (notification.entity_type === "post" && notification.entity_id) {
+                                  router.push(`/community?post=${notification.entity_id}`);
+                                } else if (notification.type === "follow" && notification.actor_id) {
+                                  router.push(`/user/${notification.actor_id}`);
+                                }
+                              }}
+                              className={`w-full px-4 py-3 flex gap-3 text-left hover:bg-gray-50 ${
+                                notification.read_at ? "bg-white" : "bg-blue-50/40"
+                              }`}
+                            >
+                              {notification.actor_avatar ? (
+                                <Image
+                                  src={notification.actor_avatar}
+                                  alt={notification.actor_name || "User"}
+                                  width={36}
+                                  height={36}
+                                  className="w-9 h-9 rounded-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-9 h-9 rounded-full bg-[#162f16] text-white flex items-center justify-center text-xs font-semibold">
+                                  {(notification.actor_name || "U").charAt(0).toUpperCase()}
+                                </div>
+                              )}
+                              <div className="flex-1">
+                                <p className="text-sm text-gray-900">
+                                  <span className="font-semibold">
+                                    {notification.actor_name || "User"}
+                                  </span>{" "}
+                                  {getNotificationText(notification)}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {formatNotificationTime(notification.created_at)}
+                                </p>
+                              </div>
+                            </button>
+                          ))
+                        )}
+                      </div>
                     </div>
                   )}
-                  <span className="text-gray-900 font-medium">
-                    {getUserName()}
-                  </span>
-                  <svg
-                    className={`w-4 h-4 text-gray-600 transition-transform ${
-                      dropdownOpen ? "rotate-180" : ""
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </button>
+                </div>
 
-                {/* Dropdown Menu */}
-                {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
-                    <button
-                      onClick={() => {
-                        router.push("/profile");
-                        setDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                <div className="relative">
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="flex items-center gap-3 hover:opacity-80 transition"
+                  >
+                    {getAvatarUrl() ? (
+                      <Image
+                        src={getAvatarUrl()}
+                        alt="Profile"
+                        width={40}
+                        height={40}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-[#162f16] text-white flex items-center justify-center font-semibold">
+                        {getInitial()}
+                      </div>
+                    )}
+                    <span className="text-gray-900 font-medium">
+                      {getUserName()}
+                    </span>
+                    <svg
+                      className={`w-4 h-4 text-gray-600 transition-transform ${
+                        dropdownOpen ? "rotate-180" : ""
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      Profile
-                    </button>
-                    <button
-                      onClick={() => {
-                        router.push("/community");
-                        setDropdownOpen(false);
-                      }}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                    >
-                      Community
-                    </button>
-                    <button
-                      onClick={() => setDropdownOpen(false)}
-                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
-                    >
-                      Settings
-                    </button>
-                    <hr className="my-2 border-gray-200" />
-                    <button
-                      onClick={handleSignOut}
-                      className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
-                    >
-                      Sign Out
-                    </button>
-                  </div>
-                )}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 9l-7 7-7-7"
+                      />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                      <button
+                        onClick={() => {
+                          router.push("/profile");
+                          setDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        Profile
+                      </button>
+                      <button
+                        onClick={() => {
+                          router.push("/community");
+                          setDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        Community
+                      </button>
+                      <button
+                        onClick={() => setDropdownOpen(false)}
+                        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                      >
+                        Settings
+                      </button>
+                      <hr className="my-2 border-gray-200" />
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          ) : (
-            <>
+          </>
+        ) : (
+          <>
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex items-center gap-10 text-sm tracking-wider text-gray-600">
+              <a href="#features" className="hover:text-[#162f16] transition">Features</a>
+              <a href="#testimonials" className="hover:text-[#162f16] transition">Testimonials</a>
+              <a href="/upcoming" className="hover:text-[#162f16] transition">Resources</a>
+              <button
+                onClick={handleCommunityClick}
+                className={`hover:text-[#162f16] transition ${
+                  pathname === "/community" ? "text-[#162f16] font-semibold" : ""
+                }`}
+              >
+                Community
+              </button>
+            </nav>
+
+            {/* Desktop Auth Section */}
+            <div className="hidden md:flex items-center gap-4">
               <button
                 onClick={() => onAuthClick("sign_in")}
                 className="px-4 py-2 text-gray-700 hover:text-gray-900 transition"
@@ -427,9 +484,9 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
               >
                 Sign Up
               </button>
-            </>
-          )}
-        </div>
+            </div>
+          </>
+        )}
 
         {/* Mobile Menu Button */}
         <button

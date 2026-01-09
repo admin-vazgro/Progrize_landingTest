@@ -107,6 +107,8 @@ export default function UserProfilePage() {
   const [education, setEducation] = useState<Education[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [addExperienceOpen, setAddExperienceOpen] = useState(false);
   const [addEducationOpen, setAddEducationOpen] = useState(false);
@@ -217,8 +219,98 @@ export default function UserProfilePage() {
     loadUserProfile();
   }, [loadUserProfile]);
 
+  useEffect(() => {
+    if (!currentUser || isOwner) {
+      setIsFollowing(false);
+      return;
+    }
+
+    const loadFollowStatus = async () => {
+      const { data, error } = await supabase
+        .from("profile_follows")
+        .select("id")
+        .eq("follower_id", currentUser.id)
+        .eq("following_id", userId)
+        .maybeSingle();
+
+      if (!error) {
+        setIsFollowing(!!data);
+      }
+    };
+
+    loadFollowStatus();
+  }, [currentUser, isOwner, userId]);
+
   const handleAuthClick = () => {
     router.push("/");
+  };
+
+  const handleToggleFollow = async () => {
+    if (!currentUser) {
+      handleAuthClick();
+      return;
+    }
+    if (isOwner || followLoading) return;
+
+    setFollowLoading(true);
+    try {
+      if (isFollowing) {
+        const { error: deleteError } = await supabase
+          .from("profile_follows")
+          .delete()
+          .eq("follower_id", currentUser.id)
+          .eq("following_id", userId);
+
+        if (deleteError) throw deleteError;
+
+        const { error: countError } = await supabase.rpc("decrement_follow_counts", {
+          follower_id: currentUser.id,
+          following_id: userId,
+        });
+        if (countError) throw countError;
+
+        setIsFollowing(false);
+        setProfile((prev) =>
+          prev ? { ...prev, followers_count: Math.max(0, prev.followers_count - 1) } : prev
+        );
+      } else {
+        const { error: insertError } = await supabase
+          .from("profile_follows")
+          .insert({ follower_id: currentUser.id, following_id: userId });
+
+        if (insertError) throw insertError;
+
+        const { error: countError } = await supabase.rpc("increment_follow_counts", {
+          follower_id: currentUser.id,
+          following_id: userId,
+        });
+        if (countError) throw countError;
+
+        setIsFollowing(true);
+        setProfile((prev) =>
+          prev ? { ...prev, followers_count: prev.followers_count + 1 } : prev
+        );
+
+        const { error: notificationError } = await supabase
+          .from("notifications")
+          .insert({
+            user_id: userId,
+            actor_id: currentUser.id,
+            type: "follow",
+            entity_type: "profile",
+            entity_id: userId,
+            meta: {},
+          });
+        if (notificationError) {
+          console.warn("Failed to create follow notification:", notificationError);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating follow status:", error);
+      alert("Failed to update follow status. Please try again.");
+    } finally {
+      setFollowLoading(false);
+    }
   };
 
   const handleToggleReferrals = async () => {
@@ -269,13 +361,13 @@ export default function UserProfilePage() {
             <div className="bg-[#162f16] rounded-2xl p-6 text-white">
               <div className="flex justify-center mb-4">
                 {profile.avatar_url ? (
-                  <div className="w-32 h-32 rounded-full border-4 border-[#d4af37] overflow-hidden">
+                  <div className="w-32 h-32 rounded-full border-4 border-[#d4af37] overflow-hidden aspect-square">
                     <Image
                       src={profile.avatar_url}
                       alt={profile.full_name}
                       width={128}
                       height={128}
-                      className="object-cover w-full h-full"
+                      className="object-cover w-full h-full rounded-full"
                     />
                   </div>
                 ) : (
@@ -297,7 +389,7 @@ export default function UserProfilePage() {
             </div>
 
             {/* Referrals */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6">
               <h3 className="font-semibold text-gray-900 mb-2">Referrals</h3>
               <p className="text-sm text-gray-600 mb-4">Let us help other to get job</p>
               
@@ -324,35 +416,49 @@ export default function UserProfilePage() {
             </div>
 
             {/* Community */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6">
               <h3 className="font-semibold text-gray-900 mb-2">Community</h3>
               <p className="text-sm text-gray-600 mb-4">Networking is the key to success</p>
               
               <div className="flex gap-4 mb-4">
                 <div className="flex-1 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#D6E264] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-3xl bg-[#f0fa95] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
                     {profile.followers_count}
                   </div>
                   <p className="text-xs text-gray-600">Followers</p>
                 </div>
                 <div className="flex-1 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#D6E264] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-3xl bg-[#f0fa95] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
                     {profile.following_count}
                   </div>
                   <p className="text-xs text-gray-600">Following</p>
                 </div>
               </div>
               
-              <button
-                onClick={() => router.push("/community")}
-                className="w-full px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
-              >
-                View Community
-              </button>
+              {isOwner ? (
+                <button
+                  onClick={() => router.push("/community")}
+                  className="w-full px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
+                >
+                  View Community
+                </button>
+              ) : (
+                <button
+                  onClick={handleToggleFollow}
+                  disabled={followLoading}
+                  className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition ${
+                    isFollowing
+                      ? "border border-gray-300 text-gray-700 hover:bg-gray-100"
+                      : "bg-[#162f16] text-white hover:bg-[#0f2310]"
+                  } ${followLoading ? "opacity-60 cursor-not-allowed" : ""}`}
+                >
+                  {isFollowing ? "Unfollow" : "Follow"}
+                </button>
+              )}
             </div>
 
             {/* Public Profiles */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6">
               <h3 className="font-semibold text-gray-900 mb-2">Public profiles</h3>
               <p className="text-sm text-gray-600 mb-4">Networking is the key to success</p>
               
@@ -384,7 +490,7 @@ export default function UserProfilePage() {
           {/* Main Content */}
           <div className="lg:col-span-6 space-y-6">
             {hasActivity && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">Activity</h3>
@@ -417,9 +523,9 @@ export default function UserProfilePage() {
               </div>
             )}
             {/* About You */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold text-gray-900">About you</h3>
+            <div className="bg-white rounded-xl p-6">
+              <div className="flex items-center justify-between mb-1">
+                <h3 className="text-lg font-semibold text-gray-900">About</h3>
                 {isOwner && (
                   <button
                     onClick={() => setEditProfileOpen(true)}
@@ -430,13 +536,13 @@ export default function UserProfilePage() {
                 )}
               </div>
               <p className="text-sm text-gray-600 mb-3">Professional Summary</p>
-              <p className="text-sm text-gray-700 leading-relaxed">
+              <p className="text-xs text-gray-700 leading-relaxed">
                 {profile.professional_summary || "No professional summary added yet."}
               </p>
             </div>
 
             {/* Experiences */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Experiences</h3>
                 {isOwner && (
@@ -459,6 +565,7 @@ export default function UserProfilePage() {
                       experience={exp}
                       isOwner={isOwner}
                       onUpdate={loadUserProfile}
+                      variant={isOwner ? "full" : "compact"}
                     />
                   ))}
                 </div>
@@ -466,7 +573,7 @@ export default function UserProfilePage() {
             </div>
 
             {/* Education */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-gray-900">Education</h3>
                 {isOwner && (
@@ -489,6 +596,7 @@ export default function UserProfilePage() {
                       education={edu}
                       isOwner={isOwner}
                       onUpdate={loadUserProfile}
+                      variant={isOwner ? "full" : "compact"}
                     />
                   ))}
                 </div>
@@ -499,8 +607,8 @@ export default function UserProfilePage() {
           {/* Right Sidebar */}
           <div className="lg:col-span-3 space-y-6">
             {/* Interested Job */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white rounded-xl p-6">
+              <div className="flex items-center justify-between mb-1">
                 <h3 className="font-semibold text-gray-900">Interested job</h3>
                 {isOwner && (
                   <button
@@ -518,7 +626,7 @@ export default function UserProfilePage() {
                   {profile.job_preferences.map((job, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-[#D6E264] text-[#162f16] rounded-full text-xs font-medium"
+                      className="px-3 py-3 bg-[#f0fa95] text-[#162f16] rounded-xl text-xs font-medium"
                     >
                       {job}
                     </span>
@@ -530,8 +638,8 @@ export default function UserProfilePage() {
             </div>
 
             {/* Skills */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white rounded-xl p-6">
+              <div className="flex items-center justify-between mb-1">
                 <h3 className="font-semibold text-gray-900">Skills</h3>
                 {isOwner && (
                   <button
@@ -564,8 +672,8 @@ export default function UserProfilePage() {
             </div>
 
             {/* Preferred Countries */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
-              <div className="flex items-center justify-between mb-4">
+            <div className="bg-white rounded-xl p-6">
+              <div className="flex items-center justify-between mb-1">
                 <h3 className="font-semibold text-gray-900">Preferred Countries</h3>
                 {isOwner && (
                   <button
@@ -582,7 +690,7 @@ export default function UserProfilePage() {
                   {profile.preferred_countries.map((country, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium"
+                      className="px-3 py-3 bg-gray-100 text-gray-700 rounded-xl text-xs font-medium"
                     >
                       {country}
                     </span>

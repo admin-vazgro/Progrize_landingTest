@@ -671,13 +671,13 @@ export default function ProfilePage() {
               <div className="flex justify-center mb-4 relative">
                 <label className="cursor-pointer">
                   {profile.avatar_url ? (
-                    <div className="w-32 h-32 rounded-full border-4 border-[#d4af37] overflow-hidden">
+                    <div className="w-32 h-32 rounded-full border-4 border-[#d4af37] overflow-hidden aspect-square">
                       <Image
                         src={profile.avatar_url}
                         alt={profile.full_name}
                         width={128}
                         height={128}
-                        className="object-cover w-full h-full"
+                        className="object-cover w-full h-full rounded-full"
                       />
                     </div>
                   ) : (
@@ -704,7 +704,7 @@ export default function ProfilePage() {
             </div>
 
             {/* Referrals */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6">
               <h3 className="font-semibold text-gray-900 mb-2">Referrals</h3>
               <p className="text-sm text-gray-600 mb-4">Let us help other to get job</p>
               
@@ -730,19 +730,19 @@ export default function ProfilePage() {
             </div>
 
             {/* Community */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6">
               <h3 className="font-semibold text-gray-900 mb-2">Community</h3>
               <p className="text-sm text-gray-600 mb-4">Networking is the key to success</p>
               
               <div className="flex gap-4 mb-4">
                 <div className="flex-1 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#D6E264] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-xl bg-[#f0fa95] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
                     {profile.followers_count}
                   </div>
                   <p className="text-xs text-gray-600">Followers</p>
                 </div>
                 <div className="flex-1 text-center">
-                  <div className="w-16 h-16 rounded-full bg-[#D6E264] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
+                  <div className="w-16 h-16 rounded-xl bg-[#f0fa95] text-[#162f16] flex items-center justify-center font-bold text-lg mx-auto mb-2">
                     {profile.following_count}
                   </div>
                   <p className="text-xs text-gray-600">Following</p>
@@ -751,14 +751,14 @@ export default function ProfilePage() {
               
               <button
                 onClick={() => router.push("/community")}
-                className="w-full px-4 py-2 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
+                className="w-full px-4 py-3 bg-[#162f16] text-white rounded-lg text-sm font-medium hover:bg-[#0f2310] transition"
               >
                 View Community
               </button>
             </div>
 
             {/* Public Profiles */}
-            <div className="bg-white rounded-xl p-6 border border-gray-200">
+            <div className="bg-white rounded-xl p-6">
               <h3 className="font-semibold text-gray-900 mb-2">Public profiles</h3>
               <p className="text-sm text-gray-600 mb-4">Networking is the key to success</p>
               
@@ -790,7 +790,7 @@ export default function ProfilePage() {
           {/* Main Content */}
           <div className="lg:col-span-6 space-y-6">
             {isNewProfile && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Get started</h3>
                   <p className="text-sm text-gray-600">
@@ -845,8 +845,8 @@ export default function ProfilePage() {
             )}
             {/* About You */}
             {hasSummary && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-white rounded-xl p-6">
+                <div className="flex items-center justify-between mb-2">
                   <h3 className="text-lg font-semibold text-gray-900">About you</h3>
                   <button
                     onClick={() => setEditProfileOpen(true)}
@@ -856,14 +856,14 @@ export default function ProfilePage() {
                   </button>
                 </div>
                 <p className="text-sm text-gray-600 mb-3">Professional Summary</p>
-                <p className="text-sm text-gray-700 leading-relaxed">
+                <p className="text-xs text-gray-700 leading-relaxed">
                   {profile.professional_summary}
                 </p>
               </div>
             )}
 
             {hasActivity && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">Activity</h3>
@@ -898,7 +898,7 @@ export default function ProfilePage() {
 
             {/* Experiences */}
             {hasExperiences && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Experiences</h3>
                   <button
@@ -923,7 +923,7 @@ export default function ProfilePage() {
 
             {/* Education */}
             {hasEducation && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Education</h3>
                   <button
@@ -948,7 +948,7 @@ export default function ProfilePage() {
 
             {/* Licenses & Certifications */}
             {hasCertifications && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Licenses & Certifications</h3>
                   <button
@@ -973,7 +973,7 @@ export default function ProfilePage() {
 
             {/* Volunteering */}
             {hasVolunteering && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Volunteering</h3>
                   <button
@@ -998,7 +998,7 @@ export default function ProfilePage() {
 
             {/* Projects */}
             {hasProjects && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Projects</h3>
                   <button
@@ -1023,7 +1023,7 @@ export default function ProfilePage() {
 
             {/* Publications */}
             {hasPublications && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Publications</h3>
                   <button
@@ -1051,8 +1051,8 @@ export default function ProfilePage() {
           <div className="lg:col-span-3 space-y-6">
             {/* Interested Job */}
             {hasJobPreferences && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-white rounded-xl p-6">
+                <div className="flex items-center justify-between mb-1">
                   <h3 className="font-semibold text-gray-900">Interested job</h3>
                   <button
                     onClick={() => setEditProfileOpen(true)}
@@ -1061,12 +1061,12 @@ export default function ProfilePage() {
                     Edit
                   </button>
                 </div>
-                <p className="text-sm text-gray-600 mb-3">Job Preference</p>
+                <p className="text-sm text-gray-600 mb-2">Job Preference</p>
                 <div className="flex flex-wrap gap-2">
                   {profile.job_preferences.map((job, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-[#D6E264] text-[#162f16] rounded-full text-xs font-medium"
+                      className="px-3 py-3 bg-[#f0fa95] text-[#162f16] rounded-xl text-xs font-medium"
                     >
                       {job}
                     </span>
@@ -1077,8 +1077,8 @@ export default function ProfilePage() {
 
             {/* Skills */}
             {hasSkills && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
-                <div className="flex items-center justify-between mb-4">
+              <div className="bg-white rounded-xl p-6">
+                <div className="flex items-center justify-between mb-1">
                   <h3 className="font-semibold text-gray-900">Skills</h3>
                   <button
                     onClick={() => setEditProfileOpen(true)}
@@ -1087,7 +1087,7 @@ export default function ProfilePage() {
                     Edit
                   </button>
                 </div>
-                <p className="text-sm text-gray-600 mb-3">Top skills</p>
+                <p className="text-sm text-gray-600 mb-2">Top skills</p>
                 <div className="flex flex-wrap gap-2">
                   {profile.skills.map((skill, index) => (
                     <span
@@ -1106,7 +1106,7 @@ export default function ProfilePage() {
 
             {/* Preferred Countries */}
             {hasPreferredCountries && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-gray-900">Preferred Countries</h3>
                   <button
@@ -1121,7 +1121,7 @@ export default function ProfilePage() {
                   {profile.preferred_countries.map((country, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-medium"
+                      className="px-3 py-3 bg-gray-100 text-gray-700 rounded-xl text-xs font-medium"
                     >
                       {country}
                     </span>
@@ -1131,7 +1131,7 @@ export default function ProfilePage() {
             )}
 
             {suggestions.length > 0 && (
-              <div className="bg-white rounded-xl p-6 border border-gray-200">
+              <div className="bg-white rounded-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h3 className="font-semibold text-gray-900">More profiles for you</h3>
                 </div>
