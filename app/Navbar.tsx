@@ -393,9 +393,6 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
                         {getInitial()}
                       </div>
                     )}
-                    <span className="text-gray-900 font-medium">
-                      {getUserName()}
-                    </span>
                     <svg
                       className={`w-4 h-4 text-gray-600 transition-transform ${
                         dropdownOpen ? "rotate-180" : ""
