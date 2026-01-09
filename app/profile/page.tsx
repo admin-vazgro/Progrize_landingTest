@@ -635,18 +635,18 @@ export default function ProfilePage() {
   const hasJobPreferences = (profile.job_preferences || []).length > 0;
   const hasSkills = (profile.skills || []).length > 0;
   const hasPreferredCountries = (profile.preferred_countries || []).length > 0;
-  const isNewProfile =
-    !hasSummary &&
-    !hasExperiences &&
-    !hasEducation &&
-    !hasCertifications &&
-    !hasVolunteering &&
-    !hasProjects &&
-    !hasPublications &&
-    !hasJobPreferences &&
-    !hasSkills &&
-    !hasPreferredCountries &&
-    !hasActivity;
+  const hasProfileContent =
+    hasSummary ||
+    hasExperiences ||
+    hasEducation ||
+    hasCertifications ||
+    hasVolunteering ||
+    hasProjects ||
+    hasPublications ||
+    hasJobPreferences ||
+    hasSkills ||
+    hasPreferredCountries;
+  const isNewProfile = !hasProfileContent;
 
   return (
     <div className="min-h-screen bg-gray-50">
