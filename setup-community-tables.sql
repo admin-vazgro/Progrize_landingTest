@@ -129,6 +129,40 @@ ALTER TABLE education
 ALTER TABLE profiles
   ADD COLUMN IF NOT EXISTS feed_preferences TEXT[] DEFAULT '{}';
 
+-- Add admin moderation fields to profiles
+ALTER TABLE profiles
+  ADD COLUMN IF NOT EXISTS is_banned BOOLEAN DEFAULT false,
+  ADD COLUMN IF NOT EXISTS is_flagged BOOLEAN DEFAULT false,
+  ADD COLUMN IF NOT EXISTS banned_at TIMESTAMP WITH TIME ZONE,
+  ADD COLUMN IF NOT EXISTS flagged_at TIMESTAMP WITH TIME ZONE,
+  ADD COLUMN IF NOT EXISTS ban_reason TEXT,
+  ADD COLUMN IF NOT EXISTS flag_reason TEXT;
+
+-- Reports table for moderation
+CREATE TABLE IF NOT EXISTS reports (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  reporter_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  target_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  target_post_id UUID REFERENCES posts(id) ON DELETE SET NULL,
+  reason TEXT,
+  status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'reviewed', 'dismissed')),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS reports_status_idx ON reports(status);
+CREATE INDEX IF NOT EXISTS reports_target_user_idx ON reports(target_user_id);
+CREATE INDEX IF NOT EXISTS reports_target_post_idx ON reports(target_post_id);
+
+ALTER TABLE reports ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "allow_insert_reports" ON reports
+  FOR INSERT TO authenticated
+  WITH CHECK (auth.uid() = reporter_id);
+
+CREATE POLICY "allow_read_own_reports" ON reports
+  FOR SELECT TO authenticated
+  USING (auth.uid() = reporter_id);
+
 -- Create profile follows table
 CREATE TABLE IF NOT EXISTS profile_follows (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

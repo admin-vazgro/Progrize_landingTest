@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { User } from "@supabase/supabase-js";
 import Navbar from "../Navbar";
 import CreatePostModal from "../components/CreatePostModal";
@@ -68,6 +68,7 @@ interface Post {
 
 export default function CommunityPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [posts, setPosts] = useState<Post[]>([]);
@@ -76,6 +77,7 @@ export default function CommunityPage() {
   const [createPostOpen, setCreatePostOpen] = useState(false);
   const [createEventOpen, setCreateEventOpen] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [targetPostId, setTargetPostId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"feed" | "events">("feed");
   const [postTypeFilter, setPostTypeFilter] = useState<PostType>("all");
   const [sortBy, setSortBy] = useState<SortType>("latest");
@@ -341,6 +343,29 @@ export default function CommunityPage() {
   useEffect(() => {
     filterPosts();
   }, [filterPosts]);
+
+  useEffect(() => {
+    const postId = searchParams.get("post");
+    const eventId = searchParams.get("event");
+
+    if (eventId) {
+      setActiveTab("events");
+      setSelectedEventId(eventId);
+    }
+
+    if (postId) {
+      setActiveTab("feed");
+      setTargetPostId(postId);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    if (!targetPostId || activeTab !== "feed") return;
+    const target = document.querySelector(`[data-post-id="${targetPostId}"]`);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [targetPostId, activeTab, filteredPosts]);
 
   useEffect(() => {
     if (!user) {
@@ -734,12 +759,13 @@ export default function CommunityPage() {
                   </div>
                 ) : (
                   filteredPosts.map((post) => (
-                    <PostCard
-                      key={post.id}
-                      post={post}
-                      currentUserId={user?.id || ""}
-                      onUpdate={loadPosts}
-                    />
+                    <div key={post.id} data-post-id={post.id}>
+                      <PostCard
+                        post={post}
+                        currentUserId={user?.id || ""}
+                        onUpdate={loadPosts}
+                      />
+                    </div>
                   ))
                 )}
               </div>

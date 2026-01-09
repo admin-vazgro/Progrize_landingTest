@@ -20,6 +20,7 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [profile, setProfile] = useState<{ full_name: string | null; avatar_url: string | null } | null>(null);
   const [notifications, setNotifications] = useState<Array<{
     id: string;
@@ -178,6 +179,13 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
     setMobileMenuOpen(false);
   };
 
+  const handleSearchSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) return;
+    router.push(`/search?q=${encodeURIComponent(query)}`);
+  };
+
   const getUserName = () => {
     if (profile?.full_name) {
       return profile.full_name;
@@ -281,13 +289,15 @@ export default function Navbar({ onAuthClick }: NavbarProps) {
             </nav>
 
             <div className="hidden md:flex items-center gap-4 flex-1 justify-end">
-              <div className="relative w-full max-w-md">
+              <form onSubmit={handleSearchSubmit} className="relative w-full max-w-md">
                 <input
                   type="text"
+                  value={searchQuery}
+                  onChange={(event) => setSearchQuery(event.target.value)}
                   placeholder="Search for..."
                   className="w-full px-4 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#162f16]"
                 />
-              </div>
+              </form>
 
               <div className="flex items-center gap-3">
                 <div className="relative">

@@ -798,6 +798,12 @@ export default function ProfilePage() {
               {profile.location && (
                 <p className="text-xs text-center text-gray-400">{profile.location}</p>
               )}
+              <button
+                onClick={() => setEditProfileOpen(true)}
+                className="mt-4 w-full text-sm text-white/90 hover:text-white transition"
+              >
+                Edit
+              </button>
             </div>
 
             {/* Referrals */}

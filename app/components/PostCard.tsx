@@ -45,6 +45,7 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
   const [isRSVPing, setIsRSVPing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showPostMenu, setShowPostMenu] = useState(false);
   const [localLikesCount, setLocalLikesCount] = useState(post.likes_count);
   const [localIsLiked, setLocalIsLiked] = useState(post.is_liked);
   const [localCommentsCount, setLocalCommentsCount] = useState(post.comments_count);
@@ -211,6 +212,29 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
     alert("Link copied to clipboard!");
   };
 
+  const handleReportPost = async () => {
+    if (!currentUserId) {
+      alert("Please sign in to report.");
+      return;
+    }
+
+    const reason = window.prompt("Why are you reporting this post? (optional)") || "";
+    const { error } = await supabase.from("reports").insert({
+      reporter_id: currentUserId,
+      target_post_id: post.id,
+      target_user_id: post.user_id,
+      reason,
+    });
+
+    if (error) {
+      console.error("Error reporting post:", error);
+      alert("Failed to submit report. Please try again.");
+      return;
+    }
+
+    alert("Report submitted. Thank you.");
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -264,40 +288,65 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
         </div>
 
         <div className="flex items-center gap-2">
-          {isOwner && (
-            <div className="relative">
-              <button
-                onClick={() => setShowDeleteConfirm(!showDeleteConfirm)}
-                className="p-2 text-gray-400 hover:text-red-600 transition"
-                aria-label="Delete post"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-              </button>
+          <div className="relative">
+            <button
+              onClick={() => setShowPostMenu((prev) => !prev)}
+              className="p-2 text-gray-400 hover:text-gray-700 transition"
+              aria-label="Post actions"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </button>
 
-              {showDeleteConfirm && (
-                <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 p-4 z-10 w-64">
-                  <p className="text-sm text-gray-700 mb-3">Are you sure you want to delete this post?</p>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleDelete}
-                      disabled={isDeleting}
-                      className="flex-1 px-3 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition disabled:opacity-50"
-                    >
-                      {isDeleting ? "Deleting..." : "Delete"}
-                    </button>
-                    <button
-                      onClick={() => setShowDeleteConfirm(false)}
-                      className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 transition"
-                    >
-                      Cancel
-                    </button>
-                  </div>
+            {showPostMenu && (
+              <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 p-2 z-10 w-40">
+                {!isOwner && (
+                  <button
+                    onClick={() => {
+                      setShowPostMenu(false);
+                      handleReportPost();
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md"
+                  >
+                    Report
+                  </button>
+                )}
+                {isOwner && (
+                  <button
+                    onClick={() => {
+                      setShowPostMenu(false);
+                      setShowDeleteConfirm(true);
+                    }}
+                    className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-gray-50 rounded-md"
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
+            )}
+
+            {showDeleteConfirm && (
+              <div className="absolute right-0 top-10 bg-white rounded-lg shadow-lg border border-gray-200 p-4 z-10 w-64">
+                <p className="text-sm text-gray-700 mb-3">Are you sure you want to delete this post?</p>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleDelete}
+                    disabled={isDeleting}
+                    className="flex-1 px-3 py-2 bg-red-600 text-white rounded-md text-sm font-medium hover:bg-red-700 transition disabled:opacity-50"
+                  >
+                    {isDeleting ? "Deleting..." : "Delete"}
+                  </button>
+                  <button
+                    onClick={() => setShowDeleteConfirm(false)}
+                    className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-md text-sm font-medium hover:bg-gray-200 transition"
+                  >
+                    Cancel
+                  </button>
                 </div>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 

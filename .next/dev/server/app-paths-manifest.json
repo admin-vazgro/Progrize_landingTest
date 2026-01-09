@@ -1,5 +1,8 @@
 {
-  "/page": "app/page.js",
+  "/api/adminprogrize/actions/route": "app/api/adminprogrize/actions/route.js",
+  "/api/adminprogrize/reports/route": "app/api/adminprogrize/reports/route.js",
+  "/api/adminprogrize/posts/route": "app/api/adminprogrize/posts/route.js",
+  "/api/adminprogrize/profiles/route": "app/api/adminprogrize/profiles/route.js",
   "/community/page": "app/community/page.js",
-  "/profile/page": "app/profile/page.js"
+  "/adminprogrize/page": "app/adminprogrize/page.js"
 }

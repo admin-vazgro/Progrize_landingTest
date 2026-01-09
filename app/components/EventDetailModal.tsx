@@ -90,11 +90,11 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
         .eq("user_id", currentUserId)
         .single();
 
-      // Get user's like status
+      // Get user's like status (event likes are stored in post_likes)
       const { data: likeData } = await supabase
-        .from("event_likes")
+        .from("post_likes")
         .select("id")
-        .eq("event_id", eventId)
+        .eq("post_id", post.id as string)
         .eq("user_id", currentUserId)
         .single();
 
@@ -133,7 +133,12 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
 
       setIsLiked(!!likeData);
     } catch (error) {
-      console.error("Error loading event details:", error);
+      const details = {
+        message: (error as { message?: string })?.message,
+        code: (error as { code?: string })?.code,
+        hint: (error as { hint?: string })?.hint,
+      };
+      console.error("Error loading event details:", error, details);
     }
   }, [eventId, currentUserId]);
 
@@ -186,19 +191,19 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
       if (isLiked) {
         // Unlike
         await supabase
-          .from("event_likes")
+          .from("post_likes")
           .delete()
-          .eq("event_id", eventId)
+          .eq("post_id", event.post_id)
           .eq("user_id", currentUserId);
 
-        await supabase.rpc("decrement_event_likes", { event_id: eventId });
+        await supabase.rpc("decrement_likes", { post_id: event.post_id });
       } else {
         // Like
         await supabase
-          .from("event_likes")
-          .insert({ event_id: eventId, user_id: currentUserId });
+          .from("post_likes")
+          .insert({ post_id: event.post_id, user_id: currentUserId });
 
-        await supabase.rpc("increment_event_likes", { event_id: eventId });
+        await supabase.rpc("increment_likes", { post_id: event.post_id });
       }
 
       setIsLiked(!isLiked);

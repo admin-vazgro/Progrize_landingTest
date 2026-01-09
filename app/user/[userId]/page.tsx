@@ -109,6 +109,7 @@ export default function UserProfilePage() {
   const [loading, setLoading] = useState(true);
   const [isFollowing, setIsFollowing] = useState(false);
   const [followLoading, setFollowLoading] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [addExperienceOpen, setAddExperienceOpen] = useState(false);
   const [addEducationOpen, setAddEducationOpen] = useState(false);
@@ -329,6 +330,29 @@ export default function UserProfilePage() {
     }
   };
 
+  const handleReportProfile = async () => {
+    if (!currentUser) {
+      alert("Please sign in to report.");
+      router.push("/");
+      return;
+    }
+
+    const reason = window.prompt("Why are you reporting this profile? (optional)") || "";
+    const { error } = await supabase.from("reports").insert({
+      reporter_id: currentUser.id,
+      target_user_id: userId,
+      reason,
+    });
+
+    if (error) {
+      console.error("Error reporting profile:", error);
+      alert("Failed to submit report. Please try again.");
+      return;
+    }
+
+    alert("Report submitted. Thank you.");
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -358,7 +382,33 @@ export default function UserProfilePage() {
           {/* Left Sidebar */}
           <div className="lg:col-span-3 space-y-6">
             {/* Profile Card */}
-            <div className="bg-[#162f16] rounded-2xl p-6 text-white">
+            <div className="bg-[#162f16] rounded-2xl p-6 text-white relative">
+              {!isOwner && (
+                <div className="absolute top-3 right-3">
+                  <button
+                    onClick={() => setShowProfileMenu((prev) => !prev)}
+                    className="p-2 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition"
+                    aria-label="Profile actions"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0zm6 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </button>
+                  {showProfileMenu && (
+                    <div className="absolute right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 p-2 w-40 z-10">
+                      <button
+                        onClick={() => {
+                          setShowProfileMenu(false);
+                          handleReportProfile();
+                        }}
+                        className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 rounded-md"
+                      >
+                        Report
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
               <div className="flex justify-center mb-4">
                 {profile.avatar_url ? (
                   <div className="w-32 h-32 rounded-full border-4 border-[#d4af37] overflow-hidden aspect-square">
