@@ -37,10 +37,8 @@ export default function ExperienceCard({ experience, isOwner, onUpdate }: Experi
   const [verificationStatus, setVerificationStatus] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isOwner && experience.hr_email) {
-      checkVerificationStatus();
-    }
-  }, [experience.id, isOwner]);
+    checkVerificationStatus();
+  }, [experience.id]);
 
   const checkVerificationStatus = async () => {
     try {
