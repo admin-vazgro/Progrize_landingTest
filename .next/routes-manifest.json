@@ -57,6 +57,36 @@
       "namedRegex": "^/_not\\-found(?:/)?$"
     },
     {
+      "page": "/adminprogrize",
+      "regex": "^/adminprogrize(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/adminprogrize(?:/)?$"
+    },
+    {
+      "page": "/api/adminprogrize/actions",
+      "regex": "^/api/adminprogrize/actions(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/adminprogrize/actions(?:/)?$"
+    },
+    {
+      "page": "/api/adminprogrize/posts",
+      "regex": "^/api/adminprogrize/posts(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/adminprogrize/posts(?:/)?$"
+    },
+    {
+      "page": "/api/adminprogrize/profiles",
+      "regex": "^/api/adminprogrize/profiles(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/adminprogrize/profiles(?:/)?$"
+    },
+    {
+      "page": "/api/adminprogrize/reports",
+      "regex": "^/api/adminprogrize/reports(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/adminprogrize/reports(?:/)?$"
+    },
+    {
       "page": "/api/send-curiosity",
       "regex": "^/api/send\\-curiosity(?:/)?$",
       "routeKeys": {},
@@ -79,6 +109,12 @@
       "regex": "^/profile(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/profile(?:/)?$"
+    },
+    {
+      "page": "/search",
+      "regex": "^/search(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/search(?:/)?$"
     },
     {
       "page": "/verification-rejected",

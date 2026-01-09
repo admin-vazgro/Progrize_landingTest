@@ -185,7 +185,7 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
   }, [eventId, loadEventDetails, loadComments]);
 
   const handleLike = async () => {
-    if (!eventId) return;
+    if (!eventId || !event) return;
 
     try {
       if (isLiked) {

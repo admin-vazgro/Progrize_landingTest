@@ -1,14 +1,20 @@
 {
-  "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/_global-error/page": "/_global-error",
   "/api/send-curiosity/route": "/api/send-curiosity",
   "/auth/callback/route": "/auth/callback",
+  "/api/adminprogrize/actions/route": "/api/adminprogrize/actions",
+  "/api/adminprogrize/posts/route": "/api/adminprogrize/posts",
+  "/api/adminprogrize/profiles/route": "/api/adminprogrize/profiles",
+  "/api/adminprogrize/reports/route": "/api/adminprogrize/reports",
+  "/adminprogrize/page": "/adminprogrize",
   "/activity/[userId]/page": "/activity/[userId]",
-  "/page": "/",
   "/community/page": "/community",
+  "/page": "/",
+  "/search/page": "/search",
+  "/verification-rejected/page": "/verification-rejected",
   "/user/[userId]/page": "/user/[userId]",
   "/profile/page": "/profile",
   "/verify/page": "/verify",
-  "/verification-rejected/page": "/verification-rejected",
   "/verification-success/page": "/verification-success"
 }
