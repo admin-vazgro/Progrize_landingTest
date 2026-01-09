@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import type { User } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
 import School from "./School";
@@ -17,6 +18,7 @@ import AuthModal from "./components/AuthModal";
 import OnboardingModal from "./components/OnboardingModal";
 
 export default function Page() {
+  const router = useRouter();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<"sign_in" | "sign_up">("sign_in");
   const [onboardingModalOpen, setOnboardingModalOpen] = useState(false);
@@ -37,6 +39,12 @@ export default function Page() {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      router.replace("/community");
+    }
+  }, [router, user]);
 
   const handleAuthClick = (mode: "sign_in" | "sign_up") => {
     setAuthMode(mode);
