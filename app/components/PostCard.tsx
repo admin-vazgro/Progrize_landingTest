@@ -51,6 +51,23 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
 
   const isOwner = post.user_id === currentUserId;
 
+  const notifyPostOwner = async (type: "like") => {
+    if (post.user_id === currentUserId) return;
+    const { error } = await supabase.from("notifications").insert({
+      user_id: post.user_id,
+      actor_id: currentUserId,
+      type,
+      entity_type: "post",
+      entity_id: post.id,
+      meta: {
+        title: post.title,
+      },
+    });
+    if (error) {
+      console.error("Error creating notification:", error);
+    }
+  };
+
   const handleUserClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     router.push(`/user/${post.user_id}`);
@@ -83,6 +100,7 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
           .insert({ post_id: post.id, user_id: currentUserId });
 
         await supabase.rpc("increment_likes", { post_id: post.id });
+        await notifyPostOwner("like");
       }
 
       onUpdate();

@@ -99,6 +99,19 @@ CREATE TABLE IF NOT EXISTS verification_history (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Create notifications table
+CREATE TABLE IF NOT EXISTS notifications (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  actor_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+  type TEXT NOT NULL,
+  entity_type TEXT,
+  entity_id UUID,
+  meta JSONB DEFAULT '{}'::jsonb,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
+  read_at TIMESTAMP WITH TIME ZONE
+);
+
 -- Add verification fields to experiences and education if missing
 ALTER TABLE experiences
   ADD COLUMN IF NOT EXISTS hr_email TEXT,
@@ -135,6 +148,8 @@ CREATE INDEX IF NOT EXISTS verification_requests_user_idx ON verification_reques
 CREATE INDEX IF NOT EXISTS verification_requests_reference_idx ON verification_requests(reference_id);
 CREATE INDEX IF NOT EXISTS verification_requests_token_idx ON verification_requests(verification_token);
 CREATE INDEX IF NOT EXISTS verification_history_request_idx ON verification_history(verification_request_id);
+CREATE INDEX IF NOT EXISTS notifications_user_idx ON notifications(user_id);
+CREATE INDEX IF NOT EXISTS notifications_read_idx ON notifications(user_id, read_at);
 
 -- Enable Row Level Security
 ALTER TABLE communities ENABLE ROW LEVEL SECURITY;
@@ -147,6 +162,7 @@ ALTER TABLE comments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profile_follows ENABLE ROW LEVEL SECURITY;
 ALTER TABLE verification_requests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE verification_history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for communities (public read)
 CREATE POLICY "allow_read_all_communities" ON communities FOR SELECT USING (true);
@@ -192,6 +208,19 @@ CREATE POLICY "allow_update_verification_requests" ON verification_requests FOR 
 -- RLS Policies for verification history
 CREATE POLICY "allow_read_all_verification_history" ON verification_history FOR SELECT USING (true);
 CREATE POLICY "allow_insert_verification_history" ON verification_history FOR INSERT USING (true);
+
+-- RLS Policies for notifications
+CREATE POLICY "allow_read_own_notifications" ON notifications
+  FOR SELECT TO authenticated
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "allow_insert_own_notifications" ON notifications
+  FOR INSERT TO authenticated
+  WITH CHECK (auth.uid() = actor_id);
+
+CREATE POLICY "allow_update_own_notifications" ON notifications
+  FOR UPDATE TO authenticated
+  USING (auth.uid() = user_id);
 
 -- Insert default communities
 INSERT INTO communities (name, description) VALUES

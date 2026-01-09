@@ -6,6 +6,9 @@ import { COUNTRIES, CITIES, SKILLS, COUNTRY_CODES, MIN_SUMMARY_CHARS } from "@/l
 
 interface UserProfile {
   id: string;
+  full_name: string;
+  occupation: string;
+  country: string;
   professional_summary: string;
   phone: string;
   phone_country_code: string;
@@ -47,6 +50,9 @@ export default function EditProfileModal({
 }: EditProfileModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    full_name: "",
+    occupation: "",
+    country: "",
     professional_summary: "",
     phone: "",
     phone_country_code: "+44",
@@ -73,6 +79,9 @@ export default function EditProfileModal({
   useEffect(() => {
     if (profile) {
       setFormData({
+        full_name: profile.full_name || "",
+        occupation: profile.occupation || "",
+        country: profile.country || "",
         professional_summary: profile.professional_summary || "",
         phone: profile.phone || "",
         phone_country_code: profile.phone_country_code || "+44",
@@ -119,6 +128,9 @@ export default function EditProfileModal({
       const { error } = await supabase
         .from("profiles")
         .update({
+          full_name: formData.full_name,
+          occupation: formData.occupation,
+          country: formData.country,
           professional_summary: formData.professional_summary,
           phone: formData.phone,
           phone_country_code: formData.phone_country_code,
@@ -288,6 +300,42 @@ export default function EditProfileModal({
 
           {/* Contact Info */}
           <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Full name
+              </label>
+              <input
+                type="text"
+                value={formData.full_name}
+                onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                placeholder="Rohith Nair"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Occupation
+              </label>
+              <input
+                type="text"
+                value={formData.occupation}
+                onChange={(e) => setFormData({ ...formData, occupation: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                placeholder="Product Designer"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Country
+              </label>
+              <input
+                type="text"
+                value={formData.country}
+                onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#162f16] text-sm"
+                placeholder="United Kingdom"
+              />
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Phone

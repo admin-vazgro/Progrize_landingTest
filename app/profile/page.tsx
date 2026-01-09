@@ -578,6 +578,16 @@ export default function ProfilePage() {
           .insert({ follower_id: user.id, following_id: targetId });
 
         if (error) throw error;
+        const { error: notificationError } = await supabase.from("notifications").insert({
+          user_id: targetId,
+          actor_id: user.id,
+          type: "follow",
+          entity_type: "profile",
+          entity_id: user.id,
+        });
+        if (notificationError) {
+          console.error("Error creating notification:", notificationError);
+        }
         const { error: countError } = await supabase.rpc("increment_follow_counts", {
           follower_id: user.id,
           following_id: targetId,

@@ -126,6 +126,27 @@ export default function CreateEventModal({ isOpen, onClose, onSuccess, userId }:
 
       if (eventError) throw eventError;
 
+      const { data: followerData } = await supabase
+        .from("profile_follows")
+        .select("follower_id")
+        .eq("following_id", userId);
+
+      if (followerData && followerData.length > 0) {
+        const notifications = followerData.map((row) => ({
+          user_id: row.follower_id,
+          actor_id: userId,
+          type: "follower_post",
+          entity_type: "post",
+          entity_id: postData.id,
+          meta: { title: postData.title },
+        }));
+
+        const { error: notificationError } = await supabase.from("notifications").insert(notifications);
+        if (notificationError) {
+          console.error("Error creating notifications:", notificationError);
+        }
+      }
+
       // Reset form
       setTitle("");
       setContent("");

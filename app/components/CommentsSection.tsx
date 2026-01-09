@@ -84,6 +84,29 @@ export default function CommentsSection({ postId, currentUserId, onUpdate }: Com
       // Increment comments count
       await supabase.rpc("increment_comments", { post_id: postId });
 
+      // Notify post owner
+      const { data: postData } = await supabase
+        .from("posts")
+        .select("user_id, title")
+        .eq("id", postId)
+        .single();
+
+      if (postData?.user_id && postData.user_id !== currentUserId) {
+        const { error: notificationError } = await supabase.from("notifications").insert({
+          user_id: postData.user_id,
+          actor_id: currentUserId,
+          type: "comment",
+          entity_type: "post",
+          entity_id: postId,
+          meta: {
+            title: postData.title,
+          },
+        });
+        if (notificationError) {
+          console.error("Error creating notification:", notificationError);
+        }
+      }
+
       setNewComment("");
       await loadComments();
       onUpdate();

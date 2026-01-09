@@ -37,7 +37,7 @@ export default function CreatePostModal({ isOpen, onClose, onSuccess, userId }: 
         .map(tag => tag.trim())
         .filter(tag => tag.length > 0);
 
-      const { error: insertError } = await supabase
+      const { data: postData, error: insertError } = await supabase
         .from("posts")
         .insert({
           user_id: userId,
@@ -46,9 +46,34 @@ export default function CreatePostModal({ isOpen, onClose, onSuccess, userId }: 
           content: content.trim(),
           tags: tagsArray,
           community_id: null // You can add community selection later
-        });
+        })
+        .select();
 
       if (insertError) throw insertError;
+
+      if (postData && postData.length > 0) {
+        const createdPost = postData[0];
+        const { data: followerData } = await supabase
+          .from("profile_follows")
+          .select("follower_id")
+          .eq("following_id", userId);
+
+        if (followerData && followerData.length > 0) {
+          const notifications = followerData.map((row) => ({
+            user_id: row.follower_id,
+            actor_id: userId,
+            type: "follower_post",
+            entity_type: "post",
+            entity_id: createdPost.id,
+            meta: { title: createdPost.title },
+          }));
+
+          const { error: notificationError } = await supabase.from("notifications").insert(notifications);
+          if (notificationError) {
+            console.error("Error creating notifications:", notificationError);
+          }
+        }
+      }
 
       // Reset form
       setTitle("");
