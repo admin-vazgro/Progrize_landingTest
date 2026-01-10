@@ -158,7 +158,7 @@ export default function EventCard({ event, currentUserId, onUpdate, onOpenDetail
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-700 mb-4 line-clamp-3">{event.content}</p>
+        <p className="text-sm text-gray-700 mb-4 line-clamp-1">{event.content}</p>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3" onClick={(e) => e.stopPropagation()}>
