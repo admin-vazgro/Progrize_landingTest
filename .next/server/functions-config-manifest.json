@@ -3,7 +3,7 @@
   "functions": {
     "/api/adminprogrize/actions": {},
     "/api/adminprogrize/posts": {},
-    "/api/adminprogrize/profiles": {},
-    "/api/adminprogrize/reports": {}
+    "/api/adminprogrize/reports": {},
+    "/api/adminprogrize/profiles": {}
   }
 }

@@ -129,6 +129,19 @@ ALTER TABLE education
 ALTER TABLE profiles
   ADD COLUMN IF NOT EXISTS feed_preferences TEXT[] DEFAULT '{}';
 
+-- Add intent + visibility to posts
+ALTER TABLE posts
+  ADD COLUMN IF NOT EXISTS intent TEXT DEFAULT 'looking_for',
+  ADD COLUMN IF NOT EXISTS visibility TEXT DEFAULT 'public';
+
+-- Update post_type constraint to include mentorship
+ALTER TABLE posts
+  DROP CONSTRAINT IF EXISTS posts_post_type_check;
+
+ALTER TABLE posts
+  ADD CONSTRAINT posts_post_type_check
+  CHECK (post_type IN ('discussion', 'job_opportunity', 'event', 'mentorship'));
+
 -- Add admin moderation fields to profiles
 ALTER TABLE profiles
   ADD COLUMN IF NOT EXISTS is_banned BOOLEAN DEFAULT false,
@@ -205,8 +218,35 @@ ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 -- RLS Policies for communities (public read)
 CREATE POLICY "allow_read_all_communities" ON communities FOR SELECT USING (true);
 
--- RLS Policies for posts (authenticated users can read, create own)
-CREATE POLICY "allow_read_all_posts" ON posts FOR SELECT TO authenticated USING (true);
+-- RLS Policies for posts (visibility-aware reads, create own)
+DROP POLICY IF EXISTS "allow_read_all_posts" ON posts;
+CREATE POLICY "allow_read_visible_posts" ON posts
+  FOR SELECT TO authenticated
+  USING (
+    visibility = 'public'
+    OR user_id = auth.uid()
+    OR (
+      visibility = 'followers'
+      AND EXISTS (
+        SELECT 1
+        FROM profile_follows f
+        WHERE f.following_id = posts.user_id
+          AND f.follower_id = auth.uid()
+      )
+    )
+    OR (
+      visibility = 'company'
+      AND EXISTS (
+        SELECT 1
+        FROM experiences e_post
+        JOIN experiences e_viewer ON e_viewer.user_id = auth.uid()
+        WHERE e_post.user_id = posts.user_id
+          AND e_post.is_current = true
+          AND e_viewer.is_current = true
+          AND lower(e_post.company_name) = lower(e_viewer.company_name)
+      )
+    )
+  );
 CREATE POLICY "allow_insert_own_posts" ON posts FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
 CREATE POLICY "allow_update_own_posts" ON posts FOR UPDATE TO authenticated USING (auth.uid() = user_id);
 CREATE POLICY "allow_delete_own_posts" ON posts FOR DELETE TO authenticated USING (auth.uid() = user_id);

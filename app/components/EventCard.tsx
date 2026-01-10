@@ -171,7 +171,7 @@ export default function EventCard({ event, currentUserId, onUpdate, onOpenDetail
                 : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
             }`}
           >
-            {event.user_rsvp === "going" ? "Going" : "I am going"}
+            {event.user_rsvp === "going" ? "Going ✓" : "Go"}
           </button>
           <button
             className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition"

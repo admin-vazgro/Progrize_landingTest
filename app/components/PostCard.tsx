@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import CommentsSection from "./CommentsSection";
+import ShareModal from "./ShareModal";
 
 interface PostEvent {
   id: string;
@@ -31,6 +32,8 @@ interface PostCardProps {
     user_avatar: string;
     user_occupation: string;
     is_liked: boolean;
+    intent?: string | null;
+    visibility?: string | null;
     event?: PostEvent;
   };
   currentUserId: string;
@@ -49,6 +52,9 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
   const [localLikesCount, setLocalLikesCount] = useState(post.likes_count);
   const [localIsLiked, setLocalIsLiked] = useState(post.is_liked);
   const [localCommentsCount, setLocalCommentsCount] = useState(post.comments_count);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
+  const [shareLabel, setShareLabel] = useState("Share this post");
 
   const isOwner = post.user_id === currentUserId;
 
@@ -206,10 +212,16 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
     onUpdate();
   };
 
-  const copyLink = () => {
-    const url = `${window.location.origin}/community?post=${post.id}`;
-    navigator.clipboard.writeText(url);
-    alert("Link copied to clipboard!");
+  const openShare = () => {
+    const baseUrl = window.location.origin;
+    if (post.post_type === "event" && post.event?.id) {
+      setShareUrl(`${baseUrl}/community?event=${post.event.id}`);
+      setShareLabel("Share this event");
+    } else {
+      setShareUrl(`${baseUrl}/community?post=${post.id}`);
+      setShareLabel("Share this post");
+    }
+    setShareOpen(true);
   };
 
   const handleReportPost = async () => {
@@ -350,6 +362,15 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
         </div>
       </div>
 
+      {/* Intent */}
+      {post.intent && (post.post_type === "job_opportunity" || post.post_type === "mentorship") && (
+        <div className="mb-2">
+          <span className="inline-flex items-center rounded-full bg-[#e8f5e8] px-3 py-1 text-xs font-semibold text-[#162f16]">
+            {post.intent === "looking_for" ? "Looking for" : "Providing"}
+          </span>
+        </div>
+      )}
+
       {/* Content */}
       <h3
         className={`text-l sm:text-base font-regular text-gray-900 mb-2 ${
@@ -481,7 +502,7 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
         </button>
 
         <button
-          onClick={copyLink}
+          onClick={openShare}
           className="flex items-center gap-2 text-gray-600 hover:text-[#162f16] transition"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -504,6 +525,17 @@ export default function PostCard({ post, currentUserId, onUpdate, compact = fals
           onUpdate={handleCommentUpdate}
         />
       )}
+
+      <ShareModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        title={post.title || "Post"}
+        description={post.content}
+        authorName={post.user_name || "User"}
+        authorAvatar={post.user_avatar}
+        url={shareUrl}
+        label={shareLabel}
+      />
     </div>
   );
 }

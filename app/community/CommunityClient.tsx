@@ -11,7 +11,7 @@ import CreateEventModal from "../components/CreateEventModal";
 import EventCard from "../components/EventCard";
 import EventDetailModal from "../components/EventDetailModal";
 
-type PostType = "all" | "discussion" | "job_opportunity" | "event";
+type PostType = "all" | "discussion" | "job_opportunity" | "event" | "mentorship";
 type SortType = "latest" | "top";
 
 interface PostLike {
@@ -53,6 +53,9 @@ interface Post {
   user_avatar: string;
   user_occupation: string;
   is_liked: boolean;
+  intent?: string | null;
+  visibility?: string | null;
+  user_company?: string | null;
   post_likes?: PostLike[];
   events?: EventData[];
   event?: {
@@ -80,11 +83,15 @@ export default function CommunityClient() {
   const [targetPostId, setTargetPostId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"feed" | "events">("feed");
   const [postTypeFilter, setPostTypeFilter] = useState<PostType>("all");
+  const [intentFilter, setIntentFilter] = useState<"all" | "looking_for" | "providing">("all");
+  const [eventTab, setEventTab] = useState<"all" | "going" | "hosted">("all");
   const [sortBy, setSortBy] = useState<SortType>("latest");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedEventLocations, setSelectedEventLocations] = useState<string[]>([]);
   const [selectedEventThemes, setSelectedEventThemes] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [followingIds, setFollowingIds] = useState<Set<string>>(new Set());
+  const [currentCompany, setCurrentCompany] = useState<string | null>(null);
   const [profileDetails, setProfileDetails] = useState<{
     full_name: string | null;
     avatar_url: string | null;
@@ -131,6 +138,21 @@ export default function CommunityClient() {
 
       if (error) throw error;
 
+      const authorIds = Array.from(new Set((data || []).map((post) => post.user_id)));
+      const { data: experienceData } = await supabase
+        .from("experiences")
+        .select("user_id, company_name")
+        .in("user_id", authorIds)
+        .eq("is_current", true);
+
+      const companyMap = new Map<string, string>();
+      (experienceData || []).forEach((row) => {
+        if (!row.user_id || !row.company_name) return;
+        if (!companyMap.has(row.user_id)) {
+          companyMap.set(row.user_id, row.company_name);
+        }
+      });
+
       const postsWithUsers = await Promise.all(
         (data || []).map(async (post) => {
           const { data: profileData } = await supabase
@@ -162,6 +184,7 @@ export default function CommunityClient() {
             user_name: profileData?.full_name || "User",
             user_avatar: profileData?.avatar_url || "",
             user_occupation: profileData?.occupation || "",
+            user_company: companyMap.get(post.user_id) || null,
             is_liked: isLiked,
             event: eventData
           };
@@ -264,6 +287,10 @@ export default function CommunityClient() {
       filtered = filtered.filter(p => p.post_type === postTypeFilter);
     }
 
+    if (intentFilter !== "all") {
+      filtered = filtered.filter((p) => p.intent === intentFilter);
+    }
+
     if (selectedTags.length > 0) {
       filtered = filtered.filter(p => 
         p.tags && p.tags.some(tag => selectedTags.includes(tag))
@@ -296,8 +323,32 @@ export default function CommunityClient() {
       });
     }
 
+    filtered = filtered.filter((post) => {
+      if (post.user_id === user?.id) return true;
+      if (!post.visibility || post.visibility === "public") return true;
+      if (post.visibility === "followers") {
+        return followingIds.has(post.user_id);
+      }
+      if (post.visibility === "company") {
+        if (!currentCompany || !post.user_company) return false;
+        return post.user_company.toLowerCase() === currentCompany.toLowerCase();
+      }
+      return true;
+    });
+
     setFilteredPosts(filtered);
-  }, [posts, activeTab, postTypeFilter, selectedTags, searchQuery, feedPreferences]);
+  }, [
+    posts,
+    activeTab,
+    postTypeFilter,
+    intentFilter,
+    selectedTags,
+    searchQuery,
+    feedPreferences,
+    followingIds,
+    currentCompany,
+    user?.id,
+  ]);
 
   const filterEvents = useCallback(() => {
     let filtered = [...events];
@@ -325,8 +376,16 @@ export default function CommunityClient() {
       );
     }
 
+    if (eventTab === "going") {
+      filtered = filtered.filter((event) => event.user_rsvp === "going");
+    }
+
+    if (eventTab === "hosted") {
+      filtered = filtered.filter((event) => event.user_id === user?.id);
+    }
+
     return filtered;
-  }, [events, searchQuery, selectedEventLocations, selectedEventThemes]);
+  }, [events, searchQuery, selectedEventLocations, selectedEventThemes, eventTab, user?.id]);
 
   useEffect(() => {
     checkAuth();
@@ -382,6 +441,34 @@ export default function CommunityClient() {
     };
 
     loadProfileDetails();
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) {
+      setFollowingIds(new Set());
+      setCurrentCompany(null);
+      return;
+    }
+
+    const loadViewerMeta = async () => {
+      const [{ data: followingData }, { data: experienceData }] = await Promise.all([
+        supabase
+          .from("profile_follows")
+          .select("following_id")
+          .eq("follower_id", user.id),
+        supabase
+          .from("experiences")
+          .select("company_name")
+          .eq("user_id", user.id)
+          .eq("is_current", true)
+          .limit(1),
+      ]);
+
+      setFollowingIds(new Set((followingData || []).map((row) => row.following_id)));
+      setCurrentCompany(experienceData?.[0]?.company_name || null);
+    };
+
+    loadViewerMeta();
   }, [user]);
 
   const handleAuthClick = () => {
@@ -664,13 +751,34 @@ export default function CommunityClient() {
                     { label: "Discussion", type: "discussion" },
                     { label: "Job Opportunity", type: "job_opportunity" },
                     { label: "Events", type: "event" },
-                    { label: "Mentorship Offer", type: "discussion" },
-                    { label: "Coaching", type: "discussion" },
+                    { label: "Mentorship", type: "mentorship" },
                   ].map((pill) => (
                     <button
                       key={pill.label}
                       onClick={() => setPostTypeFilter(pill.type as PostType)}
                       className="px-3 py-1 rounded-full text-xs bg-[#e8f5e8] text-[#162f16] hover:bg-[#dff0df] transition"
+                    >
+                      {pill.label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {[
+                    { label: "All", value: "all" },
+                    { label: "Looking for", value: "looking_for" },
+                    { label: "Providing", value: "providing" },
+                  ].map((pill) => (
+                    <button
+                      key={pill.label}
+                      onClick={() =>
+                        setIntentFilter(pill.value as "all" | "looking_for" | "providing")
+                      }
+                      className={`px-3 py-1 rounded-full text-xs border transition ${
+                        intentFilter === pill.value
+                          ? "border-[#162f16] bg-[#162f16] text-white"
+                          : "border-gray-300 text-gray-700 hover:border-gray-400"
+                      }`}
                     >
                       {pill.label}
                     </button>
@@ -725,17 +833,40 @@ export default function CommunityClient() {
               </div>
             )}
 
-            <div className="flex items-center justify-end mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">Sort by:</span>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortType)}
-                  className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#162f16]"
-                >
-                  <option value="latest">Latest</option>
-                  <option value="top">Top</option>
-                </select>
+            <div className="flex flex-col gap-3 mb-4">
+              {activeTab === "events" && (
+                <div className="flex flex-wrap items-center gap-2">
+                  {[
+                    { label: "All events", value: "all" },
+                    { label: "Going", value: "going" },
+                    { label: "Hosted", value: "hosted" },
+                  ].map((pill) => (
+                    <button
+                      key={pill.value}
+                      onClick={() => setEventTab(pill.value as "all" | "going" | "hosted")}
+                      className={`px-3 py-1.5 rounded-full text-xs font-medium border transition ${
+                        eventTab === pill.value
+                          ? "border-[#162f16] bg-[#162f16] text-white"
+                          : "border-gray-300 text-gray-700 hover:border-gray-400"
+                      }`}
+                    >
+                      {pill.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <div className="flex items-center justify-end">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">Sort by:</span>
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value as SortType)}
+                    className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#162f16]"
+                  >
+                    <option value="latest">Latest</option>
+                    <option value="top">Top</option>
+                  </select>
+                </div>
               </div>
             </div>
 

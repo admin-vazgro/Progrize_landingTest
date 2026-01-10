@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/lib/supabase";
 import Image from "next/image";
+import ShareModal from "./ShareModal";
 
 interface EventComment {
   id: string;
@@ -56,6 +57,8 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
   const [isDeleting, setIsDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareUrl, setShareUrl] = useState("");
 
   const loadEventDetails = useCallback(async () => {
     if (!eventId) return;
@@ -327,9 +330,9 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
   };
 
   const handleShare = () => {
-    const url = `${window.location.origin}/community?event=${eventId}`;
-    navigator.clipboard.writeText(url);
-    alert("Link copied to clipboard!");
+    const baseUrl = window.location.origin;
+    setShareUrl(`${baseUrl}/community?event=${eventId}`);
+    setShareOpen(true);
   };
 
   const formatDate = (dateString: string) => {
@@ -359,11 +362,12 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
   const isHost = event.user_id === currentUserId;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
-      <div 
-        className="relative w-full max-w-3xl mx-4 bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
+        <div 
+          className="relative w-full max-w-3xl mx-4 bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -606,11 +610,22 @@ export default function EventDetailModal({ eventId, currentUserId, onClose, onUp
                   : "bg-[#162f16] text-white hover:bg-[#0f2310]"
               }`}
             >
-              {event.user_rsvp === "going" ? "Going" : "I am going"}
+              {event.user_rsvp === "going" ? "Going ✓" : "Go"}
             </button>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+      <ShareModal
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+        title={event.title || "Event"}
+        description={event.content}
+        authorName={event.host_name || "Host"}
+        authorAvatar={event.host_avatar}
+        url={shareUrl}
+        label="Share this event"
+      />
+    </>
   );
 }

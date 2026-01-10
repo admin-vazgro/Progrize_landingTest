@@ -93,6 +93,8 @@ interface Post {
   user_avatar: string;
   user_occupation: string;
   is_liked: boolean;
+  intent?: string | null;
+  visibility?: string | null;
   event?: PostEvent;
 }
 

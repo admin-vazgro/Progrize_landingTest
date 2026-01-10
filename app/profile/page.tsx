@@ -19,6 +19,7 @@ import AddProjectModal from "../components/AddProjectModal";
 import PublicationCard from "../components/PublicationCard";
 import AddPublicationModal from "../components/AddPublicationModal";
 import PostCard from "../components/PostCard";
+import ShareModal from "../components/ShareModal";
 
 interface UserProfile {
   id: string;
@@ -161,6 +162,8 @@ interface Post {
   user_avatar: string;
   user_occupation: string;
   is_liked: boolean;
+  intent?: string | null;
+  visibility?: string | null;
   event?: PostEvent;
 }
 
@@ -189,6 +192,8 @@ export default function ProfilePage() {
   const [addVolunteeringOpen, setAddVolunteeringOpen] = useState(false);
   const [addProjectOpen, setAddProjectOpen] = useState(false);
   const [addPublicationOpen, setAddPublicationOpen] = useState(false);
+  const [profileShareOpen, setProfileShareOpen] = useState(false);
+  const [profileShareUrl, setProfileShareUrl] = useState("");
 
   const loadProfile = useCallback(async () => {
     try {
@@ -717,6 +722,13 @@ export default function ProfilePage() {
     router.push("/");
   };
 
+  const handleShareProfile = () => {
+    if (!profile) return;
+    const baseUrl = window.location.origin;
+    setProfileShareUrl(`${baseUrl}/user/${profile.id}`);
+    setProfileShareOpen(true);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -798,12 +810,20 @@ export default function ProfilePage() {
               {profile.location && (
                 <p className="text-xs text-center text-gray-400">{profile.location}</p>
               )}
-              <button
-                onClick={() => setEditProfileOpen(true)}
-                className="mt-4 w-full text-sm text-white/90 hover:text-white transition"
-              >
-                Edit
-              </button>
+              <div className="mt-6 flex items-center justify-center gap-4">
+                <button
+                  onClick={handleShareProfile}
+                  className="rounded-full bg-[#D6E86A] px-5 py-2 text-sm font-medium text-[#0B2B17] hover:bg-[#cde35e] transition"
+                >
+                  Share Profile
+                </button>
+                <button
+                  onClick={() => setEditProfileOpen(true)}
+                  className="text-sm text-white/90 hover:text-white transition"
+                >
+                  Edit
+                </button>
+              </div>
             </div>
 
             {/* Referrals */}
@@ -1378,6 +1398,18 @@ export default function ProfilePage() {
         onClose={() => setAddPublicationOpen(false)}
         userId={user.id}
         onSuccess={loadProfile}
+      />
+
+      <ShareModal
+        isOpen={profileShareOpen}
+        onClose={() => setProfileShareOpen(false)}
+        title={profile.full_name}
+        description={profile.professional_summary || profile.occupation || ""}
+        authorName={profile.full_name}
+        authorAvatar={profile.avatar_url}
+        url={profileShareUrl}
+        label="Share your profile"
+        showQr
       />
     </div>
   );
